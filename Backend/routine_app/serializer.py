@@ -25,7 +25,7 @@ class TrainerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Entrenador 
-		fields = ['id_entrenador','email', 'username', 'password', 'id_administrador']
+		fields = ['id_entrenador','email', 'username', 'password', 'id_administrador','borrado']
 	
 	def create(self, validated_data): #validated_data contiene los datos que se han enviado a través de una solicitud HTTP
 		user_data = validated_data.pop('user') #se elimina la clave 'user' de validated_data
@@ -44,7 +44,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Cliente
-		fields = ['id_cliente','email', 'username', 'password', 'id_entrenador', 'id_genero', 'id_nivel_gym', 'id_nivel_actividad', 'id_objetivo', 'tmb', 'peso', 'altura', 'edad', 'carbohidratos_g','proteina_g','grasas_g']
+		fields = ['id_cliente','email', 'username', 'password', 'id_entrenador', 'id_genero', 'id_nivel_gym', 'id_nivel_actividad', 'id_objetivo', 'tmb', 'peso', 'altura', 'fecha_nacimiento', 'carbohidratos_g','proteina_g','grasas_g','borrado']
 
 	def create(self,validated_data):
 		user_data = validated_data.pop('user')
@@ -78,11 +78,28 @@ class GenreSerializer(serializers.ModelSerializer):
 		model = Genero
 		fields = '__all__'
 
-
 class TargetSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Objetivo
 		fields = '__all__'
+
+class ExerciseSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Ejercicio
+		fields = '__all__'
+
+class RoutineSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Rutina
+		fields = '__all__'
+
+class CompoundSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Compuesta
+		fields = '__all__'
+
+
+
 
 
 	
