@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'routine_app',
     'corsheaders',
     'django.contrib.admin',
@@ -82,7 +83,7 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppGym4',
+        'NAME': 'AppGym6',
         'USER': 'postgres',
         'PASSWORD': 'awayouname11',
         'HOST': 'localhost',  
@@ -131,6 +132,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORSALLOWEDORIGINS = []
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
+]
+
 
 
 

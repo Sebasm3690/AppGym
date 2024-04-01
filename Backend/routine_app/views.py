@@ -47,6 +47,23 @@ def clientRegister(request):
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def traducir_respuesta_a_espanol(texto):
+    url = "https://libretranslate.com/translate"
+    datos = {
+        "q": texto,
+        "source": "en",
+        "target": "es",
+        "format": "text"
+    }
+    headers = {"Content-Type": "application/json"}
+    respuesta = requests.post(url, json=datos, headers=headers)
+    if respuesta.status_code == 200:
+        return respuesta.json().get('translatedText')
+    else:
+        return "Error en la traducción"
+
+
+
 #Login
 @api_view(['POST'])
 def trainerLogin(request):
@@ -87,18 +104,44 @@ def profile(request):
 
 #Ver comidas
 class FoodAPIView(APIView):
-	def get(self, request, *args, **kwargs):
-		query = request.data.get('query', '')
+    def get(self, request, *args, **kwargs):
+        query = request.data.get('query', '')
 
-		if query:
-			api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
-			api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'
-			api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
-			api_response = api_request.json()
-			return Response(api_response, status = status.HTTP_200_OK)
-		
-		else:
-			return Response({"error","Sin query"}, status = status.HTTP_404_BAD_REQUEST)
+        if query:
+            # Consulta a la API de Nutrición
+            api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
+            api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'  # Idealmente, mover a una variable de entorno o configuración segura
+            api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
+            if api_request.status_code == 200:
+                api_response = api_request.json()
+                
+                # Aquí deberías iterar sobre api_response para extraer los nombres de alimentos
+                # y hacer la traducción con la API de traducción de tu elección.
+                # Asegúrate de revisar la documentación de la API de traducción para la implementación correcta.
+                # Este es un paso conceptual, necesitarías adaptarlo a la API específica que elijas.
+                
+                # Por ejemplo, usando Google Translate API de manera muy simplificada:
+                translate_url = "https://translation.googleapis.com/language/translate/v2"
+                for item in api_response:
+                    text = item["food_name"]  # Asumiendo que este campo existe en tu respuesta
+                    translate_params = {
+                        "q": text,
+                        "source": "en",
+                        "target": "es",
+                        "format": "text"
+                    }
+                    translate_headers = {"Authorization": "Bearer tu_token_de_acceso"}
+                    translate_response = requests.post(translate_url, params=translate_params, headers=translate_headers)
+                    translated_text = translate_response.json()['data']['translations'][0]['translatedText']
+                    item["food_name"] = translated_text
+
+                return Response(api_response, status=status.HTTP_200_OK)
+            else:
+                # Manejo en caso de que la API de Nutrición no responda correctamente
+                return Response({"error": "Error al consultar la API de Nutrición"}, status=api_request.status_code)
+        else:
+            return Response({"error": "Sin query"}, status=status.HTTP_404_BAD_REQUEST)
+
 
 #Agregar comidas
 class NutritionAPIView(APIView):
@@ -328,8 +371,6 @@ def get_exercises(request, body_part):
 #class AddExcercises(viewsets.ModelViewSet):
 	#def post(self,request):
 
-
-	
 
 def calcularEdad(fecha_nacimiento):
 		hoy = date.today()

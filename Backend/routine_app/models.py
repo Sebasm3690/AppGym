@@ -77,6 +77,7 @@ class Consume(models.Model):
     id_alimento = models.ForeignKey('Alimento',on_delete=models.CASCADE)
     fecha = models.DateField()
 
+
 class Alimento(models.Model):
     id_alimento = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
@@ -123,7 +124,7 @@ class Ejercicio(models.Model):
     equipamento = models.CharField(max_length=1000)
     instrucciones = models.JSONField(max_length=1000)
     imagen = models.ImageField(upload_to='ejercicios', null=True, blank=True)
-    objetivo = models.CharField(max_length=20)
+    objetivo = models.CharField(max_length=100)
 
 
 
