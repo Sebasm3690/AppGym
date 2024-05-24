@@ -17,6 +17,7 @@ urlpatterns = [
     path('clientRegister/', clientRegister),
     path('profile/', profile),
     path('getExcercises/<str:body_part>', get_exercises),
+    path('adminLogin/',adminLogin),
      # Incluye las rutas del router bajo un prefijo específico para evitar conflictos
     path( "api/v1/", include(router.urls)), #/api/v1/
     path("getFood/",FoodAPIView.as_view(),name='getFood'),
@@ -29,5 +30,4 @@ urlpatterns = [
     path('borradoLogicoCliente/<query_param>/', BorradoLogicoCliente.as_view(), name='borradoLogicoCliente'),
     path("getExcercises/<query_param>/", ExerciseView.as_view({'get':'list'}), name='getExcercises'),
     path("getRoutine/",RoutineView.as_view({'get':'list'}), name='getRoutine'),
-    path("traducirEspanol/<str:texto>/",traducir_respuesta_a_espanol,name='traducirEspanol'),
 ]

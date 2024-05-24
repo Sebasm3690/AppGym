@@ -47,24 +47,8 @@ def clientRegister(request):
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def traducir_respuesta_a_espanol(texto):
-    url = "https://libretranslate.com/translate"
-    datos = {
-        "q": texto,
-        "source": "en",
-        "target": "es",
-        "format": "text"
-    }
-    headers = {"Content-Type": "application/json"}
-    respuesta = requests.post(url, json=datos, headers=headers)
-    if respuesta.status_code == 200:
-        return respuesta.json().get('translatedText')
-    else:
-        return "Error en la traducción"
 
-
-
-#Login
+#Login Trainer
 @api_view(['POST'])
 def trainerLogin(request):
 	username = request.data.get('username')
@@ -81,6 +65,29 @@ def trainerLogin(request):
 		
 		except Entrenador.DoesNotExist:
 			return Response({"error":"Usuario no es un entrenador"}, status=status.HTTP_404_NOT_FOUND)
+	else:
+		return Response({"error":"username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
+	return Response({"error":"Error inesperado en el servidor"},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+#Login Admin
+@api_view(['POST'])
+def adminLogin(request):
+	username = request.data.get('username')
+	password = request.data.get('password')
+
+	user = authenticate(username = username, password = password)
+
+	if user is not None:
+		try:
+			administrador = Administrador.objects.get(user = user)
+			token , created = Token.objects.get_or_create(user=user)
+			serializer = AdminSerializer(instance = administrador)
+			return Response({"token":token.key, "administrador":serializer.data}, status = status.HTTP_200_OK)
+		
+		except Administrador.DoesNotExist:
+			return Response({"error":"Usuario no es un administrador"}, status=status.HTTP_404_NOT_FOUND)
 	else:
 		return Response({"error":"username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({"error":"Error inesperado en el servidor"},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -248,6 +255,8 @@ class BorradoLogicoCliente(APIView):
 		cliente.borrado = True
 		cliente.save()
 		return Response({"mensaje":"Borrado del cliente realizado correctamente"}, status=status.HTTP_200_OK)
+	
+
 
 class calcularMacroNutrientes(APIView):
 	def post(self,request,query_param,*args,**kwargs):
@@ -282,6 +291,7 @@ class calcularMacroNutrientes(APIView):
 
 
 
+
 class calcularTotalMacrosAlimentos(APIView):
 	def get(self,request,query_param,*args,**kwargs):
 		cliente_id = query_param
@@ -307,6 +317,7 @@ class calcularTotalMacrosAlimentos(APIView):
 		}
 
 		return Response({"consumo_hoy":consumo_hoy,"consumo_restante":consumo_restante}, status=status.HTTP_200_OK)
+
 
 
 
@@ -343,6 +354,8 @@ class CompoundView(viewsets.ModelViewSet):
 	queryset = Compuesta.objects.all()
 
 
+
+
 # Ver Ejercicios
 
 @api_view(['GET'])
@@ -370,6 +383,8 @@ def get_exercises(request, body_part):
 
 #class AddExcercises(viewsets.ModelViewSet):
 	#def post(self,request):
+
+
 
 
 def calcularEdad(fecha_nacimiento):

@@ -5,15 +5,20 @@ from .models import *
 
 class AdminSerializer(serializers.ModelSerializer):
 	username = serializers.CharField(source='user.username')
-	password = serializers.CharField(source='user.password', write_only=True)
+	email = serializers.CharField(source='user.email')
+	password = serializers.CharField(source='user.password')
 
 	class Meta:
 		model = Administrador
-		fields = ['id_administrador','email', 'username', 'password']
+		fields = ['id_administrador','nombre','apellido','email', 'username', 'password','borrado']
 	
 	def create(self, validated_data): #validated_data contiene los datos que se han enviado a través de una solicitud HTTP
 		user_data = validated_data.pop('user') #se elimina la clave 'user' de validated_data
-		user = User.objects.create(username=user_data['username'], password=user_data['password']) 
+		password = user_data.pop('password', None)
+		user = User.objects.create(**user_data) 
+		if password:
+			user.set_password(password)
+			user.save()
 		administrador = Administrador.objects.create(user=user, **validated_data) 
 		return administrador
 		  
@@ -25,7 +30,7 @@ class TrainerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Entrenador 
-		fields = ['id_entrenador','email', 'username', 'password', 'id_administrador','borrado']
+		fields = ['id_entrenador', 'nombre', 'apellido' ,'email', 'username', 'password', 'id_administrador','borrado']
 	
 	def create(self, validated_data): #validated_data contiene los datos que se han enviado a través de una solicitud HTTP
 		user_data = validated_data.pop('user') #se elimina la clave 'user' de validated_data

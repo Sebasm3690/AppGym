@@ -10,22 +10,18 @@ from django.contrib.auth.models import User
 class Administrador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id_administrador = models.AutoField(primary_key=True)
-    email = models.EmailField('email', unique=True)
-    borrado = models.CharField(default=False) 
-    #nombre = models.CharField(max_length=50)
-    #apellido = models.CharField(max_length=50)
-    #contrasenia = models.CharField(max_length=15)
-    # Configurando 'email' como el campo de identificación principal para la autenticación.
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    borrado = models.BooleanField(default=False) 
+    nombre = models.CharField(max_length=50)
+    apellido = models.CharField(max_length=50)
+ 
    
 
 class Entrenador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id_entrenador = models.AutoField(primary_key=True)
-    borrado = models.CharField(default=False) 
-    #nombre = models.CharField(max_length=50)
-    #apellido = models.CharField(max_length=50)
+    borrado = models.BooleanField(default=False) 
+    nombre = models.CharField(max_length=50)
+    apellido = models.CharField(max_length=50)
     #contrasenia = models.CharField(max_length=15)
     id_administrador = models.ForeignKey('Administrador',on_delete=models.CASCADE)
 
