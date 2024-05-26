@@ -26,7 +26,7 @@ class AdminSerializer(serializers.ModelSerializer):
 class TrainerSerializer(serializers.ModelSerializer):
 	username = serializers.CharField(source='user.username')
 	email = serializers.CharField(source='user.email')
-	password = serializers.CharField(source='user.password')
+	password = serializers.CharField(source='user.password',write_only=True, required=False)
 
 	class Meta:
 		model = Entrenador 
@@ -41,6 +41,27 @@ class TrainerSerializer(serializers.ModelSerializer):
 			user.save()
 		entrenador = Entrenador.objects.create(user=user, **validated_data)
 		return entrenador
+	
+	def update(self, instance, validated_data):
+		# Extraer los datos del usuario
+		user_data = validated_data.pop('user', None)
+		if user_data:
+			user = instance.user
+			user.username = user_data.get('username', user.username)
+			user.email = user_data.get('email', user.email)
+			password = user_data.get('password', None)
+			if password:
+				user.set_password(password)
+			user.save()
+
+		# Actualizar los datos del entrenador
+		instance.nombre = validated_data.get('nombre', instance.nombre)
+		instance.apellido = validated_data.get('apellido', instance.apellido)
+		instance.id_administrador = validated_data.get('id_administrador', instance.id_administrador)
+		instance.borrado = validated_data.get('borrado', instance.borrado)
+		instance.save()
+
+		return instance
 
 
 class ClientSerializer(serializers.ModelSerializer):

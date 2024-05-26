@@ -10,25 +10,26 @@ import {
   FormControl,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-//import "../Admin/Login.css";
+import "./Login.css";
 import Header from "../Otros/header";
 import Footer from "../Otros/footer";
 import { useNavigate } from "react-router-dom";
+import "../Entrenador/Login.css";
 
-class LoginAdmin extends React.Component {
+class LoginEntrenador extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
       password: "",
       errorMessage: "",
-      idAdmin: null,
     };
-    this.navigate = props.navigate; // Obtener la función de navegación de las props
+
+    this.navigate = props.navigate;
   }
 
   handleInputChange = (event) => {
-    const { id, value } = event.target; //El id es el username o el password y el value es el valor ingresado
+    const { id, value } = event.target;
     this.setState({ [id]: value });
   };
 
@@ -36,20 +37,15 @@ class LoginAdmin extends React.Component {
     event.preventDefault();
     const { username, password } = this.state;
     try {
-      const response = await axios.post("http://localhost:8000/adminLogin/", {
+      const response = await axios.post("http://localhost:8000/trainerLogin/", {
         username,
         password,
       });
-      const { token, administrador } = response.data;
+      const { token, entrenador } = response.data;
       console.log("Token:", token);
-      console.log("Datos del administrador", administrador);
+      console.log("Datos del entrenador", entrenador);
 
-      // Guardar el id del admin en el estado y en localStorage
-      this.setState({ idAdmin: administrador.id_administrador }); //Actualiza el estado del id administrador
-      localStorage.setItem("idAdmin", administrador.id_administrador); //Persiste aunque la página se recargue
-
-      // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
-      this.navigate("/homeAdmin/"); // Cambia '/crudTrainers' por la ruta correcta
+      this.navigate("/homeEntrenador/");
     } catch (error) {
       this.setState({
         error:
@@ -84,7 +80,7 @@ class LoginAdmin extends React.Component {
                         </h3>
                         <p className="text-muted mb-4 text-center">
                           Por favor, introduzca sus credenciales para iniciar
-                          sesión como administrador.
+                          sesión como entrenador.
                         </p>
                         <Form
                           className="d-flex flex-column align-items-center"
@@ -120,16 +116,16 @@ class LoginAdmin extends React.Component {
                           <Button
                             type="submit"
                             className="btn-primary btn-block text-uppercase mb-2 rounded-3 shadow-sm"
-                            style={{ width: "75%" }} // Ajustar ancho del botón para mejor estética
+                            style={{ width: "75%" }}
                           >
                             Iniciar sesión
                           </Button>
                           {error && <p style={{ color: "red" }}>{error}</p>}
                           <a
-                            href="/loginEntrenador"
+                            href="/loginAdmin"
                             className="text-primary mt-3 d-block"
                           >
-                            ¿Iniciar sesión como entrenador?
+                            ¿Iniciar sesión como administrador?
                           </a>
                           <a
                             href="/forgot-password"
@@ -152,7 +148,6 @@ class LoginAdmin extends React.Component {
   }
 }
 
-// Crear un componente de orden superior para usar la función navigate de react-router-dom
 function withRouter(Component) {
   function ComponentWithRouterProp(props) {
     let navigate = useNavigate();
@@ -162,4 +157,4 @@ function withRouter(Component) {
   return ComponentWithRouterProp;
 }
 
-export default withRouter(LoginAdmin);
+export default withRouter(LoginEntrenador);

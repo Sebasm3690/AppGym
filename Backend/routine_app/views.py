@@ -34,6 +34,16 @@ def trainerRegister(request):
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+#Función para cerrar sesión
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication]) #Método para autenticarse
+@permission_classes({IsAuthenticated}) #se ve si la ruta está autenticada
+def logout(request):
+	request.user.auth_token.delete()
+	return Response({"mensaje":"Cerraste sesión correctamente"}, status=status.HTTP_200_OK)
+
+
 
 @api_view(['POST'])
 def clientRegister(request):
@@ -68,6 +78,28 @@ def trainerLogin(request):
 	else:
 		return Response({"error":"username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({"error":"Error inesperado en el servidor"},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+#Buscar entrenadores
+
+class TrainerViewSet(viewsets.ModelViewSet):
+	queryset = Entrenador.objects.all()
+	serializer_class = TrainerSerializer
+
+	def get_queryset(self):
+		queryset = super().get_queryset() #Llama al método get_queryset del padre (viewsets.ModelViewSet) para obtener el conjunto de datos predeterminado. Este conjunto de datos inicial incluye todos los registros de Entrenador.
+		nombre = self.request.query_params.get("nombre") 
+		apellido = self.request.query_params.get("apellido")
+		correo = self.request.query_params.get("correo")
+
+		if nombre:
+			queryset = queryset.filter(nombre__icontains=nombre)
+		if apellido:
+			queryset = queryset.filter(apellido__icontains=apellido)
+		if correo:
+			queryset = queryset.filter(correo_icontains=correo)
+		
+		return queryset
 
 
 
@@ -248,6 +280,17 @@ class BorradoLogicoEntrenador(APIView):
 		return Response({"mensaje":"Borrado del entrenador realizado correctamente"}, status=status.HTTP_200_OK)
 
 
+
+class RecuperarEntrenador(APIView):
+	def post(self,request,query_param,*args,**kwargs):
+		id_entr = query_param 
+		entrenador = Entrenador.objects.get(id_entrenador=id_entr)
+		entrenador.borrado = False
+		entrenador.save()
+		return Response({"mensaje":"Recuperación del entrenador realizado correctamente"}, status=status.HTTP_200_OK)
+
+
+
 class BorradoLogicoCliente(APIView):
 	def post(self,request,query_param,*args,**kwargs):
 		id_cli = query_param 
@@ -334,8 +377,8 @@ class ConsumeView(viewsets.ModelViewSet):
 	queryset = Consume.objects.all()
 
 class TrainerView(viewsets.ModelViewSet):
-	serializer_class = TrainerSerializer
 	queryset = Entrenador.objects.all()
+	serializer_class = TrainerSerializer
 
 class ClientView(viewsets.ModelViewSet):
 	serializer_class = ClientSerializer

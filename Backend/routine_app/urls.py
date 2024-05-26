@@ -9,6 +9,7 @@ router.register(r'food',FoodView, 'food')
 router.register(r'consume', ConsumeView, 'consume') 
 router.register(r'trainer', TrainerView, 'trainer') 
 router.register(r'client',ClientView,'client')
+router.register(r'entrenador',TrainerViewSet) #Buscar entrenador
 
 urlpatterns = [
     # Rutas personalizadas primero
@@ -30,4 +31,6 @@ urlpatterns = [
     path('borradoLogicoCliente/<query_param>/', BorradoLogicoCliente.as_view(), name='borradoLogicoCliente'),
     path("getExcercises/<query_param>/", ExerciseView.as_view({'get':'list'}), name='getExcercises'),
     path("getRoutine/",RoutineView.as_view({'get':'list'}), name='getRoutine'),
+    path("recuperarEntrenador/<query_param>/",RecuperarEntrenador.as_view(), name='recuperarEntrenador'),
+    path("cerrarSesion/",logout,name="cerrarSesion")
 ]

@@ -1,0 +1,50 @@
+.maincontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.bg-image {
+  background-image: url("https://img.freepik.com/foto-gratis/equipo-gimnasio-3d_23-2151114137.jpg?size=626&ext=jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.form-control,
+.btn {
+  height: 45px;
+  font-size: 16px;
+}
+
+.form-control {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
+.btn {
+  padding: 10px 20px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .bg-image {
+    min-height: 30vh;
+  }
+  .login {
+    min-height: 70vh;
+  }
+}
