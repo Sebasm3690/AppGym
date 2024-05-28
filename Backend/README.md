@@ -25,3 +25,4 @@ npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons @fo
 npm install sweetalert2
 npm install @sweetalert2/react-content
 npm install sweetalert2-react-content
+npm install react-icons

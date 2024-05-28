@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import NavScrollExample from "../Otros/NavbarUsuarios";
-import Footer from "../Otros/footer";
+import NavScrollExample from "../Otros/NavBarAdmin";
+//import Footer from "../Otros/footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPencilAlt,
@@ -255,7 +255,11 @@ const CrudTrainers = () => {
                   </thead>
                   <tbody>
                     {trainers
-                      .filter((trainer) => !trainer.borrado)
+                      .filter(
+                        (trainer) =>
+                          !trainer.borrado &&
+                          parseInt(trainer.id_administrador === idAdmin)
+                      )
                       .map((trainer) => (
                         <tr key={trainer.id_entrenador}>
                           <td>
@@ -293,7 +297,7 @@ const CrudTrainers = () => {
           </Col>
         </Row>
       </Container>
-      <Footer />
+      {/*<Footer />*/}
       {/* Modal agregar entrenador */}
       <Modal show={showModalAgregar} onHide={() => setShowModalAgregar(false)}>
         <ModalHeader closeButton>
@@ -459,7 +463,11 @@ const CrudTrainers = () => {
             </thead>
             <tbody>
               {trainers
-                .filter((trainer) => trainer.borrado)
+                .filter(
+                  (trainer) =>
+                    trainer.borrado &&
+                    parseInt(trainer.id_administrador === idAdmin)
+                )
                 .map((trainer) => (
                   <tr key={trainer.id_entrenador}>
                     <td>

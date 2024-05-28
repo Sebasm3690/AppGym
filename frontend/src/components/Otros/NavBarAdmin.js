@@ -13,10 +13,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import "../Otros/navBar.css";
 
 const NavScrollExample = ({ onSearchResults, onLogout }) => {
-  const idEntrenador = localStorage.getItem("idEntrenador");
+  const idAdmin = localStorage.getItem("idAdmin");
   const [searchParams, setSearchParams] = useState({
     nombre: "",
     apellido: "",
@@ -35,7 +34,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
     event.preventDefault();
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/buscarClientes/${idEntrenador}/`,
+        `http://127.0.0.1:8000/buscarEntrenadores/${idAdmin}/`,
         {
           params: searchParams,
         }
@@ -69,7 +68,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
               <NavDropdown
                 title={
                   <Image
-                    src="https://previews.123rf.com/images/metelsky/metelsky1809/metelsky180900233/109815470-man-avatar-profile-male-face-icon-vector-illustration.jpg"
+                    src="https://source.unsplash.com/250x250?girl"
                     roundedCircle
                     width="45"
                     height="45"
@@ -92,13 +91,13 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
       </Navbar>
       <Container className="mt-4">
         <Row className="justify-content-center" style={{ marginTop: "120px" }}>
-          <Col xs={12} md={10} className="search-container">
-            <Form onSubmit={handleSearch} className="search-form">
+          <Col xs={12} md={10}>
+            <Form onSubmit={handleSearch} className="d-flex">
               <Form.Control
                 type="search"
                 name="nombre"
                 placeholder="Buscar nombre"
-                className="search-input"
+                className="me-2"
                 aria-label="Buscar nombre"
                 value={searchParams.nombre}
                 onChange={handleInputChange}
@@ -107,7 +106,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
                 type="search"
                 name="apellido"
                 placeholder="Buscar apellido"
-                className="search-input"
+                className="me-2"
                 aria-label="Buscar apellido"
                 value={searchParams.apellido}
                 onChange={handleInputChange}
@@ -116,7 +115,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
                 type="search"
                 name="correo"
                 placeholder="Buscar correo"
-                className="search-input"
+                className="me-2"
                 aria-label="Buscar correo"
                 value={searchParams.correo}
                 onChange={handleInputChange}

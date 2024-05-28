@@ -12,7 +12,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 //import "../Admin/Login.css";
 import Header from "../Otros/header";
-import Footer from "../Otros/footer";
+//import Footer from "../Otros/footer";
 import { useNavigate } from "react-router-dom";
 
 class LoginAdmin extends React.Component {
@@ -146,7 +146,7 @@ class LoginAdmin extends React.Component {
             </Row>
           </Container>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </>
     );
   }

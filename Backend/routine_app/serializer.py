@@ -32,17 +32,19 @@ class TrainerSerializer(serializers.ModelSerializer):
 		model = Entrenador 
 		fields = ['id_entrenador', 'nombre', 'apellido' ,'email', 'username', 'password', 'id_administrador','borrado']
 	
-	def create(self, validated_data): #validated_data contiene los datos que se han enviado a través de una solicitud HTTP
+	def create(self, validated_data): #validated_data contiene datos validados y limpiados provenientes del cliente
+		# Extraemos los datos del usuario del diccionario validated_data
 		user_data = validated_data.pop('user') #se elimina la clave 'user' de validated_data
 		password = user_data.pop('password', None)
 		user = User.objects.create(**user_data) 
 		if password:
 			user.set_password(password)
 			user.save()
+		# Creamos una nueva instancia de Cliente utilizando el usuario creado y los datos restantes validados
 		entrenador = Entrenador.objects.create(user=user, **validated_data)
 		return entrenador
 	
-	def update(self, instance, validated_data):
+	def update(self, instance, validated_data): #Instance es la instancia del modelo que se está actualizando con los nuevos datos en validated_data (por ejemplo aqui instance es la instancia del modelo que se está actualizando y validated_data contiene los nuevos datos que deben ser aplicados a esa instancia)
 		# Extraer los datos del usuario
 		user_data = validated_data.pop('user', None)
 		if user_data:
@@ -60,34 +62,13 @@ class TrainerSerializer(serializers.ModelSerializer):
 		instance.id_administrador = validated_data.get('id_administrador', instance.id_administrador)
 		instance.borrado = validated_data.get('borrado', instance.borrado)
 		instance.save()
-
 		return instance
 
 
-class ClientSerializer(serializers.ModelSerializer):
-	username = serializers.CharField(source='user.username')
-	password = serializers.CharField(source='user.password')
-
+class GenreSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Cliente
-		fields = ['id_cliente','email', 'username', 'password', 'id_entrenador', 'id_genero', 'id_nivel_gym', 'id_nivel_actividad', 'id_objetivo', 'tmb', 'peso', 'altura', 'fecha_nacimiento', 'carbohidratos_g','proteina_g','grasas_g','borrado']
-
-	def create(self,validated_data):
-		user_data = validated_data.pop('user')
-		user = User.objects.create(username=user_data['username'], password=user_data['password'])
-		cliente = Cliente.objects.create(user=user, **validated_data)
-		return cliente
-
-class ConsumeSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Consume
+		model = Genero
 		fields = '__all__'
-
-
-class FoodSerializer(serializers.ModelSerializer):
-	class Meta: 
-		model = Alimento
-		fields = "__all__"
 
 class GymLevelSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -99,15 +80,80 @@ class ActivityLevelSerializer(serializers.ModelSerializer):
 		model = nivelActividad
 		fields = '__all__'
 
-class GenreSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Genero
-		fields = '__all__'
-
 class TargetSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Objetivo
 		fields = '__all__'
+
+
+
+class ClientSerializer(serializers.ModelSerializer):
+	username = serializers.CharField(source='user.username')
+	email = serializers.CharField(source='user.email')
+	password = serializers.CharField(source='user.password')
+	 #Los 4 serializer de abajo me permiten obtener los nombres en el frontend mediante "client.id_genero.nombre"
+	id_genero = serializers.PrimaryKeyRelatedField(queryset=Genero.objects.all())
+	id_nivel_gym = serializers.PrimaryKeyRelatedField(queryset=nivelGym.objects.all())
+	id_nivel_actividad = serializers.PrimaryKeyRelatedField(queryset=nivelActividad.objects.all())
+	id_objetivo = serializers.PrimaryKeyRelatedField(queryset=Objetivo.objects.all())
+
+	#Serializadores para las respuestas get 
+	genero = GenreSerializer(source='id_genero', read_only=True)
+	nivel_gym = GymLevelSerializer(source='id_nivel_gym', read_only=True)
+	nivel_actividad = ActivityLevelSerializer(source='id_nivel_actividad', read_only=True)
+	objetivo = TargetSerializer(source='id_objetivo',read_only=True)
+
+
+	class Meta:
+		model = Cliente
+		fields = ['id_cliente','nombre','apellido','email', 'username', 'password', 'id_entrenador', 'id_genero', 'id_nivel_gym', 'id_nivel_actividad', 'id_objetivo', 'tmb', 'peso', 'altura', 'fecha_nacimiento', 'carbohidratos_g','proteina_g','grasas_g','borrado','genero','nivel_gym','nivel_actividad','objetivo']
+
+	def create(self,validated_data):
+		user_data = validated_data.pop('user')
+		user = User.objects.create(username=user_data['username'], password=user_data['password'])
+		cliente = Cliente.objects.create(user=user, **validated_data)
+		return cliente
+	
+	def update(self,instance,validated_data):
+		 # Extraemos los datos del usuario del diccionario validated_data, si existen
+		user_data = validated_data.pop('user',None)
+
+		# Si hay datos de usuario, actualizamos el usuario asociado a la instancia del cliente
+		if user_data:
+			user = instance.user
+			user.username = user_data.get('username', user.username)
+			user.email = user_data.get('email',user.email)
+			user.password = user_data.get('password', user.password)
+			user.save()
+
+		 # Actualizamos los campos de la instancia del cliente con los datos validados
+		instance.nombre = validated_data.get('nombre', instance.nombre) #intenta obtener el valor asociado con la clave 'nombre' del diccionario validated_data.   # instance.nombre es el valor por defecto que se usa si 'nombre' no se encuentra en validated_data.
+		instance.apellido = validated_data.get('apellido', instance.apellido)
+		instance.peso = validated_data.get('peso', instance.peso)
+		instance.altura = validated_data.get('altura', instance.altura)
+		instance.fecha_nacimiento = validated_data.get('fecha_nacimiento', instance.fecha_nacimiento)
+		instance.id_entrenador = validated_data.get('id_entrenador', instance.id_entrenador)
+		instance.id_genero = validated_data.get('id_genero', instance.id_genero)
+		instance.id_nivel_gym = validated_data.get('id_nivel_gym', instance.id_nivel_gym)
+		instance.id_nivel_actividad = validated_data.get('id_nivel_actividad', instance.id_nivel_actividad)
+		instance.id_objetivo = validated_data.get('id_objetivo', instance.id_objetivo)
+
+		# Guardamos la instancia actualizada
+		instance.save()
+
+		# Devolvemos la instancia actualizada
+		return instance
+
+
+class ConsumeSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Consume
+		fields = '__all__'
+
+class FoodSerializer(serializers.ModelSerializer):
+	class Meta: 
+		model = Alimento
+		fields = "__all__"
 
 class ExerciseSerializer(serializers.ModelSerializer):
 	class Meta:

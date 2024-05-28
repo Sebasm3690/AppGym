@@ -21,7 +21,7 @@ from rest_framework.authentication import TokenAuthentication
 from django.http import JsonResponse
 from datetime import date
 
-# SignUp
+# SignUp trainer
 @api_view(['POST'])
 def trainerRegister(request):
 	serializer = TrainerSerializer(data=request.data)
@@ -34,17 +34,8 @@ def trainerRegister(request):
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#Función para cerrar sesión
 
-@api_view(['POST'])
-@authentication_classes([TokenAuthentication]) #Método para autenticarse
-@permission_classes({IsAuthenticated}) #se ve si la ruta está autenticada
-def logout(request):
-	request.user.auth_token.delete()
-	return Response({"mensaje":"Cerraste sesión correctamente"}, status=status.HTTP_200_OK)
-
-
-
+# Signup cliente
 @api_view(['POST'])
 def clientRegister(request):
 	serializer = ClientSerializer(data=request.data)
@@ -55,6 +46,17 @@ def clientRegister(request):
 		return Response({'token':token.key, "cliente":serializer.data}, status=status.HTTP_201_CREATED)
 	
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+#Función para cerrar sesión
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication]) #Método para autenticarse
+@permission_classes({IsAuthenticated}) #se ve si la ruta está autenticada
+def logout(request):
+	request.user.auth_token.delete()
+	return Response({"mensaje":"Cerraste sesión correctamente"}, status=status.HTTP_200_OK)
 
 
 
@@ -81,13 +83,17 @@ def trainerLogin(request):
 
 
 #Buscar entrenadores
-
 class TrainerViewSet(viewsets.ModelViewSet):
 	queryset = Entrenador.objects.all()
 	serializer_class = TrainerSerializer
 
 	def get_queryset(self):
 		queryset = super().get_queryset() #Llama al método get_queryset del padre (viewsets.ModelViewSet) para obtener el conjunto de datos predeterminado. Este conjunto de datos inicial incluye todos los registros de Entrenador.
+
+		id_admin = self.kwargs.get('id_administrador')
+
+		queryset = queryset.filter(id_administrador=id_admin)
+
 		nombre = self.request.query_params.get("nombre") 
 		apellido = self.request.query_params.get("apellido")
 		correo = self.request.query_params.get("correo")
@@ -97,10 +103,41 @@ class TrainerViewSet(viewsets.ModelViewSet):
 		if apellido:
 			queryset = queryset.filter(apellido__icontains=apellido)
 		if correo:
-			queryset = queryset.filter(correo_icontains=correo)
+			queryset = queryset.filter(user__email__icontains=correo) #Para acceder al correo que está dentro de user
 		
 		return queryset
 
+
+#Buscar clientes
+class ClientViewSet(viewsets.ModelViewSet):
+	queryset = Cliente.objects.all()  # Asegúrate de que queryset esté definido aquí
+	serializer_class = ClientSerializer
+
+	def get_queryset(self):
+		queryset = super().get_queryset()
+
+		id_entrenador = self.kwargs.get('id_entrenador')
+
+		queryset = queryset.filter(id_entrenador=id_entrenador)
+
+		# Obtiene los parámetros de consulta de la solicitud
+		nombre = self.request.query_params.get("nombre") #query_params es un diccionario que contiene los parámetros de consulta (query parameters) enviados en la URL de la solicitud.
+		apellido = self.request.query_params.get("apellido")
+		correo = self.request.query_params.get("correo")
+
+
+		# Filtra el queryset según los parámetros de consulta proporcionados
+		if nombre:
+			queryset = queryset.filter(nombre__icontains=nombre)
+		if apellido:
+			queryset = queryset.filter(apellido__icontains=apellido)
+		if correo:
+			queryset = queryset.filter(user__email__icontains=correo)
+
+		# Devuelve el queryset filtrado
+		return queryset
+	
+	
 
 
 #Login Admin
@@ -281,6 +318,15 @@ class BorradoLogicoEntrenador(APIView):
 
 
 
+class BorradoLogicoCliente(APIView):
+	def post(self,request,query_param,*args,**kwargs):
+		id_cli = query_param 
+		cliente = Cliente.objects.get(id_cliente=id_cli)
+		cliente.borrado = True
+		cliente.save()
+		return Response({"mensaje":"Borrado del cliente realizado correctamente"}, status=status.HTTP_200_OK)
+
+
 class RecuperarEntrenador(APIView):
 	def post(self,request,query_param,*args,**kwargs):
 		id_entr = query_param 
@@ -289,6 +335,14 @@ class RecuperarEntrenador(APIView):
 		entrenador.save()
 		return Response({"mensaje":"Recuperación del entrenador realizado correctamente"}, status=status.HTTP_200_OK)
 
+
+class RecuperarCliente(APIView):
+	def post(self,request,query_param,*args,**kwargs):
+		id_cli = query_param 
+		cliente = Cliente.objects.get(id_cliente=id_cli)
+		cliente.borrado = False
+		cliente.save()
+		return Response({"mensaje":"Recuperación del cliente realizado correctamente"}, status=status.HTTP_200_OK)
 
 
 class BorradoLogicoCliente(APIView):
@@ -396,6 +450,21 @@ class CompoundView(viewsets.ModelViewSet):
 	serializer_class = CompoundSerializer
 	queryset = Compuesta.objects.all()
 
+class GenreView(viewsets.ModelViewSet):
+	serializer_class = GenreSerializer
+	queryset = Genero.objects.all()
+
+class GymLevelView(viewsets.ModelViewSet):
+	serializer_class = GymLevelSerializer
+	queryset = nivelGym.objects.all()
+
+class GymActivityView(viewsets.ModelViewSet):
+	serializer_class = ActivityLevelSerializer
+	queryset = nivelActividad.objects.all()
+
+class TargetView(viewsets.ModelViewSet):
+	serializer_class = TargetSerializer
+	queryset = Objetivo.objects.all()
 
 
 
@@ -426,7 +495,6 @@ def get_exercises(request, body_part):
 
 #class AddExcercises(viewsets.ModelViewSet):
 	#def post(self,request):
-
 
 
 

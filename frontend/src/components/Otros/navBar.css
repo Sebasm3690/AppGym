@@ -1,0 +1,31 @@
+/* components/Otros/navbar.css */
+.navbar {
+  z-index: 1050;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.search-input {
+  margin-right: 8px;
+}
+
+/* Aplicar margen izquierdo solo en pantallas grandes */
+@media (min-width: 768px) {
+  .search-container {
+    margin-left: 200px; /* Ajusta este valor según sea necesario */
+  }
+}

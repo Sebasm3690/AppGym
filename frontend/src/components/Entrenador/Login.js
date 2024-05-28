@@ -12,7 +12,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
 import Header from "../Otros/header";
-import Footer from "../Otros/footer";
+//import Footer from "../Otros/footer";
 import { useNavigate } from "react-router-dom";
 import "../Entrenador/Login.css";
 
@@ -44,6 +44,10 @@ class LoginEntrenador extends React.Component {
       const { token, entrenador } = response.data;
       console.log("Token:", token);
       console.log("Datos del entrenador", entrenador);
+
+      // Guardar el id del admin en el estado y en localStorage
+      this.setState({ idAdmin: entrenador.id_administrador }); //Actualiza el estado del id entrenador
+      localStorage.setItem("idEntrenador", entrenador.id_entrenador); //Persiste aunque la página se recargue
 
       this.navigate("/homeEntrenador/");
     } catch (error) {
@@ -142,7 +146,7 @@ class LoginEntrenador extends React.Component {
             </Row>
           </Container>
         </div>
-        <Footer />
+        {/*<Footer /> */}
       </>
     );
   }

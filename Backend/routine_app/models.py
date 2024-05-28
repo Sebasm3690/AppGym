@@ -46,9 +46,8 @@ class Objetivo(models.Model):
 class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id_cliente = models.AutoField(primary_key=True)
-    #nombre = models.CharField(max_length=50)
-    #apellido = models.CharField(max_length=50)
-    email = models.EmailField('email', unique=True)
+    nombre = models.CharField(max_length=50)
+    apellido = models.CharField(max_length=50)
     #contrasenia = models.CharField(max_length=15)
     tmb = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     altura = models.DecimalField(decimal_places=2, max_digits=5, default=0)

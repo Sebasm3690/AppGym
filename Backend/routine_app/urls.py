@@ -10,6 +10,10 @@ router.register(r'consume', ConsumeView, 'consume')
 router.register(r'trainer', TrainerView, 'trainer') 
 router.register(r'client',ClientView,'client')
 router.register(r'entrenador',TrainerViewSet) #Buscar entrenador
+router.register(r'genero',GenreView,'genero')
+router.register(r'nivelGym',GymLevelView,'nivelGym')
+router.register(r'nivelActividad',GymActivityView,'nivelActividad')
+router.register(r'objetivo',TargetView,'objetivo')
 
 urlpatterns = [
     # Rutas personalizadas primero
@@ -28,9 +32,13 @@ urlpatterns = [
     path("calcularMacros/<query_param>/",calcularMacroNutrientes.as_view(), name='calcularMacros'),
     path("calcularTotalMacrosAlimentos/<query_param>/",calcularTotalMacrosAlimentos.as_view(), name='calcularTotalMacrosAlimentos)'),
     path('borradoLogicoEntrenador/<query_param>/', BorradoLogicoEntrenador.as_view(), name='borradoLogicoEntrenador'),
+    path('borradoLogicoCliente/<query_param>/', BorradoLogicoCliente.as_view(), name='borradoLogicoEntrenador'),
     path('borradoLogicoCliente/<query_param>/', BorradoLogicoCliente.as_view(), name='borradoLogicoCliente'),
     path("getExcercises/<query_param>/", ExerciseView.as_view({'get':'list'}), name='getExcercises'),
     path("getRoutine/",RoutineView.as_view({'get':'list'}), name='getRoutine'),
     path("recuperarEntrenador/<query_param>/",RecuperarEntrenador.as_view(), name='recuperarEntrenador'),
-    path("cerrarSesion/",logout,name="cerrarSesion")
+    path("recuperarCliente/<query_param>/",RecuperarCliente.as_view(), name='recuperarCliente'),
+    path("cerrarSesion/",logout,name="cerrarSesion"),
+    path("buscarClientes/<int:id_entrenador>/",ClientViewSet.as_view({'get':'list'}, name="cliente-buscar")),
+    path("buscarEntrenadores/<int:id_administrador>/",TrainerViewSet.as_view({'get':'list'}, name="entrenador-buscar")),
 ]
