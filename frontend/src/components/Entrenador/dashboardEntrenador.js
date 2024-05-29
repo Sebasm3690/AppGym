@@ -356,7 +356,7 @@ const CrudClients = () => {
                     {clients
                       .filter(
                         (client) =>
-                          client.borrado === "False" &&
+                          client.borrado === false &&
                           parseInt(client.id_entrenador) ===
                             parseInt(idEntrenador)
                       )
@@ -772,7 +772,7 @@ const CrudClients = () => {
               {clients
                 .filter(
                   (client) =>
-                    client.borrado === "True" &&
+                    client.borrado === true &&
                     parseInt(client.id_entrenador) === parseInt(idEntrenador)
                 )
                 .map((client) => (

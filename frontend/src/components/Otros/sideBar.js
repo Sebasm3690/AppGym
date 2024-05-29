@@ -59,7 +59,7 @@ const Sidebar = ({ onToggle }) => {
                 <Tooltip id="tooltip-settings">Gestión de rutinas</Tooltip>
               }
             >
-              <Nav.Link href="/configuracionEntrenador" className="text-center">
+              <Nav.Link href="/crudRutinas" className="text-center">
                 <FontAwesomeIcon icon={faDumbbell} /> Gestión de rutinas
               </Nav.Link>
             </OverlayTrigger>

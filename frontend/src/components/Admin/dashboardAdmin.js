@@ -258,7 +258,8 @@ const CrudTrainers = () => {
                       .filter(
                         (trainer) =>
                           !trainer.borrado &&
-                          parseInt(trainer.id_administrador === idAdmin)
+                          parseInt(trainer.id_administrador) ===
+                            parseInt(idAdmin)
                       )
                       .map((trainer) => (
                         <tr key={trainer.id_entrenador}>
@@ -348,7 +349,7 @@ const CrudTrainers = () => {
             <input
               className="form-control"
               name="contrasenia"
-              type="text"
+              type="password"
               onChange={(e) => setContrasenia(e.target.value)}
             />
           </FormGroup>
@@ -466,7 +467,7 @@ const CrudTrainers = () => {
                 .filter(
                   (trainer) =>
                     trainer.borrado &&
-                    parseInt(trainer.id_administrador === idAdmin)
+                    parseInt(trainer.id_administrador) === parseInt(idAdmin)
                 )
                 .map((trainer) => (
                   <tr key={trainer.id_entrenador}>

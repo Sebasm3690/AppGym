@@ -72,12 +72,12 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class GymLevelSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = nivelGym
+		model = NivelGym
 		fields = '__all__'
 
 class ActivityLevelSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = nivelActividad
+		model = NivelActividad
 		fields = '__all__'
 
 class TargetSerializer(serializers.ModelSerializer):
@@ -93,8 +93,8 @@ class ClientSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(source='user.password')
 	 #Los 4 serializer de abajo me permiten obtener los nombres en el frontend mediante "client.id_genero.nombre"
 	id_genero = serializers.PrimaryKeyRelatedField(queryset=Genero.objects.all())
-	id_nivel_gym = serializers.PrimaryKeyRelatedField(queryset=nivelGym.objects.all())
-	id_nivel_actividad = serializers.PrimaryKeyRelatedField(queryset=nivelActividad.objects.all())
+	id_nivel_gym = serializers.PrimaryKeyRelatedField(queryset=NivelGym.objects.all())
+	id_nivel_actividad = serializers.PrimaryKeyRelatedField(queryset=NivelActividad.objects.all())
 	id_objetivo = serializers.PrimaryKeyRelatedField(queryset=Objetivo.objects.all())
 
 	#Serializadores para las respuestas get 

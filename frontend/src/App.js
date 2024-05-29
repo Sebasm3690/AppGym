@@ -9,7 +9,7 @@ import CrudTrainers from "./components/Admin/dashboardAdmin";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // Optional if you want to use the styles directly
 import LoginEntrenador from "./components/Entrenador/Login";
 import CrudClients from "./components/Entrenador/dashboardEntrenador";
-
+import CrudRoutines from "./components/Entrenador/dashboardRutinas";
 library.add(fas);
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
         <Route path="/loginEntrenador" element={<LoginEntrenador />} />
         <Route path="/homeAdmin/" element={<CrudTrainers />} />
         <Route path="/homeEntrenador/" element={<CrudClients />} />
+        <Route path="/crudRutinas/" element={<CrudRoutines />} />
       </Routes>
     </Router>
   );

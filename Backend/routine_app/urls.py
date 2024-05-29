@@ -14,6 +14,8 @@ router.register(r'genero',GenreView,'genero')
 router.register(r'nivelGym',GymLevelView,'nivelGym')
 router.register(r'nivelActividad',GymActivityView,'nivelActividad')
 router.register(r'objetivo',TargetView,'objetivo')
+router.register(r'rutina',RoutineView,'rutina')
+router.register(r'ejercicio',ExerciseView,'ejercicio')
 
 urlpatterns = [
     # Rutas personalizadas primero

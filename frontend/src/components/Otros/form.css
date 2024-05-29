@@ -1,0 +1,26 @@
+.modal-body-custom {
+  padding: 20px;
+}
+
+.form-control-custom {
+  border-radius: 30px;
+  padding: 15px;
+}
+
+.button-custom {
+  border-radius: 30px;
+  padding: 10px 20px;
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.button-save {
+  background-color: #000; /* Color de fondo negro */
+  color: #fff; /* Texto en blanco */
+}
+
+.button-cancel {
+  background-color: #ccc; /* Color de fondo gris */
+  color: #000; /* Texto en negro */
+}

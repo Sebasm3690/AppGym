@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppGym6',
+        'NAME': 'AppGym8',
         'USER': 'postgres',
         'PASSWORD': 'awayouname11',
         'HOST': 'localhost',  

@@ -130,17 +130,24 @@ def llenar_catalogo(apps,schema_editor):
 
     if response.status_code == 200:
         data = response.json()
-        for ejercicio in data:  
-            instrucciones_traducidas = [traducciones_instrucciones[inst] for inst in ejercicio['instructions']]
+        for ejercicio in data:
+            nombre = traducciones_nombres_ejercicios.get(ejercicio['name'], ejercicio['name'])
+            musculo = traducciones_parte_del_cuerpo.get(ejercicio['bodyPart'], ejercicio['bodyPart'])
+            equipamento = traducciones_equipo.get(ejercicio['equipment'], ejercicio['equipment'])
+            instrucciones = [traducciones_instrucciones.get(inst, inst) for inst in ejercicio.get('instructions', [])]
+            objetivo = traducciones_objetivo.get(ejercicio['target'], ejercicio['target'])
+
             nuevo_ejercicio = Ejercicio(
-                nombre=traducciones_nombres_ejercicios[ejercicio['name']],
-                musculo=traducciones_parte_del_cuerpo[ejercicio['bodyPart']],
-                equipamento=traducciones_equipo[ejercicio['equipment']],
-                instrucciones=" ".join(instrucciones_traducidas),
-                imagen=ejercicio['gifUrl'],
-                objetivo=traducciones_objetivo[ejercicio['target']]
+                nombre=nombre,
+                musculo=musculo,
+                equipamento=equipamento,
+                instrucciones=" ".join(instrucciones),
+                imagen=ejercicio.get('gifUrl', ''),
+                objetivo=objetivo
             )
             nuevo_ejercicio.save()
+    else:
+        print(f"Error al obtener datos de la API: {response.status_code}")
 
 
 def revertir_llenar_catalogo(apps,schema_editor):

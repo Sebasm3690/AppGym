@@ -456,11 +456,11 @@ class GenreView(viewsets.ModelViewSet):
 
 class GymLevelView(viewsets.ModelViewSet):
 	serializer_class = GymLevelSerializer
-	queryset = nivelGym.objects.all()
+	queryset = NivelGym.objects.all()
 
 class GymActivityView(viewsets.ModelViewSet):
 	serializer_class = ActivityLevelSerializer
-	queryset = nivelActividad.objects.all()
+	queryset = NivelActividad.objects.all()
 
 class TargetView(viewsets.ModelViewSet):
 	serializer_class = TargetSerializer
