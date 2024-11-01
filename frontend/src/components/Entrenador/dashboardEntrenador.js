@@ -58,6 +58,7 @@ const CrudClients = () => {
   const [correo, setCorreo] = useState("");
   const [username, setUsername] = useState("");
   const [contrasenia, setContrasenia] = useState("");
+  const [id_cliente, setIdCliente] = useState(0);
 
   const navigate = useNavigate();
   console.log("ID del entrenador:", idEntrenador);
@@ -103,6 +104,7 @@ const CrudClients = () => {
   const handleAgregarCliente = () => {
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const urlAgregar = `http://127.0.0.1:8000/clientRegister/`;
+
     var parametros;
 
     if (nombre.trim() === "") {
@@ -157,10 +159,50 @@ const CrudClients = () => {
           console.log("Respuesta del servidor", response.data);
           show_alerta("El cliente ha sido agregado exitosamente", "success");
           setShowModalAgregar(false);
-          getClients();
+          getClients(); // Refresh clients after adding the new one
+
+          // Extract id_cliente from the response
+          const id_cliente = parseInt(response.data.cliente.id_cliente);
+
+          // Now that id_cliente is available, make subsequent requests using this value
+          const urlCalcularTMB = `http://127.0.0.1:8000/calcularTMB/${id_cliente}/`;
+
+          // Calculate TMB
+          axios
+            .post(urlCalcularTMB)
+            .then(() => {
+              show_alerta(
+                "El TMB del cliente se calculó exitosamente",
+                "success"
+              );
+            })
+            .catch((error) => {
+              console.error("Error calculando TMB", error.response || error);
+            });
+
+          // Delay the calculation of macronutrients to ensure TMB is calculated first
+          const urlCalcularMN = `http://127.0.0.1:8000/calcularMacros/${id_cliente}/`;
+          setTimeout(() => {
+            axios
+              .post(urlCalcularMN)
+              .then(() => {
+                show_alerta(
+                  "Los macronutrientes del cliente se agregaron exitosamente",
+                  "success"
+                );
+              })
+              .catch((error) => {
+                console.error(
+                  "Error calculando macronutrientes",
+                  error.response || error
+                );
+                show_alerta("Error al calcular los macronutrientes", "error");
+              });
+          }, 3000); // 3-second delay to ensure TMB has been calculated first
         })
         .catch((error) => {
-          console.log(error.response.data);
+          console.log(error.response ? error.response.data : error);
+          show_alerta("Error al agregar el cliente", "error");
         });
     }
   };

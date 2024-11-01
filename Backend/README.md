@@ -11,6 +11,7 @@ pip install pillow
 pip install googletrans==4.0.0-rc1
 pip install google-cloud-translate
 pip install streamlit googletrans==4.0.0-rc1
+pip install requests-oauthlib
 
 # Frontend
 

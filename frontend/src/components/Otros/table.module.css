@@ -1,0 +1,19 @@
+.planContainer {
+  padding: 20px;
+}
+
+.planTitle {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.planTitle .fa-calendar-alt {
+  margin-right: 10px;
+}
+
+.planTable {
+  width: 100%;
+  margin-top: 10px;
+}

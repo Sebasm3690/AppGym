@@ -47,7 +47,7 @@ class LoginAdmin extends React.Component {
       // Guardar el id del admin en el estado y en localStorage
       this.setState({ idAdmin: administrador.id_administrador }); //Actualiza el estado del id administrador
       localStorage.setItem("idAdmin", administrador.id_administrador); //Persiste aunque la página se recargue
-
+      localStorage.setItem("userRole", "administrador");
       // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
       this.navigate("/homeAdmin/"); // Cambia '/crudTrainers' por la ruta correcta
     } catch (error) {

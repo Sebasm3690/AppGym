@@ -1,0 +1,128 @@
+p {
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  color: #333; /* Darker gray for better readability */
+}
+
+/* Ensure all cards have the same height and width */
+.food-card {
+  width: 100%; /* Takes full width of the column */
+  max-width: 300px; /* Ensures a consistent max width */
+  height: 540px; /* Same height for all cards */
+  margin: auto; /* Center the card horizontally */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space out content */
+  border-radius: 10px; /* Rounded corners for a modern look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.food-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+/* Make the card footer align items properly */
+.food-card .card-footer {
+  border-top: none; /* Remove border between body and footer */
+  background-color: #f8f9fa; /* Light background for footer */
+}
+
+@media (max-width: 576px) {
+  .food-card {
+    width: 100%;
+  }
+}
+
+/* Optional: Enhance hover effect for a subtle interaction */
+.food-card:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 100px;
+  margin-top: 115px;
+}
+
+/*It allows to have slower animations*/
+
+.image-container img {
+  transition: transform 0.5s ease, filter 0.5s ease, opacity 0.5s ease;
+  opacity: 0.9;
+}
+
+/* Adding the blurred background to each image */
+.image-container img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2); /* Subtle white overlay */
+  filter: blur(15px); /* Initial blur value */
+  transition: opacity 0.3s ease;
+  opacity: 0; /* Hidden initially */
+  z-index: 1; /* Behind the image */
+}
+
+/* When hovering over an image, make it stand out and apply blur to the background */
+.image-container img:hover {
+  transform: scale(1.1); /* Scale up the image */
+  z-index: 3; /* Bring the image above other elements */
+  filter: brightness(1.2) drop-shadow(0px 5px 15px rgba(0, 0, 0, 0.5)); /* Brightness and shadow effect */
+  opacity: 1; /*The image appears with more oppacity*/
+}
+
+.image-container img:hover::before {
+  opacity: 1; /* Show the blurred background when hovering */
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/*This is an animation that is applied after a click in an image*/
+.image-container img:active {
+  animation: bounce 0.3s ease;
+}
+
+@media (max-width: 576px) {
+  .image-container {
+    gap: 5px;
+  }
+
+  .image-container img {
+    transform: none;
+    filter: none;
+  }
+
+  .image-container img:hover {
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 70px; /* Desktop navbar height */
+  }
+}
+@media (max-width: 767px) {
+  body {
+    padding-top: 56px; /* Mobile navbar height */
+  }
+}

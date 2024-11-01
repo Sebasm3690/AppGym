@@ -15,6 +15,9 @@ function Header() {
             <Nav.Link as={Link} to="/loginEntrenador">
               INICIAR SESION
             </Nav.Link>
+            <Nav.Link as={Link} to="/loginCliente">
+              INICIAR SESION CLIENTE
+            </Nav.Link>
             <Nav.Link as={Link} to="/about">
               ACERCA DE
             </Nav.Link>

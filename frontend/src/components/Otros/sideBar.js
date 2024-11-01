@@ -69,7 +69,7 @@ const Sidebar = ({ onToggle }) => {
               placement="right"
               overlay={<Tooltip id="tooltip-settings">Asignar rutinas</Tooltip>}
             >
-              <Nav.Link href="/configuracionEntrenador" className="text-center">
+              <Nav.Link href="/assignRoutines/" className="text-center">
                 <FontAwesomeIcon icon={faClipboardList} /> Asignar rutinas
               </Nav.Link>
             </OverlayTrigger>

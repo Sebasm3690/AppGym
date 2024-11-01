@@ -15,7 +15,12 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "../Otros/navBar.css";
 
-const NavScrollExample = ({ onSearchResults, onLogout }) => {
+const NavScrollExample = ({
+  onSearchResults,
+  onLogout,
+  showWeekDays,
+  showTableRoutines,
+}) => {
   const idEntrenador = localStorage.getItem("idEntrenador");
   const [searchParams, setSearchParams] = useState({
     nombre: "",
@@ -48,7 +53,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
 
   return (
     <>
-      <Navbar expand="lg" className="navbar-dark bg-dark">
+      <Navbar expand="lg" className="navbar-dark bg-dark" fixed="top">
         <Container fluid>
           <Navbar.Brand href="#">
             <img
@@ -90,44 +95,49 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Container className="mt-4">
-        <Row className="justify-content-center" style={{ marginTop: "120px" }}>
-          <Col xs={12} md={10} className="search-container">
-            <Form onSubmit={handleSearch} className="search-form">
-              <Form.Control
-                type="search"
-                name="nombre"
-                placeholder="Buscar nombre"
-                className="search-input"
-                aria-label="Buscar nombre"
-                value={searchParams.nombre}
-                onChange={handleInputChange}
-              />
-              <Form.Control
-                type="search"
-                name="apellido"
-                placeholder="Buscar apellido"
-                className="search-input"
-                aria-label="Buscar apellido"
-                value={searchParams.apellido}
-                onChange={handleInputChange}
-              />
-              <Form.Control
-                type="search"
-                name="correo"
-                placeholder="Buscar correo"
-                className="search-input"
-                aria-label="Buscar correo"
-                value={searchParams.correo}
-                onChange={handleInputChange}
-              />
-              <Button variant="primary" type="submit">
-                <FontAwesomeIcon icon={faSearch} />
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
+      {!showWeekDays && !showTableRoutines && (
+        <Container className="mt-4">
+          <Row
+            className="justify-content-center"
+            style={{ marginTop: "120px" }}
+          >
+            <Col xs={12} md={10} className="search-container">
+              <Form onSubmit={handleSearch} className="search-form">
+                <Form.Control
+                  type="search"
+                  name="nombre"
+                  placeholder="Buscar nombre"
+                  className="search-input"
+                  aria-label="Buscar nombre"
+                  value={searchParams.nombre}
+                  onChange={handleInputChange}
+                />
+                <Form.Control
+                  type="search"
+                  name="apellido"
+                  placeholder="Buscar apellido"
+                  className="search-input"
+                  aria-label="Buscar apellido"
+                  value={searchParams.apellido}
+                  onChange={handleInputChange}
+                />
+                <Form.Control
+                  type="search"
+                  name="correo"
+                  placeholder="Buscar correo"
+                  className="search-input"
+                  aria-label="Buscar correo"
+                  value={searchParams.correo}
+                  onChange={handleInputChange}
+                />
+                <Button variant="primary" type="submit">
+                  <FontAwesomeIcon icon={faSearch} />
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 };

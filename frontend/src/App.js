@@ -8,8 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CrudTrainers from "./components/Admin/dashboardAdmin";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // Optional if you want to use the styles directly
 import LoginEntrenador from "./components/Entrenador/Login";
+import LoginCliente from "./components/Cliente/Login";
 import CrudClients from "./components/Entrenador/dashboardEntrenador";
 import CrudRoutines from "./components/Entrenador/dashboardRutinas";
+import AssignRoutines from "./components/Entrenador/dashboardAsignarRutina";
+import ClientControl from "./components/Cliente/dashboardCliente";
 library.add(fas);
 
 function App() {
@@ -18,9 +21,12 @@ function App() {
       <Routes>
         <Route path="/loginAdmin" element={<LoginAdmin />} />
         <Route path="/loginEntrenador" element={<LoginEntrenador />} />
+        <Route path="/loginCliente" element={<LoginCliente />} />
         <Route path="/homeAdmin/" element={<CrudTrainers />} />
         <Route path="/homeEntrenador/" element={<CrudClients />} />
         <Route path="/crudRutinas/" element={<CrudRoutines />} />
+        <Route path="/assignRoutines/" element={<AssignRoutines />} />
+        <Route path="/homeClient/" element={<ClientControl />} />
       </Routes>
     </Router>
   );

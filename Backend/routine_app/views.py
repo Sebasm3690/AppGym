@@ -20,6 +20,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from django.http import JsonResponse
 from datetime import date
+from django.db.models import Q, Sum, F,Value, DecimalField
+from django.conf import settings
+from django.db.models.functions import Coalesce
 
 # SignUp trainer
 @api_view(['POST'])
@@ -110,7 +113,7 @@ class TrainerViewSet(viewsets.ModelViewSet):
 
 #Buscar clientes
 class ClientViewSet(viewsets.ModelViewSet):
-	queryset = Cliente.objects.all()  # Asegúrate de que queryset esté definido aquí
+	queryset = Cliente.objects.all()  
 	serializer_class = ClientSerializer
 
 	def get_queryset(self):
@@ -137,7 +140,34 @@ class ClientViewSet(viewsets.ModelViewSet):
 		# Devuelve el queryset filtrado
 		return queryset
 	
+
 	
+#Buscar rutinas
+class RoutineViewSet(viewsets.ModelViewSet):
+	queryset = Rutina.objects.all()
+	serializer_class = RoutineSerializer
+
+	def get_queryset(self):
+		queryset = super().get_queryset()
+		id_entrenador = self.kwargs.get('id_entrenador')
+		queryset = queryset.filter(id_entrenador=id_entrenador)
+		
+		nombre = self.request.query_params.get("nombre")
+		enfoque = self.request.query_params.get("enfoque")
+		tipo = self.request.query_params.get("tipo")
+
+		if nombre:
+			queryset = queryset.filter(nombre__icontains=nombre)
+		if enfoque:
+			queryset = queryset.filter(enfoque__icontains=enfoque)
+		if tipo:
+			queryset = queryset.filter(tipo__icontains=tipo)
+
+		# Devuelve el queryset filtrado
+		return queryset
+	
+
+
 
 
 #Login Admin
@@ -160,6 +190,24 @@ def adminLogin(request):
 	else:
 		return Response({"error":"username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
 	return Response({"error":"Error inesperado en el servidor"},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+#Login client
+@api_view(['POST'])
+def clientLogin(request):
+	username = request.data.get("username")
+	password = request.data.get("password")	
+
+	user = authenticate(username = username, password = password)
+
+	if user is not None:
+		try:
+			cliente = Cliente.objects.get(user = user)
+			token,created = Token.objects.get_or_create(user = user)
+			serializer = ClientSerializer(instance = cliente)
+			return Response({"token":token.key, "cliente":serializer.data}, status= status.HTTP_200_OK)
+		except Cliente.DoesNotExist:
+			return Response({"error":"username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
 	
 
 	#entrenador = get_object_or_404(Entrenador, user__email = request.data['email'])
@@ -176,6 +224,74 @@ def adminLogin(request):
 @permission_classes({IsAuthenticated}) #se ve si la ruta está autenticada
 def profile(request):
 	return Response({"Tu estas logueado como {}".format(request.user.username)}, status=status.HTTP_200_OK)
+
+
+
+
+
+#Obtener comidas en FatSecret
+
+def get_nutrition_data(request):
+	query = request.GET.get('search')
+	url = "https://fatsecret4.p.rapidapi.com/rest/server.api"
+
+	querystring = {
+        "method": "foods.search",
+        "search_expression": query,
+        "page_number": "0",
+        "format": "json"
+    }
+
+	headers = {
+		"x-rapidapi-key": settings.FATSECRET_API_KEY,
+		"x-rapidapi-host": "fatsecret4.p.rapidapi.com",
+		"Authorization": settings.FATSECRET_AUTH_TOKEN
+	}
+
+	response = requests.get(url, headers=headers, params=querystring)
+
+	if response.status_code == 200:
+		data = response.json()
+		return JsonResponse(data)
+	
+
+#Obtener una comida en base al id en FatSecret
+
+def get_food_by_id(request, food_id):
+	query = request.GET.get('search','food')
+	url = "https://fatsecret4.p.rapidapi.com/rest/server.api"
+
+	querystring = {
+        "method": "foods.search",
+        "search_expression": query,
+        "page_number": "0",
+        "format": "json"
+    }
+
+	headers = {
+		"x-rapidapi-key": settings.FATSECRET_API_KEY,
+		"x-rapidapi-host": "fatsecret4.p.rapidapi.com",
+		"Authorization": settings.FATSECRET_AUTH_TOKEN
+	}
+
+	# Perform the API request
+	response = requests.get(url, headers=headers, params=querystring)
+
+	if response.status_code != 200:
+		return JsonResponse({"error": "Error al obtener los datos"}, status = response.status_code)
+
+	# Parse the API response
+	data = response.json()
+	foods = data.get('foods',{}).get('food',[])
+
+	# Filter the foods to find the one matching the given food_id
+	filtered_food = next((food for food in foods if str(food.get('food_id')) == str(food_id)), None)
+
+	if filtered_food:
+		return JsonResponse(filtered_food)
+	else:
+		return JsonResponse({"error": f"No se encontró la comida con el ID {food_id}"},status=404)
+	
 
 
 #Ver comidas
@@ -306,6 +422,75 @@ class CalcularTMBAPIView(APIView):
 		cliente.save()		
 
 		return Response({"tmb": tmb}, status=status.HTTP_200_OK)
+	
+
+class calcularMacroNutrientes(APIView):
+	def post(self,request,query_param,*args,**kwargs):
+		id_cli = query_param
+		proteina = 0
+		grasas = 0
+		carbohidratos = 0
+		cliente = Cliente.objects.get(id_cliente=id_cli)
+		#print(f"Objetivo del cliente: {cliente.id_objetivo.nombre}")
+
+		if cliente.id_objetivo.nombre == 'Ganar masa muscular':
+			proteina = cliente.peso * Decimal('1.8') #  1.8 - 2.2
+			grasas = cliente.peso * Decimal('1') #  1 - 1.2
+			#carbohidratos = cliente.peso * 3 # 3 - 4
+			carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
+		elif cliente.id_objetivo.nombre == 'Perder peso':
+			proteina = cliente.peso * Decimal('2.2') # 2.2 - 2.7
+			grasas = cliente.peso * Decimal('0.8') # 0.8 - 1
+			#carbohidratos = cliente.peso * Decimal('1') #1 - 1.5
+			carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
+		elif cliente.id_objetivo.nombre == 'Mantener peso':
+			proteina = cliente.peso * Decimal('1.8') #  1.8 - 2.2
+			grasas = cliente.peso * Decimal('1') #  1 - 1.2
+			#carbohidratos = cliente.peso * 2.5 # 2.5 - 3.5
+			carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
+		cliente.carbohidratos_g = carbohidratos
+		cliente.proteina_g = proteina
+		cliente.grasas_g = grasas
+		cliente.save()
+
+		return Response({"carbohidratos":carbohidratos, "proteina":proteina, "grasas":grasas}, status=status.HTTP_200_OK)
+
+
+
+
+class calcularTotalMacrosAlimentos(APIView):
+	def get(self,request,query_param,*args,**kwargs):
+		cliente_id = query_param
+		cliente = Cliente.objects.get(id_cliente=cliente_id)
+
+		#Macros totales
+		consumo_hoy = Consume.objects.filter(
+			id_cliente = cliente_id,  #All foods consumed by the client today
+			fecha = datetime.now().date()
+		).aggregate(
+			total_calorias = Coalesce(Sum(F('id_alimento__calorias')* F('cantidad'), output_field=DecimalField()), Value(0, output_field=DecimalField())), #Value 0 is a value by default in case it can't find any value and avoid an error
+			total_proteina = Coalesce(Sum(F('id_alimento__proteina_g') * F('cantidad'), output_field=DecimalField()), Value(0, output_field=DecimalField())),
+			total_carbohidratos = Coalesce(Sum(F('id_alimento__carbohidratos_g') * F('cantidad'), output_field=DecimalField()), Value(0, output_field=DecimalField())),
+			total_grasa = Coalesce(Sum(F('id_alimento__grasa_g') * F('cantidad'),output_field=DecimalField()),Value(0, output_field=DecimalField()))
+		)
+		 # Macros restantes (use max() to ensure the value is never less than 0)
+		consumo_restante = {
+			"calorias_restantes": cliente.tmb - consumo_hoy['total_calorias'],
+			"proteina_restante": cliente.proteina_g - consumo_hoy['total_proteina'],
+			"carbohidratos_restantes": cliente.carbohidratos_g - consumo_hoy['total_carbohidratos'],
+			"grasas_restantes": cliente.grasas_g - consumo_hoy['total_grasa']
+		}
+
+		consumo_logrado_porcentaje = {
+			"calorias_logradas": consumo_hoy['total_calorias'] * 100 / cliente.tmb if cliente.tmb else 0, #"If" in this case allows to avoid an error in case cliente.tmb doesn't exist
+			"proteina_lograda": consumo_hoy['total_proteina'] * 100 / cliente.proteina_g if cliente.proteina_g else 0,
+			"carbohidratos_logrados": consumo_hoy['total_carbohidratos'] * 100 / cliente.carbohidratos_g if cliente.carbohidratos_g else 0,
+			"grasa_lograda": consumo_hoy['total_grasa'] * 100 / cliente.grasas_g if cliente.grasas_g else 0
+		}
+
+		return Response({"consumo_hoy":consumo_hoy,"consumo_restante":consumo_restante,"consumo_logrado_porcentaje":consumo_logrado_porcentaje}, status=status.HTTP_200_OK)
+
+
 
 
 class BorradoLogicoEntrenador(APIView):
@@ -353,70 +538,6 @@ class BorradoLogicoCliente(APIView):
 		cliente.save()
 		return Response({"mensaje":"Borrado del cliente realizado correctamente"}, status=status.HTTP_200_OK)
 	
-
-
-class calcularMacroNutrientes(APIView):
-	def post(self,request,query_param,*args,**kwargs):
-		id_cli = query_param
-		proteina = 0
-		grasas = 0
-		carbohidratos = 0
-		cliente = Cliente.objects.get(id_cliente=id_cli)
-		#print(f"Objetivo del cliente: {cliente.id_objetivo.nombre}")
-
-		if cliente.id_objetivo.nombre == 'Ganar masa muscular':
-			proteina = cliente.peso * Decimal('1.8') #  1.8 - 2.2
-			grasas = cliente.peso * Decimal('1') #  1 - 1.2
-			#carbohidratos = cliente.peso * 3 # 3 - 4
-			carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
-		elif cliente.id_objetivo.nombre == 'Perder peso':
-			proteina = cliente.peso * Decimal('2.2') # 2.2 - 2.7
-			grasas = cliente.peso * Decimal('0.8') # 0.8 - 1
-			#carbohidratos = cliente.peso * Decimal('1') #1 - 1.5
-			carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
-		elif cliente.id_objetivo.nombre == 'Mantener peso':
-			proteina = cliente.peso * Decimal('1.8') #  1.8 - 2.2
-			grasas = cliente.peso * Decimal('1') #  1 - 1.2
-			#carbohidratos = cliente.peso * 2.5 # 2.5 - 3.5
-			carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
-		cliente.carbohidratos_g = carbohidratos
-		cliente.proteina_g = proteina
-		cliente.grasas_g = grasas
-		cliente.save()
-
-		return Response({"carbohidratos":carbohidratos, "proteina":proteina, "grasas":grasas}, status=status.HTTP_200_OK)
-
-
-
-
-class calcularTotalMacrosAlimentos(APIView):
-	def get(self,request,query_param,*args,**kwargs):
-		cliente_id = query_param
-		cliente = Cliente.objects.get(id_cliente=cliente_id)
-		consume = Consume.objects.filter(id_cliente=cliente_id, fecha=datetime.now().date()) #Me saca todos los alimentos consumidos por el cliente en el día de hoy
-
-		#Macros totales
-		consumo_hoy = Consume.objects.filter(
-			id_cliente = cliente_id,
-			fecha = datetime.now().date()
-		).aggregate(
-			total_Calorias = Sum('id_alimento__calorias'),
-			total_Proteina = Sum('id_alimento__proteina_g'),
-			total_Grasas = Sum('id_alimento__grasa_total_g'),
-			total_Carbohidratos = Sum('id_alimento__total_carbohidratos_g')
-		)
-		#Macros restantes
-		consumo_restante = {
-			"calorias_restantes": cliente.tmb - consumo_hoy['total_Calorias'],
-			"proteina_restante": cliente.proteina_g - consumo_hoy['total_Proteina'],
-			"grasas_restantes": cliente.grasas_g - consumo_hoy['total_Grasas'],
-			"carbohidratos_restantes": cliente.grasas_g - consumo_hoy['total_Carbohidratos']
-		}
-
-		return Response({"consumo_hoy":consumo_hoy,"consumo_restante":consumo_restante}, status=status.HTTP_200_OK)
-
-
-
 
 class AdminView(viewsets.ModelViewSet):
 	serializer_class = AdminSerializer
@@ -466,6 +587,18 @@ class TargetView(viewsets.ModelViewSet):
 	serializer_class = TargetSerializer
 	queryset = Objetivo.objects.all()
 
+class AssignedView(viewsets.ModelViewSet):
+	serializer_class = AssignedSerializer
+	queryset = SeAsigna.objects.all()
+
+class PartOfDayView(viewsets.ModelViewSet):
+	serializer_class = PartOfDaySerializer
+	queryset = ParteDia.objects.all()
+
+class DisponeView(viewsets.ModelViewSet):
+	serializer_class = DisponeSerializer
+	queryset = Dispone.objects.all()
+
 
 
 # Ver Ejercicios
@@ -491,14 +624,389 @@ def get_exercises(request, body_part):
         return JsonResponse({'error': 'Hubo un problema al obtener los ejercicios'}, status=response.status_code)
 
 
-#Agregar ejercicios
-
-#class AddExcercises(viewsets.ModelViewSet):
-	#def post(self,request):
-
-
 
 def calcularEdad(fecha_nacimiento):
 		hoy = date.today()
 		edad = hoy.year - fecha_nacimiento.year
 		return edad
+
+
+
+#Agregar rutina
+
+@api_view(['POST'])
+def addRoutine(request):
+	if request.method == 'POST':
+		datos = request.data 
+		nombre = datos.get('nombre')	
+		descripcion = datos.get('descripcion')
+		enfoque = datos.get('enfoque')
+		ejercicios = datos.get('ejercicios',[])
+		id_entren = datos.get('id_entrenador')
+
+		#Crear la rutina
+		entrenador = Entrenador.objects.get(id_entrenador=id_entren)
+		rutina = Rutina.objects.create(
+			id_entrenador= entrenador,
+			nombre = nombre,
+			descripcion = descripcion,
+			enfoque = enfoque,
+			tipo = 'Creada'
+		)
+
+		#Agregar ejercicios a la rutina
+		for ejercicio in ejercicios:
+			ej = Ejercicio.objects.get(id_ejercicio=ejercicio)
+			Compuesta.objects.create(
+				id_rutina = rutina,
+				id_ejercicio = ej
+			)
+
+		return Response({"mensaje":"Rutina creada correctamente"}, status=status.HTTP_201_CREATED)
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+	
+
+#Editar rutina
+
+@api_view(['PUT'])
+def updateRoutine(request,rutina_id):
+	if request.method == 'PUT':
+		datos = request.data
+		nombre = datos.get('nombre')
+		descripcion = datos.get('descripcion')
+		enfoque = datos.get('enfoque')
+		ejercicios = datos.get('ejercicios',[])
+		id_entren = datos.get('id_entrenador')
+
+		#Filtrar rutina y entrenador
+		rutina = get_object_or_404(Rutina, id_rutina=rutina_id)
+		entrenador = get_object_or_404(Entrenador,id_entrenador=id_entren)
+
+		#Editar la rutina
+		rutina.id_entrenador = entrenador	
+		rutina.nombre = nombre
+		rutina.descripcion = descripcion
+		rutina.enfoque = enfoque 
+		rutina.save()
+
+		#Limpiar ejercicios antiguos 
+		Compuesta.objects.filter(id_rutina=rutina).delete()
+		
+		#Agregar ejercicios a la rutina
+		for ejercicio in ejercicios:
+			ej = Ejercicio.objects.get(id_ejercicio=ejercicio)
+			Compuesta.objects.create(
+				id_rutina = rutina,
+				id_ejercicio = ej
+			)
+
+		return Response({"mensaje":"Rutina editada correctamente"}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+	
+	
+
+@api_view(['GET'])
+def obtenerEjerciciosRutina(request, query_param):
+    try:
+        rutina = Rutina.objects.get(id_rutina=int(query_param))
+        rutinas_compuesta = Compuesta.objects.filter(id_rutina=rutina) # Encuentra las compuestas de las rutina
+        ejercicios = [compuesta.id_ejercicio for compuesta in rutinas_compuesta] #Encuentra los ejercicios de las compuestas de los ejerciocios  
+        ejercicios_serializados = ExerciseSerializer(ejercicios, many=True)
+        return Response({'ejercicios': ejercicios_serializados.data}, status=status.HTTP_200_OK)
+    except Rutina.DoesNotExist:
+        return Response({'error': 'Rutina no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+    except ValueError:
+        return Response({'error': 'El parámetro de consulta debe ser un entero'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+	
+
+#Asignar rutina de ejercicios
+
+@api_view(['POST'])
+def asignarRutina(request):
+	if request.method == 'POST':
+		datos = request.data
+		id_rutina = datos[0].get("routineId")
+		id_cliente = datos[0].get("clientId")
+		dia = datos[0].get("day")
+		
+		
+		cliente = Cliente.objects.get(id_cliente=id_cliente)
+		rutina = Rutina.objects.get(id_rutina=id_rutina)
+
+		for dato in datos:
+			id_ejercicio = dato.get("exerciseId")
+			ejercicio = Ejercicio.objects.get(id_ejercicio=id_ejercicio)
+
+			serie = dato.get("set")
+			repeticiones = dato.get("reps")
+			peso = dato.get("weight")
+
+			se_asigna, created = SeAsigna.objects.update_or_create(
+				id_rutina = rutina,
+				id_ejercicio = ejercicio,
+				id_cliente = cliente,
+				serie = serie,
+				repeticiones = repeticiones,
+				peso = peso,
+				dia = dia,
+			)
+		return Response({"mensaje":"Rutina asignada correctamente"}, status=status.HTTP_201_CREATED)
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['GET'])
+def obtenerRutinasCliente(request):
+	if request.method == 'GET':
+		id_cliente = request.query_params.get('id_cliente')
+		dia = request.query_params.get('dia')
+	
+		if not id_cliente or not dia:
+			return Response({"error":"El id del cliente y el dia son requeridos"}, status=status.HTTP_400_BAD_REQUEST)
+
+	try:
+		asignas = SeAsigna.objects.filter(id_cliente = id_cliente,dia=dia)
+		
+		# Obtener rutinas únicas por ID
+		rutinas_dict = {}
+		for asigna in asignas: 
+			rutina = asigna.id_rutina
+			if rutina.id_rutina not in rutinas_dict:
+				rutinas_dict[rutina.id_rutina] = rutina
+
+		# Convertir a lista de rutinas
+		rutinas = list(rutinas_dict.values())
+		rutinas_serializadas = RoutineSerializer(rutinas, many=True)
+		print(rutinas_serializadas.data)
+		return Response({'rutinas':rutinas_serializadas.data},status=status.HTTP_200_OK)
+	except Exception as e:
+		return Response({"error",str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['GET'])
+def obtenerTodasRutinasCliente(request):
+    if request.method == 'GET':
+        id_cliente = request.query_params.get('id_cliente')
+        try:
+            asignas = SeAsigna.objects.filter(id_cliente=id_cliente)
+            
+            # Obtener rutinas únicas por ID y añadir días
+            rutinas_por_dia = []
+            rutina_ids = set()
+            for asigna in asignas:
+                rutina = asigna.id_rutina
+                if rutina.id_rutina not in rutina_ids:
+                    rutina_data = {
+                        'id_rutina': rutina.id_rutina,
+                        'nombre': rutina.nombre,
+                        'descripcion': rutina.descripcion,
+                        'enfoque': rutina.enfoque,
+                        'tipo': rutina.tipo,
+                        'id_entrenador': rutina.id_entrenador.id_entrenador,
+                        'dia': asigna.dia
+                    }
+                    rutinas_por_dia.append(rutina_data)
+                    rutina_ids.add(rutina.id_rutina)
+
+            # Serializar rutinas con día
+            rutinas_serializadas = RoutineWithDaysSerializer(rutinas_por_dia, many=True)
+            
+            # Imprimir rutinas serializadas en consola
+            #print(rutinas_serializadas.data)
+            
+            return Response({'rutinas': rutinas_serializadas.data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+	
+@api_view(['GET'])
+def obtenerRutinaAsignadaDetalleCompleto(request):
+	if request.method == 'GET':
+		id_cliente = request.query_params.get('id_cliente')
+		dia = request.query_params.get('dia')
+		id_rutina = request.query_params.get('id_rutina')
+
+		asignas = SeAsigna.objects.filter(id_cliente = id_cliente, dia = dia, id_rutina = id_rutina)
+		ejercicios = Ejercicio.objects.all()
+
+		#Zip between ejercicios and asignas
+		images = []
+		ejerciciosIds = []
+		nombresEjercicios = []
+		ejercicios_dict = {ejercicio.id_ejercicio:ejercicio for ejercicio in ejercicios}
+		for asigna in asignas:
+			ejercicio = ejercicios_dict[asigna.id_ejercicio.id_ejercicio]
+			imagen = ejercicio.imagen
+			if imagen not in images:
+				images.append(imagen)
+				ejerciciosIds.append(ejercicio.id_ejercicio)
+				nombresEjercicios.append(ejercicio.nombre)
+		asignas_serializadas = AssignedSerializer(asignas, many=True)
+		return Response({'asignas':asignas_serializadas.data, 'imagenes':images, "ejerciciosIds":ejerciciosIds, 'nombresEjercicios':nombresEjercicios}, status=status.HTTP_200_OK)
+	
+
+@api_view(['DELETE'])
+def eliminarRutinaAsignada(request, id_rutina, id_cliente):
+	if request.method == 'DELETE':
+		print("Si entra a eliminar")
+		print(id_rutina)
+		print(id_cliente)
+		SeAsigna.objects.filter(id_rutina=id_rutina,id_cliente=id_cliente).delete()
+		return Response({"mensaje":"Rutina eliminada correctamente"}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+@api_view(['PUT'])
+def actualizar_rutinas(request):
+	routines_data = request.data 
+	for routine_data in routines_data:
+		try:
+			seAsigna = SeAsigna.objects.get(id=routine_data['id'])
+			seAsigna.serie = routine_data['serie']
+			seAsigna.repeticiones = routine_data['repeticiones']
+			seAsigna.peso = routine_data['peso']
+			seAsigna.save()
+		except SeAsigna.DoesNotExist:
+			return Response({"error":"Rutina asignada no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+	return Response({"message":"Rutina asignada actualizada exitosamente"}, status=status.HTTP_200_OK)
+
+
+
+@api_view(['POST'])
+def agregar_alimento(request):
+	if request.method == 'POST':
+		datos = request.data
+		id_alimento = datos.get('id_alimento')
+		id_cliente = datos.get('id_cliente')
+		parte_dia = datos.get('parte_dia')
+		cantidad = datos.get('cantidad')
+
+		print(parte_dia)
+
+		#--Alimento
+
+		if not Alimento.objects.filter(api_id_referencia = id_alimento).exists():
+			nombre = datos.get('nombre')
+			calorias = datos.get('calorias')
+			porcion = datos.get('porcion')
+			grasa = datos.get('grasa')
+			carbohidratos = datos.get('carbohidratos')
+			proteina = datos.get('proteina')
+
+			#Create alimento
+
+			alimento = Alimento.objects.create(
+				nombre = nombre,
+				calorias = calorias,
+				proteina_g = proteina,
+				carbohidratos_g = carbohidratos,
+				grasa_g = grasa,
+				tamaño_porcion_g = porcion,
+				api_id_referencia = id_alimento
+			)
+			
+			cliente = get_object_or_404(Cliente, id_cliente=id_cliente)
+			alimento = get_object_or_404(Alimento, id_alimento=alimento.id_alimento)
+		
+		else:
+
+			#--Consume
+
+			alimento = Alimento.objects.get(api_id_referencia = id_alimento)
+			cliente = get_object_or_404(Cliente, id_cliente=id_cliente)
+
+			#When the client consumed another food in the same day part
+
+		if Consume.objects.filter(id_cliente=id_cliente, id_alimento=alimento.id_alimento).exists():
+			#Update cantidad if client has already been consumed the food in the same parte_dia
+			consume = Consume.objects.get(id_cliente=id_cliente, id_alimento=alimento.id_alimento)
+			consume.cantidad = consume.cantidad + cantidad
+		else:
+			consume = Consume.objects.create(
+				id_cliente = cliente,
+				id_alimento = alimento,
+				cantidad = cantidad
+			)
+			
+			#Parte del dia 
+
+			parte_dia = ParteDia.objects.get(nombre=parte_dia)
+
+			print(parte_dia.id_parte_dia)
+
+			dispone = Dispone.objects.create(
+				id_cliente = cliente,
+				id_alimento = alimento,
+				id_parte_dia = parte_dia,
+			)
+
+			dispone.save()
+		consume.save()
+
+		return Response({"mensaje":"Alimento y consume creado exitosamente"}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Metodo no permitido"},status=status.HTTP_405_METHOD_NOT_ALLOWED)	
+
+
+@api_view(['GET'])
+def obtenerConsumoCliente(request,query_param):
+	if request.method == 'GET':
+		id_cliente = query_param
+		consumo = Consume.objects.filter(id_cliente=id_cliente).select_related('id_alimento') #Select_related allows to add all alimento atributtes inside consumo, also I have to modify the serializer to chase that
+		consumo_serializado = ConsumeSerializer(consumo,many=True)
+		return Response({"consumo":consumo_serializado.data}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Metodo no permitido"},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+	
+@api_view(['GET'])
+def obtener_consumoCliente(request):
+	if request.method == 'GET':
+		id_cliente = request.query_params.get('id_cliente')
+		consumo = Consume.objects.filter(id_cliente=id_cliente)
+		consumo_serializado = ConsumeSerializer(consumo, many=True)
+		return Response({"consumo":consumo_serializado.data}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+	
+
+# 	@api_view(['POST'])
+# def addRoutine(request):
+# 	if request.method == 'POST':
+# 		datos = request.data 
+# 		nombre = datos.get('nombre')	
+# 		descripcion = datos.get('descripcion')
+# 		enfoque = datos.get('enfoque')
+# 		ejercicios = datos.get('ejercicios',[])
+# 		id_entren = datos.get('id_entrenador')
+
+# 		#Crear la rutina
+# 		entrenador = Entrenador.objects.get(id_entrenador=id_entren)
+# 		rutina = Rutina.objects.create(
+# 			id_entrenador= entrenador,
+# 			nombre = nombre,
+# 			descripcion = descripcion,
+# 			enfoque = enfoque,
+# 			tipo = 'Creada'
+# 		)
+
+# 		#Agregar ejercicios a la rutina
+# 		for ejercicio in ejercicios:
+# 			ej = Ejercicio.objects.get(id_ejercicio=ejercicio)
+# 			Compuesta.objects.create(
+# 				id_rutina = rutina,
+# 				id_ejercicio = ej
+# 			)
+
+# 		return Response({"mensaje":"Rutina creada correctamente"}, status=status.HTTP_201_CREATED)
+# 	else:
+# 		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+	

@@ -87,6 +87,26 @@ class TargetSerializer(serializers.ModelSerializer):
 
 
 
+#class ClientSerializer(serializers.ModelSerializer):
+	#username = serializers.CharField(source='user.username')
+	#email = serializers.CharField(source='user.email')
+	#password = serializers.CharField(source='user.password',write_only=True, required=False) 
+
+	#class Meta: 
+		#model = Cliente
+		#fields = ['id_cliente','nombre','apellido','email', 'username', 'password', 'id_entrenador', 'id_genero', 'id_nivel_gym', 'id_nivel_actividad', 'id_objetivo', 'tmb', 'peso', 'altura', 'fecha_nacimiento', 'carbohidratos_g','proteina_g','grasas_g','borrado']
+
+	#def create(self, validated_date):
+		#user_data = validated_date.pop('user')
+		#password = user_data.pop('password',None)
+		#user = User.objects.create(**user_data)
+		#if password:
+			#user.set_password(password)
+			#user.save()
+		#cliente = Cliente.objects.create(user=user, **validated_date)
+		#return cliente
+
+
 class ClientSerializer(serializers.ModelSerializer):
 	username = serializers.CharField(source='user.username')
 	email = serializers.CharField(source='user.email')
@@ -145,15 +165,42 @@ class ClientSerializer(serializers.ModelSerializer):
 		return instance
 
 
-class ConsumeSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Consume
-		fields = '__all__'
+class RoutineWithDaysSerializer(serializers.Serializer):
+	id_rutina = serializers.IntegerField()
+	nombre = serializers.CharField()
+	descripcion = serializers.CharField()
+	enfoque = serializers.CharField()
+	tipo = serializers.CharField()
+	id_entrenador = serializers.IntegerField()
+	dia = serializers.CharField()
+
+
+
+class AssignWithImageSerializar(serializers.Serializer):
+	id_rutina = serializers.IntegerField()
+	id_ejercicio = serializers.IntegerField()
+	id_cliente = serializers.IntegerField()
+	serie = serializers.IntegerField()
+	repeticiones = serializers.IntegerField()
+	peso = serializers.IntegerField()
+	fecha = serializers.DateField()
+	dia = serializers.CharField()
+	imagen = serializers.ImageField()  # Add this line to include the 'imagen' field
+	
 
 class FoodSerializer(serializers.ModelSerializer):
 	class Meta: 
 		model = Alimento
 		fields = "__all__"
+
+
+class ConsumeSerializer(serializers.ModelSerializer):
+	id_alimento = FoodSerializer()
+
+	class Meta:
+		model = Consume
+		fields = '__all__'
+
 
 class ExerciseSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -168,6 +215,21 @@ class RoutineSerializer(serializers.ModelSerializer):
 class CompoundSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Compuesta
+		fields = '__all__'
+
+class AssignedSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = SeAsigna
+		fields = '__all__'
+
+class PartOfDaySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ParteDia
+		fields = '__all__'
+
+class DisponeSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Dispone
 		fields = '__all__'
 
 

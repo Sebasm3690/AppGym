@@ -54,36 +54,54 @@ class Cliente(models.Model):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+
+class Alimento(models.Model):
+    id_alimento = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=150)
+    calorias = models.DecimalField(decimal_places=2, max_digits=7)
+    proteina_g = models.DecimalField(decimal_places=2, max_digits=6)
+    carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=6)
+    grasa_g = models.DecimalField(decimal_places=2, max_digits=6)
+    tamaño_porcion_g = models.IntegerField()
+    api_id_referencia = models.CharField(max_length=10)
+
+
 class Consume(models.Model):
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    id_alimento = models.ForeignKey('Alimento', on_delete=models.CASCADE)
-    fecha = models.DateField()
+    id_alimento = models.ForeignKey(Alimento, on_delete=models.CASCADE)
+    fecha = models.DateField(auto_now_add=True)
+    cantidad = models.IntegerField()
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['id_cliente', 'id_alimento'], name='unique_cliente_alimento')
         ]
 
-class Alimento(models.Model):
-    id_alimento = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50)
-    calorias = models.DecimalField(decimal_places=2, max_digits=5)
-    grasa_total_g = models.IntegerField()
-    proteina_g = models.DecimalField(decimal_places=2, max_digits=5)
-    sodio_mg = models.DecimalField(decimal_places=2, max_digits=5)
-    potasio_mg = models.DecimalField(decimal_places=2, max_digits=5)
-    colesterol_mg = models.DecimalField(decimal_places=2, max_digits=5)
-    total_carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=5)
-    total_fibra_g = models.DecimalField(decimal_places=2, max_digits=5)
-    azucar_total_g = models.DecimalField(decimal_places=2, max_digits=5)
-    grasa_total_saturada_g = models.DecimalField(decimal_places=2, max_digits=5)
-    tamaño_porcion_g = models.IntegerField()
+
+class ParteDia(models.Model):
+    id_parte_dia = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=30)
+    icono = models.CharField(max_length=50)
+
+
+class Dispone(models.Model):
+    id_dispone = models.AutoField(primary_key=True) 
+    id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE,related_name='cliente_dispone')
+    id_alimento = models.ForeignKey(Alimento, on_delete=models.CASCADE,related_name='alimento_dispone')
+    id_parte_dia = models.ForeignKey(ParteDia, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['id_cliente', 'id_alimento','id_parte_dia'], name='unique_dispone_cliente_alimento_partedia')
+        ]
+
 
 class Rutina(models.Model):
     id_rutina = models.AutoField(primary_key=True)
     id_entrenador = models.ForeignKey(Entrenador, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=200)
+    enfoque = models.CharField(max_length=50)
     tipo = models.CharField(max_length=20)
 
 class Compuesta(models.Model):
@@ -109,19 +127,13 @@ class SeAsigna(models.Model):
     id_rutina = models.ForeignKey(Rutina, on_delete=models.CASCADE)
     id_ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    series = models.IntegerField()
+    serie = models.IntegerField()
     repeticiones = models.IntegerField()
     peso = models.IntegerField()
-    volumen = models.FloatField()
-    intensidad = models.FloatField()
     fecha = models.DateField(auto_now_add=True)
-    tipo = models.CharField(max_length=50)
+    dia = models.CharField(max_length=30)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['id_rutina', 'id_ejercicio'], name='unique_seasigna_rutina_ejercicio'),
-            models.UniqueConstraint(fields=['id_cliente', 'series'], name='unique_cliente_series'),
-            models.UniqueConstraint(fields=['id_rutina', 'id_cliente'], name='unique_rutina_cliente'),
-            models.UniqueConstraint(fields=['id_ejercicio', 'series'], name='unique_ejercicio_series'),
-            models.UniqueConstraint(fields=['id_rutina', 'id_ejercicio', 'id_cliente', 'series'], name='unique_seasigna_rutina_ejercicio_cliente_series')
+            models.UniqueConstraint(fields=['id_rutina', 'id_ejercicio', 'id_cliente', 'serie'], name='unique_seasigna_rutina_ejercicio_cliente_serie')
         ]

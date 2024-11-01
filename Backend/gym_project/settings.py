@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,7 @@ SECRET_KEY = 'django-insecure-pqpluknjk)4bux^w)@1wyiznic#9^xmr#v+aye6)#+h004uad(
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -83,7 +85,7 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppGym8',
+        'NAME': 'AppGym3',
         'USER': 'postgres',
         'PASSWORD': 'awayouname11',
         'HOST': 'localhost',  
@@ -137,7 +139,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-
+FATSECRET_API_KEY = os.getenv('FATSECRET_API_KEY', '940907e4c1msh2523358c0fb13dep15b731jsnfd364151b589')
+FATSECRET_AUTH_TOKEN = os.getenv('FATSECRET_AUTH_TOKEN', "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwOEFEREZGRjZBNDkxOUFBNDE4QkREQTYwMDcwQzE5NzNDRjMzMUUiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJFSXJkX19ha2tacWtHTDNhWUFjTUdYUFBNeDQifQ.eyJuYmYiOjE3MzA0ODk0NDksImV4cCI6MTczMDU3NTg0OSwiaXNzIjoiaHR0cHM6Ly9vYXV0aC5mYXRzZWNyZXQuY29tIiwiYXVkIjoiYmFzaWMiLCJjbGllbnRfaWQiOiIyYjBmYzk0ZmUyMDE0MzJkOTdlMDQwMzkyOWFhMTQ1OSIsInNjb3BlIjpbImJhc2ljIl19.EXDsvLa7Nhm-_FuggXNRH2uxmGDIDNnxpfjzfi-6yCXwCwR4_nuxvJQ90tAvDS74Xf05E5pWbZP6Xl97YEZZw0_HBLIEnf_aaEz70TmtYuKUQL4ujpMuyWH6sh-F02Yh8U3q2Nn80Ik4NqQlEs9OsAQW6KHxdCJYETvAzZrw998b7gcMxoH8V_BVO0l0u9CytH3H6FX8Eet6zIjtRFrAxZBi65ive_otQ6RnlWftd9M0SxH-9L3KHVG48n32XBR6lx0Y0tIKd2VAtNprVB7qeOb04UEFhnLI9TXURV8E-SYrl7Yw0BAQhNyrSBlPZmAJzZXEZfWQeDWZOMTDs7M9KZXAHqbY2cQ5OcFOtgcu5JpqH_mQFFpeAXLXUoFzE_DlgycxV5zHKwbivL8qfujBXTdSAdfMhWdjPi4mXTtMVpysaPNQEvPuJse6lGlnB-CG_NHS9H3B5GteS3vIOUaAEFdciE7ztqmrpeGGcRZkz80suSjTbFVKe3bdym8Fa6k04d3rSkfr01bB6tjU569jTAvoXLydtKg-W9ug3PUt2x4qpFAi52ZKras2LVMnJT0lmx4C0P6u-JpKP6C7hOgMxITFCuhY5h4Tx7B6FXbCiihXJe_qScgUlxWxeD-KaWQDgfe5EuVUWLHMsdE-IHkTc91Eb40weDMulgFhpVdxCjI")
 
 
 

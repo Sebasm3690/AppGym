@@ -48,7 +48,7 @@ class LoginEntrenador extends React.Component {
       // Guardar el id del admin en el estado y en localStorage
       this.setState({ idAdmin: entrenador.id_administrador }); //Actualiza el estado del id entrenador
       localStorage.setItem("idEntrenador", entrenador.id_entrenador); //Persiste aunque la página se recargue
-
+      localStorage.setItem("userRole", "entrenador");
       this.navigate("/homeEntrenador/");
     } catch (error) {
       this.setState({
