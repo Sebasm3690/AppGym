@@ -49,7 +49,7 @@ class LoginCliente extends React.Component {
       localStorage.setItem("idCliente", cliente.id_cliente); //Persiste aunque la página se recargue
       localStorage.setItem("userRole", "cliente");
       // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
-      this.navigate("/homeClient/"); // Cambia '/crudTrainers' por la ruta correcta
+      this.navigate("/homeCliente/"); // Cambia '/crudTrainers' por la ruta correcta
     } catch (error) {
       this.setState({
         error:

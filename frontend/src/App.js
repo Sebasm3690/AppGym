@@ -13,6 +13,8 @@ import CrudClients from "./components/Entrenador/dashboardEntrenador";
 import CrudRoutines from "./components/Entrenador/dashboardRutinas";
 import AssignRoutines from "./components/Entrenador/dashboardAsignarRutina";
 import ClientControl from "./components/Cliente/dashboardCliente";
+import HomeClient from "./components/Cliente/Home";
+import Home from "./components/Otros/Home";
 library.add(fas);
 
 function App() {
@@ -26,7 +28,9 @@ function App() {
         <Route path="/homeEntrenador/" element={<CrudClients />} />
         <Route path="/crudRutinas/" element={<CrudRoutines />} />
         <Route path="/assignRoutines/" element={<AssignRoutines />} />
-        <Route path="/homeClient/" element={<ClientControl />} />
+        <Route path="/dashboardControlCalorico/" element={<ClientControl />} />
+        <Route path="/homeCliente/" element={<HomeClient />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </Router>
   );

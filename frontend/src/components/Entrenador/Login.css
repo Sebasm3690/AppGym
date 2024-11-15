@@ -1,16 +1,31 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
 .maincontainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 60vh;
+  padding: 0;
+  margin: 0;
+}
+
+.maincontainer .container-fluid {
+  height: 100%;
+  padding: 0;
 }
 
 .bg-image {
-  background-image: url("https://img.freepik.com/foto-gratis/equipo-gimnasio-3d_23-2151114137.jpg?size=626&ext=jpg");
+  background-image: url("../../assets/loginGym.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  min-height: 100vh;
+  min-height: 95vh;
 }
 
 .login {
@@ -42,9 +57,9 @@
 
 @media (max-width: 768px) {
   .bg-image {
-    min-height: 30vh;
+    min-height: 40vh;
   }
   .login {
-    min-height: 70vh;
+    min-height: 30vh;
   }
 }

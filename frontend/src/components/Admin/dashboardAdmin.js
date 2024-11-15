@@ -214,21 +214,24 @@ const CrudTrainers = () => {
           <Col md={{ span: 10, offset: 1 }}>
             <div className="panel">
               <div className="panel-heading">
-                <Row>
+                <Row className="d-flex align-items-center justify-content-between mb-3">
                   <Col xs={6}>
-                    <h3>Lista de Entrenadores</h3>
+                    <h3 className="mb-0 lista-entrenadores">
+                      Lista de entrenadores
+                    </h3>
                   </Col>
-                  <Col xs={6} className="text-end">
+                  {/*Buttons*/}
+                  <Col xs="auto">
                     <Button
                       variant="primary"
-                      className="me-2 mb-2 btn-responsive"
+                      className="btn-agregar me-2 mb-2 btn-responsive"
                       onClick={() => setShowModalAgregar(true)}
                     >
-                      <FontAwesomeIcon icon={faPlus} /> Agregar Entrenador
+                      <FontAwesomeIcon icon={faPlus} /> <text>Agregar</text>
                     </Button>
                     <Button
                       variant="secondary"
-                      className="me-2 mb-2 btn-responsive"
+                      className="btn-recuperar mb-2 btn-responsive"
                       onClick={() =>
                         setShowModalEntrenadoresBorrados(
                           !showEntrenadoresBorrados //Es lo mismo que enviarle como true, ya que "showModalEntrenadoresBorrados" está inicializado como false
@@ -236,21 +239,21 @@ const CrudTrainers = () => {
                       }
                     >
                       <FontAwesomeIcon icon={faEyeSlash} />{" "}
-                      {/*showBorrados ? "Ocultar" : "Mostrar"*/} Entrenadores
-                      Dados de Baja
+                      {/*showBorrados ? "Ocultar" : "Mostrar"*/}{" "}
+                      <text>Recuperar</text>
                     </Button>
                   </Col>
                 </Row>
               </div>
-              <div className="panel-body table-responsive">
-                <Table striped bordered hover className="table" id="tablaAdmin">
+              <div className="table-container">
+                {/* Desktop Table Layout */}
+                <Table className="main-table">
                   <thead>
                     <tr>
-                      <th>Acciones</th>
                       <th>Numero entrenador</th>
                       <th>Nombre</th>
-                      <th>Apellido</th>
                       <th>Correo</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -263,36 +266,85 @@ const CrudTrainers = () => {
                       )
                       .map((trainer) => (
                         <tr key={trainer.id_entrenador}>
-                          <td>
-                            <Button
-                              variant="primary"
-                              className="edit-btn me-2"
-                              onClick={() =>
-                                handleLlenarCamposEntrenador(
-                                  trainer.id_entrenador
-                                )
-                              }
-                            >
-                              <FontAwesomeIcon icon={faPencilAlt} />
-                            </Button>
-                            <Button
-                              variant="danger"
-                              className="delete-btn"
-                              onClick={() =>
-                                handleMostrarBorrado(trainer.id_entrenador)
-                              }
-                            >
-                              <FontAwesomeIcon icon={faTrashAlt} />
-                            </Button>
-                          </td>
                           <td>{trainer.id_entrenador}</td>
-                          <td>{trainer.nombre}</td>
-                          <td>{trainer.apellido}</td>
+                          <td>{trainer.nombre + " " + trainer.apellido}</td>
                           <td>{trainer.email}</td>
+                          <td>
+                            <div className="action-buttons">
+                              <Button
+                                variant="primary"
+                                className="edit-btn me-2"
+                                onClick={() =>
+                                  handleLlenarCamposEntrenador(
+                                    trainer.id_entrenador
+                                  )
+                                }
+                              >
+                                <FontAwesomeIcon icon={faPencilAlt} />
+                              </Button>
+                              <Button
+                                variant="danger"
+                                className="delete-btn"
+                                onClick={() =>
+                                  handleMostrarBorrado(trainer.id_entrenador)
+                                }
+                              >
+                                <FontAwesomeIcon icon={faTrashAlt} />
+                              </Button>
+                            </div>
+                          </td>
                         </tr>
                       ))}
                   </tbody>
                 </Table>
+
+                {/* Mobile Card Layout */}
+                <div className="card-container">
+                  {trainers
+                    .filter(
+                      (trainer) =>
+                        !trainer.borrado &&
+                        parseInt(trainer.id_administrador) === parseInt(idAdmin)
+                    )
+                    .map((trainer) => (
+                      <div key={trainer.id_entrenador} className="trainer-card">
+                        <div
+                          className="trainer-card-item"
+                          data-label="Número de entrenador"
+                        >
+                          {trainer.id_entrenador}
+                        </div>
+                        <div className="trainer-card-item" data-label="Nombre">
+                          {trainer.nombre + " " + trainer.apellido}
+                        </div>
+                        <div className="trainer-card-item" data-label="Correo">
+                          {trainer.email}
+                        </div>
+                        <div className="action-buttons">
+                          <Button
+                            variant="primary"
+                            className="edit-btn me-2"
+                            onClick={() =>
+                              handleLlenarCamposEntrenador(
+                                trainer.id_entrenador
+                              )
+                            }
+                          >
+                            <FontAwesomeIcon icon={faPencilAlt} />
+                          </Button>
+                          <Button
+                            variant="danger"
+                            className="delete-btn"
+                            onClick={() =>
+                              handleMostrarBorrado(trainer.id_entrenador)
+                            }
+                          >
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           </Col>
@@ -300,118 +352,141 @@ const CrudTrainers = () => {
       </Container>
       {/*<Footer />*/}
       {/* Modal agregar entrenador */}
-      <Modal show={showModalAgregar} onHide={() => setShowModalAgregar(false)}>
+      <Modal
+        show={showModalAgregar}
+        onHide={() => setShowModalAgregar(false)}
+        centered
+      >
         <ModalHeader closeButton>
-          <div>
-            <Modal.Title>Agregar Entrenador</Modal.Title>
-          </div>
+          <Modal.Title className="w-100 text-center">
+            Agregar Entrenador
+          </Modal.Title>
         </ModalHeader>
 
         <ModalBody>
-          <FormGroup>
-            <label>Nombre:</label>
-            <input
-              className="form-control"
-              name="nombre"
-              type="text"
-              onChange={(e) => setNombre(e.target.value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>Apellido:</Form.Label>
-            <input
-              className="form-control"
-              name="apellido"
-              type="text"
-              onChange={(e) => setApellido(e.target.value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>Correo:</Form.Label>
-            <input
-              className="form-control"
-              name="correo"
-              type="text"
-              onChange={(e) => setCorreo(e.target.value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>Nombre de usuario:</Form.Label>
-            <input
-              className="form-control"
-              name="username"
-              type="text"
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>Contraseña:</Form.Label>
-            <input
-              className="form-control"
-              name="contrasenia"
-              type="password"
-              onChange={(e) => setContrasenia(e.target.value)}
-            />
-          </FormGroup>
+          <div className="form-container">
+            <Form>
+              <FormGroup className="mb-3">
+                <Form.Label className="form-label-custom">Nombre:</Form.Label>
+                <Form.Control
+                  name="nombre"
+                  type="text"
+                  onChange={(e) => setNombre(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup className="mb-3">
+                <Form.Label className="form-label-custom">Apellido:</Form.Label>
+                <Form.Control
+                  name="apellido"
+                  type="text"
+                  onChange={(e) => setApellido(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup className="mb-3">
+                <Form.Label className="form-label-custom">Correo:</Form.Label>
+                <Form.Control
+                  name="correo"
+                  type="email"
+                  onChange={(e) => setCorreo(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup className="mb-3">
+                <Form.Label className="form-label-custom">
+                  Nombre de usuario:
+                </Form.Label>
+                <Form.Control
+                  name="username"
+                  type="text"
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup className="mb-3">
+                <Form.Label className="form-label-custom">
+                  Contraseña:
+                </Form.Label>
+                <Form.Control
+                  name="contrasenia"
+                  type="password"
+                  onChange={(e) => setContrasenia(e.target.value)}
+                />
+              </FormGroup>
+            </Form>
+          </div>
         </ModalBody>
-        <ModalFooter>
-          <Button variant="primary" onClick={() => handleAgregarEntrenador()}>
+        <ModalFooter className="modal-footer-custom justify-content-center ">
+          <Button
+            variant="dark"
+            onClick={() => handleAgregarEntrenador()}
+            className="modal-button"
+          >
             Agregar
           </Button>
         </ModalFooter>
       </Modal>
       {/* Modal editar entrenador */}
-      <Modal show={showModalEditar} onHide={() => setShowModalEditar(false)}>
+      <Modal
+        show={showModalEditar}
+        onHide={() => setShowModalEditar(false)}
+        centered
+      >
         <ModalHeader closeButton>
-          <div>
-            <Modal.Title>Editar Entrenador</Modal.Title>
-          </div>
+          <Modal.Title className="w-100 text-center">
+            Editar Entrenador
+          </Modal.Title>
         </ModalHeader>
 
         <ModalBody>
-          <FormGroup>
-            <label>Nombre:</label>
-            <input
-              className="form-control"
-              name="nombre"
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>Apellido:</Form.Label>
-            <input
-              className="form-control"
-              name="apellido"
-              type="text"
-              value={apellido}
-              onChange={(e) => setApellido(e.target.value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>Correo:</Form.Label>
-            <input
-              className="form-control"
-              name="correo"
-              type="text"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>Nombre de usuario:</Form.Label>
-            <input
-              className="form-control"
-              name="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </FormGroup>
+          <div className="form-container">
+            <FormGroup className="mb-3">
+              <Form.Label className="form-label-custom">Nombre:</Form.Label>
+              <Form.Control
+                name="nombre"
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup className="mb-3">
+              <Form.Label className="form-label-custom">Apellido:</Form.Label>
+              <Form.Control
+                name="apellido"
+                type="text"
+                value={apellido}
+                onChange={(e) => setApellido(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup className="mb-3">
+              <Form.Label className="form-label-custom">Correo:</Form.Label>
+              <Form.Control
+                name="correo"
+                type="email"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup className="mb-3">
+              <Form.Label className="form-label-custom">
+                Nombre de usuario:
+              </Form.Label>
+              <Form.Control
+                name="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormGroup>
+          </div>
         </ModalBody>
-        <ModalFooter>
-          <Button variant="primary" onClick={() => handleEditarEntrenador()}>
+        <ModalFooter className="modal-footer-custom justify-content-center">
+          <Button
+            variant="dark"
+            className="modal-button"
+            onClick={() => handleEditarEntrenador()}
+          >
             Actualizar
           </Button>
         </ModalFooter>
@@ -446,50 +521,101 @@ const CrudTrainers = () => {
         size="lg"
       >
         <ModalHeader closeButton>
-          <div>
-            <Modal.Title>Ver entrenadores borrados</Modal.Title>
-          </div>
+          <Modal.Title className="w-100 text-center">
+            Ver entrenadores borrados
+          </Modal.Title>
         </ModalHeader>
 
         <ModalBody className="table-responsive">
-          <Table striped bordered hover className="table" id="tablaAdmin">
-            <thead>
-              <tr>
-                <th>Acciones</th>
-                <th>Numero entrenador</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Correo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {trainers
-                .filter(
-                  (trainer) =>
-                    trainer.borrado &&
-                    parseInt(trainer.id_administrador) === parseInt(idAdmin)
-                )
-                .map((trainer) => (
-                  <tr key={trainer.id_entrenador}>
-                    <td>
-                      <Button
-                        variant="info"
-                        className="edit-btn me-2"
-                        onClick={() =>
-                          handleRecuperarEntrenador(trainer.id_entrenador)
-                        }
-                      >
-                        <FontAwesomeIcon icon={faUndo} /> Recuperar
-                      </Button>
-                    </td>
-                    <td>{trainer.id_entrenador}</td>
-                    <td>{trainer.nombre}</td>
-                    <td>{trainer.apellido}</td>
-                    <td>{trainer.email}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </Table>
+          <div className="table-container">
+            <Table className="table">
+              <thead>
+                <tr>
+                  <th>Acciones</th>
+                  <th>Numero entrenador</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Correo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {trainers
+                  .filter(
+                    (trainer) =>
+                      trainer.borrado &&
+                      parseInt(trainer.id_administrador) === parseInt(idAdmin)
+                  )
+                  .map((trainer) => (
+                    <tr key={trainer.id_entrenador}>
+                      <td>
+                        <Button
+                          variant="info"
+                          className="edit-btn me-2"
+                          onClick={() =>
+                            handleRecuperarEntrenador(trainer.id_entrenador)
+                          }
+                        >
+                          <FontAwesomeIcon icon={faUndo} />
+                        </Button>
+                      </td>
+                      <td>{trainer.id_entrenador}</td>
+                      <td>{trainer.nombre}</td>
+                      <td>{trainer.apellido}</td>
+                      <td>{trainer.email}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          </div>
+        </ModalBody>
+      </Modal>
+      <Modal
+        show={showEntrenadoresBorrados}
+        onHide={() => setShowModalEntrenadoresBorrados(false)}
+        size="md"
+      >
+        <ModalHeader closeButton>
+          <Modal.Title className="w-100 text-center">
+            Entrenadores borrados
+          </Modal.Title>
+        </ModalHeader>
+        <ModalBody>
+          <div className="card-container">
+            {trainers
+              .filter(
+                (trainer) =>
+                  !trainer.borrado &&
+                  parseInt(trainer.id_administrador) === parseInt(idAdmin)
+              )
+              .map((trainer) => (
+                <div key={trainer.id_entrenador} className="trainer-card">
+                  <div
+                    className="trainer-card-item"
+                    data-label="Número de entrenador"
+                  >
+                    {trainer.id_entrenador}
+                  </div>
+                  <div className="trainer-card-item" data-label="Nombre">
+                    {trainer.nombre + " " + trainer.apellido}
+                  </div>
+                  <div className="trainer-card-item" data-label="Correo">
+                    {trainer.email}
+                  </div>
+
+                  <div className="action-buttons d-flex justify-content-end">
+                    <Button
+                      variant="info"
+                      className="edit-btn me-2"
+                      onClick={() =>
+                        handleRecuperarEntrenador(trainer.id_entrenador)
+                      }
+                    >
+                      <FontAwesomeIcon icon={faUndo} />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+          </div>
         </ModalBody>
       </Modal>
     </>

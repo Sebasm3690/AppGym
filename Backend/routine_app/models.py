@@ -27,7 +27,7 @@ class NivelActividad(models.Model):
 
 class Genero(models.Model):
     id_genero = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=9)
+    nombre = models.CharField(max_length=10)
 
 class Objetivo(models.Model):
     id_objetivo = models.AutoField(primary_key=True)
@@ -62,7 +62,6 @@ class Alimento(models.Model):
     proteina_g = models.DecimalField(decimal_places=2, max_digits=6)
     carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=6)
     grasa_g = models.DecimalField(decimal_places=2, max_digits=6)
-    tamaño_porcion_g = models.IntegerField()
     api_id_referencia = models.CharField(max_length=10)
 
 
@@ -70,7 +69,6 @@ class Consume(models.Model):
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     id_alimento = models.ForeignKey(Alimento, on_delete=models.CASCADE)
     fecha = models.DateField(auto_now_add=True)
-    cantidad = models.IntegerField()
 
     class Meta:
         constraints = [
@@ -84,16 +82,16 @@ class ParteDia(models.Model):
     icono = models.CharField(max_length=50)
 
 
+
 class Dispone(models.Model):
     id_dispone = models.AutoField(primary_key=True) 
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE,related_name='cliente_dispone')
     id_alimento = models.ForeignKey(Alimento, on_delete=models.CASCADE,related_name='alimento_dispone')
     id_parte_dia = models.ForeignKey(ParteDia, on_delete=models.CASCADE)
+    fecha = models.DateField(auto_now_add=True)
+    cantidad = models.IntegerField()
+    tamaño_porcion_g = models.CharField(max_length=50)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['id_cliente', 'id_alimento','id_parte_dia'], name='unique_dispone_cliente_alimento_partedia')
-        ]
 
 
 class Rutina(models.Model):

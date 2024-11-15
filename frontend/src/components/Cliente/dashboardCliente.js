@@ -31,31 +31,39 @@ import CamposNutrition2 from "../../assets/CamposNutrition2.png";
 import "../Cliente/styles.css";
 import NavScrollExample from "../Otros/NavBarCliente";
 import axios from "axios";
-import { FaEdit, FaUtensils } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUtensils } from "react-icons/fa";
 import { show_alerta } from "../../functions";
 import SidebarAlimentos from "../Otros/sideBarAlimentos";
 import "../Otros/sideBar.css";
 import * as Icons from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { Doughnut, Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+// Register the required components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ClientControl = () => {
   // Create a new Date object for the local time in Ecuador
-  const today = new Date().toLocaleDateString("es-EC", {
-    timeZone: "America/Guayaquil", // Ecuador's time zone
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  const today = new Date()
+    .toLocaleDateString("es-EC", {
+      timeZone: "America/Guayaquil", // Ecuador's timezone
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .split("/")
+    .reverse()
+    .join("-"); // Rearranges to "YYYY-MM-DD"
 
-  // Reformat '29/10/2024' to '2024-10-29'
-  const [day, month, year] = today.split("/");
-  const formattedToday = `${year}-${month}-${day}`;
   const idCliente = localStorage.getItem("idCliente");
   const url = `http://127.0.0.1:8000/api/v1/client/${idCliente}`;
-  const urlConsumo = `http://127.0.0.1:8000/obtenerConsumoCliente/${idCliente}/`;
+  const urlDispone = `http://127.0.0.1:8000/obtenerDisponeCliente/${idCliente}/`;
   const urlMacros = `http://127.0.0.1:8000/calcularTotalMacrosAlimentos/${idCliente}`;
   const urlMeals = "http://127.0.0.1:8000/api/v1/parteDia/";
-  const [showDetails, setShowDetails] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(false);
+  const urlConsumos = "http://127.0.0.1:8000/api/v1/consume/";
+  const [showDetails, setShowDetails] = useState(true);
+  const [showNavbar, setShowNavbar] = useState(true);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showImages, setShowImages] = useState(true);
@@ -64,29 +72,43 @@ const ClientControl = () => {
   const [quantity, setQuantity] = useState(1);
   const [parteDia, setParteDia] = useState("");
   const [nutrients, setNutrients] = useState({});
+  const [porcion, setPorcion] = useState("");
+  const [fecha, setFecha] = useState("");
   //***********************************************/ */
-  const [consumos, setConsumos] = useState([]);
+  const [dispones, setDispones] = useState([]);
   const [client, setClient] = useState([]);
   const [foods, setFoods] = useState([]);
   const [macrosHoy, setMacrosHoy] = useState([]);
   const [macrosRestante, setMacrosRestante] = useState([]);
   const [macrosPorcentaje, setMacrosPorcentaje] = useState([]);
   const [meals, setMeals] = useState([]);
+  const [consumos, setConsumos] = useState([]);
+  const [showModalUpdateFood, setShowModalUpdateFood] = useState(false);
+  const [foodToUpdate, setFoodToUpdate] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     getClient();
     console.log(today);
   }, []);
 
   useEffect(() => {
-    getConsumo();
+    getDispone();
+    console.log("Dispone are: " + dispones);
   }, []);
 
   useEffect(() => {
     getMacros();
-  }, []);
+  }, [dispones]);
 
   useEffect(() => {
     getMeals();
+  }, []);
+
+  useEffect(() => {
+    getConsumos();
+    // console.log("Fecha in consumo is: " + consumos[0].fecha);
+    // console.log("Today is: " + today);
   }, []);
 
   useEffect(() => {
@@ -98,10 +120,14 @@ const ClientControl = () => {
     setClient(respuesta.data);
   };
 
-  const getConsumo = async () => {
-    const respuesta = await axios.get(urlConsumo);
-    setConsumos(respuesta.data.consumo);
-    console.log("El consumo es:" + JSON.stringify(respuesta.data, null, 2));
+  const getDispone = async () => {
+    const respuesta = await axios.get(urlDispone);
+    setDispones(respuesta.data.dispone);
+  };
+
+  const getConsumos = async () => {
+    const respuesta = await axios.get(urlConsumos);
+    setConsumos(respuesta.data);
   };
 
   const getMacros = async () => {
@@ -142,6 +168,14 @@ const ClientControl = () => {
     return `${numericValue * quantity} ${unit}`; //36 chips
   };
 
+  const getTotalValue = (value) => value * quantity;
+
+  const toFixedCalculate = (value) => {
+    const fixedValue =
+      value !== null && value !== undefined ? value.toFixed(2) : "0.00";
+    return fixedValue;
+  };
+
   const parseNutrients = (description) => {
     //"Per 12 chips - Calories: 150kcal | Fat: 8.00g | Carbs: 18.00g | Protein: 2.00g"
     const parts = description.split("-"); //parts = [ "Per 12 chips", "Calories: 150kcal | Fat: 8.00g | Carbs: 18.00g | Protein: 2.00g"];
@@ -162,25 +196,20 @@ const ClientControl = () => {
   };
 
   const handleViewDetails = async (food_id, nombre) => {
-    console.log(food_id);
-    console.log(nombre);
+    const query = nombre !== "" ? nombre : searchQuery || "";
     if (nombre !== "") {
       setSearchQuery(nombre);
     }
     console.log("El id de la comida es: " + food_id);
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/food/${food_id}/?search=${searchQuery}`
+        `http://127.0.0.1:8000/food/${food_id}/?search=${query}`
       );
 
-      setSelectedFood(response.data);
+      setSelectedFood(response.data.food);
       /*Split nutrients*/
-      const parsedNutrients = parseNutrients(response.data.food_description);
-
-      console.log(
-        "Parsed Nutrients:",
-        JSON.stringify(parsedNutrients, null, 2)
-      );
+      //const parsedNutrients = parseNutrients(response.data.food);
+      const parsedNutrients = response.data.food.servings.serving;
 
       setNutrients(parsedNutrients);
       setShowModalNutrients(true);
@@ -218,7 +247,11 @@ const ClientControl = () => {
         `http://127.0.0.1:8000/nutrition/?search=${searchQuery}`
       );
 
-      setFoods(response.data.foods.food);
+      console.log("Foods v3:", JSON.stringify(response.data, null, 2));
+
+      const foods = response.data.foods_search.results?.food || [];
+
+      setFoods(foods);
       /*const foods = response.data.foods.food;
 
       const translatedFoods = await Promise.all(
@@ -233,17 +266,24 @@ const ClientControl = () => {
     }
   };
 
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("idCliente");
+    navigate("/loginCliente");
+  };
+
   const handleAddFood = () => {
     const urlAddFood = "http://127.0.0.1:8000/addFood/";
+    console.log("Selected food:", JSON.stringify(selectedFood, null, 2));
     const datos = {
       id_alimento: selectedFood.food_id,
       nombre: selectedFood.food_name,
-      calorias: parseFloat(nutrients.nutrientValues.calories),
-      grasa: parseFloat(nutrients.nutrientValues.fat),
-      carbohidratos: parseFloat(nutrients.nutrientValues.carbs),
-      proteina: parseFloat(nutrients.nutrientValues.protein),
+      calorias: parseFloat(nutrients[0].calories),
+      grasa: parseFloat(nutrients[0].fat),
+      carbohidratos: parseFloat(nutrients[0].carbohydrate),
+      proteina: parseFloat(nutrients[0].protein),
       cantidad: quantity,
-      porcion: parseInt(nutrients.serving),
+      porcion: nutrients[0].serving_description,
       parte_dia: parteDia,
       id_cliente: parseInt(idCliente),
     };
@@ -252,10 +292,125 @@ const ClientControl = () => {
       axios.post(urlAddFood, datos).then((response) => {
         show_alerta("El alimento ha sido agregado exitosamente", "success");
         setShowModalNutrients(false);
+        window.location.reload();
       });
     } catch (error) {
       show_alerta("Error al agregar el alimento", error);
     }
+  };
+
+  const handleShowModalUpdate = (idAlimento, idParteDia, fecha) => {
+    const urlGetFoodUpdate = `http://127.0.0.1:8000/obtenerDatosDisponeActual/`;
+    const datos = {
+      id_cliente: idCliente,
+      id_alimento: idAlimento,
+      id_parte_dia: idParteDia,
+      fecha: fecha,
+    };
+    axios.get(urlGetFoodUpdate, { params: datos }).then(
+      (response) => {
+        setShowModalUpdateFood(true);
+        setFoodToUpdate(response.data.dispone.id_alimento);
+        setQuantity(response.data.dispone.cantidad);
+        setPorcion(response.data.dispone.tamaño_porcion_g);
+        setParteDia(response.data.dispone.id_parte_dia);
+        setFecha(response.data.dispone.fecha);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  };
+
+  const handleUpdateFood = () => {
+    const urlUpdateFood = `http://127.0.0.1:8000/updateFood/`;
+    const datos = {
+      id_alimento: foodToUpdate.id_alimento,
+      id_cliente: parseInt(idCliente),
+      id_parte_dia: parseInt(parteDia),
+      fecha: fecha,
+      cantidad: quantity,
+    };
+    axios.post(urlUpdateFood, datos).then((response) => {
+      show_alerta("El alimento ha sido actualizado exitosamente", "success");
+      setShowModalUpdateFood(false);
+      const updatedDispone = response.data.dispone;
+      //Update dispone
+      setDispones((prevDispones) => {
+        return prevDispones.map((item) =>
+          item.id_cliente === updatedDispone.id_cliente &&
+          item.id_parte_dia.id_parte_dia ===
+            updatedDispone.id_parte_dia.id_parte_dia &&
+          item.id_alimento.id_alimento ===
+            updatedDispone.id_alimento.id_alimento &&
+          item.fecha === updatedDispone.fecha
+            ? updatedDispone
+            : item
+        );
+      });
+    });
+  };
+
+  const handleDeleteFood = () => {
+    const urlDeleteFood = `http://127.0.0.1:8000/deleteFood/`;
+    const datos = {
+      id_alimento: foodToUpdate.id_alimento,
+      id_cliente: parseInt(idCliente),
+      id_parte_dia: parseInt(parteDia),
+      fecha: fecha,
+    };
+    axios.delete(urlDeleteFood, { data: datos }).then((response) => {
+      show_alerta("El alimento ha sido eliminado exitosamente", "success");
+      setShowModalUpdateFood(false);
+      //Delete dispone
+      setDispones((prevDispones) => {
+        return prevDispones.filter(
+          (item) =>
+            item.id_cliente !== idCliente &&
+            item.id_parte_dia !== parteDia &&
+            item.id_alimento.id_alimento !== foodToUpdate.id_alimento &&
+            item.fecha !== fecha
+        );
+      });
+    });
+  };
+
+  const MacroNutrientPieChart = ({ carbs, fat, protein }) => {
+    const data = {
+      labels: ["Carbohidratos", "Grasa", "Proteina"],
+      datasets: [
+        {
+          data: [carbs, fat, protein],
+          backgroundColor: ["#FFCD56", "#FF6384", "#36A2EB"],
+          hoverBackgroundColor: ["#FFCD56", "#FF6384", "#36A2EB"],
+        },
+      ],
+    };
+
+    const options = {
+      responsive: true,
+      cotout: "60%",
+      plugins: {
+        legend: {
+          display: false,
+        },
+
+        //This is not necessary at all
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              // Customize tooltip to show the label with percentage
+              let label = context.label || "";
+              if (label) {
+                label += `: ${context.raw}g`;
+              }
+              return label;
+            },
+          },
+        },
+      },
+    };
+    return <Doughnut data={data} options={options} />;
   };
 
   /*const meals = [
@@ -266,13 +421,13 @@ const ClientControl = () => {
 
   return (
     <>
-      {showNavbar && <NavScrollExample />}
+      {showNavbar && <NavScrollExample onLogout={handleCerrarSesion} />}
       {showNavbar && <SidebarAlimentos />}
       <Container fluid className="pt-5 mt-4 d-flex justify-content-center">
         <Row className="w-100" style={{ maxWidth: "800px" }}>
           {" "}
           {/*w-100 helped me to move the content to the right*/}
-          {showImages && (
+          {/*{showImages && (
             <>
               <Col xs={12} md={6} className="mb-2 mb-md-0">
                 <img
@@ -293,10 +448,13 @@ const ClientControl = () => {
                 />
               </Col>
             </>
-          )}
+          )}*/}
           {/*Search Button appears after push in the + button*/}
           {showSearchBar && (
-            <Form onSubmit={handleSearchSubmit} className="mb-4">
+            <Form
+              onSubmit={handleSearchSubmit}
+              className="search-bar-form mb-4"
+            >
               {/* Image Section */}
               <Row className="justify-content-center">
                 <Col md={6} className="text-center">
@@ -310,18 +468,22 @@ const ClientControl = () => {
                 </Col>
               </Row>
               {/* Search Bar Section */}
-              <Row className="justify-content-center">
-                <Col md={10}>
+              <Row className="justify-content-center mt-3">
+                <Col md={10} className="offset-md-2 offset-lg-3">
                   <FormGroup controlId="searchQuery">
-                    <div className="input-group">
+                    <div className="input-group search-bar-input-group">
                       <Form.Control
                         type="text"
-                        placeholder="Search for food..."
+                        placeholder="Ingrese un alimento..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
-                      <Button type="submit" variant="primary">
-                        <FontAwesomeIcon icon={faSearch} /> Search
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        className="search-bar-button"
+                      >
+                        <FontAwesomeIcon icon={faSearch} /> Buscar
                       </Button>
                     </div>
                   </FormGroup>
@@ -331,7 +493,7 @@ const ClientControl = () => {
           )}
           {/*This is the main screen when the user click on the food picture*/}
           {showDetails && (
-            <Col xs={12}>
+            <Col xs={12} style={{ marginLeft: "103px" }}>
               <Card className="p-4 shadow">
                 {/* Calories Section */}
                 <Row className="text-center mb-4">
@@ -368,24 +530,26 @@ const ClientControl = () => {
                                 borderTop: "3.5px solid #ccc",
                               }}
                             />
-                            {consumos
+                            {dispones
                               .filter(
-                                (consumo) =>
-                                  //consumo.parte_dia === meal.name &&
-                                  consumo.fecha === formattedToday
+                                (dispone) =>
+                                  dispone.id_parte_dia === meal.id_parte_dia &&
+                                  dispone.id_cliente === parseInt(idCliente) &&
+                                  dispone.fecha === today
                               )
-                              .map((consumo) => (
+                              .map((dispone) => (
                                 <div
                                   style={{ marginBottom: "10px" }}
-                                  key={consumo.id_alimento.id_alimento}
+                                  key={dispone.id_alimento.id_alimento}
                                 >
                                   <div style={{ display: "flex", gap: "10px" }}>
-                                    <h6>{consumo.id_alimento.nombre} </h6>
+                                    <h6>{dispone.id_alimento.nombre} </h6>
                                     <FaEdit
                                       onClick={() =>
-                                        handleViewDetails(
-                                          consumo.id_alimento.id_alimento,
-                                          consumo.id_alimento.nombre
+                                        handleShowModalUpdate(
+                                          dispone.id_alimento.id_alimento,
+                                          dispone.id_parte_dia,
+                                          dispone.fecha
                                         )
                                       }
                                       style={{
@@ -397,7 +561,9 @@ const ClientControl = () => {
                                   </div>
 
                                   <h6 style={{ color: "green" }}>
-                                    {consumo.id_alimento.calorias + " kcal"}
+                                    {dispone.id_alimento.calorias *
+                                      dispone.cantidad +
+                                      " kcal"}
                                   </h6>
 
                                   {/*Button update and delete*/}
@@ -445,7 +611,10 @@ const ClientControl = () => {
                       <FontAwesomeIcon icon={faBreadSlice} /> Carbohidratos
                     </h5>
                     <p className="mb-1">
-                      {macrosPorcentaje.carbohidratos_logrados.toFixed(2)}%
+                      {toFixedCalculate(
+                        macrosPorcentaje.carbohidratos_logrados
+                      )}
+                      %
                     </p>
                     <ProgressBar
                       now={macrosPorcentaje.carbohidratos_logrados}
@@ -466,12 +635,24 @@ const ClientControl = () => {
                       <FontAwesomeIcon icon={faBacon} /> Grasa
                     </h5>
                     <p className="mb-1">
-                      {macrosPorcentaje.grasa_lograda.toFixed(2)}%
+                      {toFixedCalculate(macrosPorcentaje.grasa_lograda)}%
                     </p>
+                    {/*Here I add a custom color for te bar*/}
                     <ProgressBar
                       now={macrosPorcentaje.grasa_lograda}
-                      variant="success"
-                    />
+                      variant="custom"
+                    >
+                      <div
+                        className="progress-bar"
+                        style={{
+                          backgroundColor: "#FF6384", // Rose color for the fill
+                          width: `${macrosPorcentaje.grasa_lograda}%`,
+                          height: "100%",
+                          borderRadius: "8px",
+                        }}
+                      />
+                    </ProgressBar>
+                    {/*************/}
                   </Col>
 
                   <Col xs={4}>
@@ -485,7 +666,7 @@ const ClientControl = () => {
                       <FontAwesomeIcon icon={faEgg} /> Proteina
                     </h5>
                     <p className="mb-1">
-                      {macrosPorcentaje.proteina_lograda.toFixed(2)}%
+                      {toFixedCalculate(macrosPorcentaje.proteina_lograda)}%
                     </p>
                     <ProgressBar
                       now={macrosPorcentaje.proteina_lograda}
@@ -499,31 +680,87 @@ const ClientControl = () => {
                   />
 
                   {/* Macronutrients details */}
-
-                  <Col>
-                    <p>Grasa Total: {macrosHoy.total_grasa}g</p>
-                    <p>Total carbohidratos: {macrosHoy.total_calorias}g</p>
-                    <p>Proteina: {macrosHoy.total_proteina}g</p>
-                  </Col>
-
-                  <hr
-                    style={{ margin: "30px 0", borderTop: "3.5px solid #ccc" }}
-                  />
                 </Row>
 
                 {/* Macronutrient Pie Chart */}
-                {/*<Row className="text-center">
-                  <Col>
-                    <FontAwesomeIcon icon={faChartPie} size="3x" />
-                    <p>Carbs: 60%, Fat: 30%, Protein: 50%</p>
+                <Row className="text-center mb-4">
+                  <Col xs={6}>
+                    <p
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "2rem",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "#FFCD56",
+                          fontSize: "1.65em",
+                        }}
+                      >
+                        ●
+                      </span>{" "}
+                      Carbohidratos: {macrosHoy.total_carbohidratos}g
+                    </p>
+                    <p
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "2rem",
+                      }}
+                    >
+                      <span style={{ color: "#FF6384", fontSize: "1.65em" }}>
+                        ●
+                      </span>{" "}
+                      Grasa: {macrosHoy.total_grasa}g
+                    </p>
+
+                    <p
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "2em",
+                      }}
+                    >
+                      <span style={{ color: "#36A2EB", fontSize: "1.65em" }}>
+                        ●
+                      </span>{" "}
+                      Proteina: {macrosHoy.total_proteina}g
+                    </p>
                   </Col>
-                </Row> */}
+
+                  <Col
+                    xs={6}
+                    style={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    {/* Pie Chart showing the macronutrient distribution */}
+                    <div
+                      style={{
+                        width: "250px",
+                        height: "250px",
+                      }}
+                    >
+                      <MacroNutrientPieChart
+                        carbs={macrosHoy.total_carbohidratos}
+                        fat={macrosHoy.total_grasa}
+                        protein={macrosHoy.total_proteina}
+                      />
+                    </div>
+                  </Col>
+
+                  <hr
+                    style={{
+                      margin: "30px 0",
+                      borderTop: "3.5px solid #ccc",
+                    }}
+                  />
+                </Row>
               </Card>
             </Col>
           )}
           {/*Appears all the food after push "Search" button*/}
           {foods.length > 0 && (
-            <Row className="justify-content-center g-4">
+            <Row className="food-list-row">
               {foods.map((food) => (
                 <Col
                   xs={12}
@@ -531,31 +768,29 @@ const ClientControl = () => {
                   md={4}
                   lg={3}
                   key={food.food_id}
-                  className="mb-3 d-flex justify-content-center"
+                  className="food-list-col"
                 >
-                  <Card
-                    className="food-card"
-                    style={{ width: "100%", borderRadius: "10px" }}
-                  >
-                    <Card.Img variant="top" src={porDefectoFood} />
+                  <Card className="food-card">
                     <Card.Body>
-                      <Card.Title className="text-center">
-                        {food.brand_name}
+                      <Card.Title className="food-card-title">
+                        {food.food_name}
                       </Card.Title>
-                      <p className="text-center">{food.food_name}</p>
-                      {/*<p>
-                            <strong>Macros: </strong>
-                            {food.food_description}
-                          </p> */}
+                      <p className="food-card-serving">
+                        {food.servings.serving[0].serving_description}
+                      </p>
+                      <p className="food-card-calories">
+                        {food.servings.serving[0].calories + "kcal"}
+                      </p>
                     </Card.Body>
-                    <Card.Footer>
+                    <Card.Footer className="food-card-footer">
                       <Button
                         variant="success"
-                        className="ms-auto d-flex align-items-center"
+                        className="food-card-button"
                         onClick={() => handleViewDetails(food.food_id, "")}
+                        aria-label={`View details for ${food.food_name}`}
                       >
                         Ver mas
-                        <BiChevronRight size={20} className="ms-1" />
+                        <BiChevronRight size={20} />
                       </Button>
                     </Card.Footer>
                   </Card>
@@ -568,6 +803,7 @@ const ClientControl = () => {
             show={showModalNutrients}
             onHide={() => setShowModalNutrients(false)}
             centered
+            style={{ marginLeft: "80px" }}
           >
             <Modal.Header closeButton>
               <Modal.Title>
@@ -602,27 +838,25 @@ const ClientControl = () => {
                     </Button>
                   </div>
                   <p>
-                    <strong>Porción:</strong>{" "}
-                    {getNutrientValue(nutrients?.serving) || "N/A"}
+                    <strong>Porción: </strong>
+                    {getNutrientValue(nutrients[0].serving_description) ||
+                      "N/A"}
                   </p>
                   <p>
                     <strong>Calorías:</strong>{" "}
-                    {getNutrientValue(nutrients?.nutrientValues?.calories) ||
-                      "N/A"}
+                    {getNutrientValue(nutrients[0].calories + "kcal") || "N/A"}
                   </p>
                   <p>
                     <strong>Grasa:</strong>{" "}
-                    {getNutrientValue(nutrients?.nutrientValues?.fat) || "N/A"}
+                    {getNutrientValue(nutrients[0].fat + "g") || "N/A"}
                   </p>
                   <p>
                     <strong>Carbohidratos:</strong>{" "}
-                    {getNutrientValue(nutrients?.nutrientValues?.carbs) ||
-                      "N/A"}
+                    {getNutrientValue(nutrients[0].carbohydrate + "g") || "N/A"}
                   </p>
                   <p>
                     <strong>Proteina:</strong>{" "}
-                    {getNutrientValue(nutrients.nutrientValues?.protein) ||
-                      "N/A"}
+                    {getNutrientValue(nutrients[0].protein + "g") || "N/A"}
                   </p>
                 </div>
               ) : (
@@ -637,6 +871,88 @@ const ClientControl = () => {
               >
                 <FaUtensils className="me-2" />
                 Agregar alimento
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          {/*Modal for update food*/}
+          <Modal
+            show={showModalUpdateFood}
+            onHide={() => setShowModalUpdateFood(false)}
+            centered
+            style={{ marginLeft: "100px" }}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>{foodToUpdate?.nombre || "Food Item"}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {foodToUpdate ? (
+                <div className="text-center">
+                  {/* Quantity Input with +/- Buttons */}
+                  <div className="d-flex justify-content-center align-items-center mb-3">
+                    {" "}
+                    {/*d-flex help us to put everything in the same line*/}
+                    <Button
+                      variant="outline-secondary"
+                      onClick={decreaseQuantity}
+                    >
+                      <BiMinus />
+                    </Button>
+                    <FormControl
+                      type="number"
+                      value={quantity}
+                      readOnly
+                      className="text-center mx-2"
+                      style={{ maxWidth: "60px" }}
+                    ></FormControl>
+                    <Button
+                      variant="outline-secondary"
+                      onClick={increaseQuantity}
+                    >
+                      <BiPlus />
+                    </Button>
+                  </div>
+                  <p>
+                    <strong>Porción:</strong>{" "}
+                    {getNutrientValue(porcion) || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Calorías:</strong>{" "}
+                    {getTotalValue(foodToUpdate.calorias) + " kcal" || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Grasa:</strong>{" "}
+                    {getTotalValue(foodToUpdate.grasa_g) + " g" || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Carbohidratos:</strong>{" "}
+                    {getTotalValue(foodToUpdate.carbohidratos_g) + " g" ||
+                      "N/A"}
+                  </p>
+                  <p>
+                    <strong>Proteina:</strong>{" "}
+                    {getTotalValue(foodToUpdate.proteina_g) + " g" || "N/A"}
+                  </p>
+                </div>
+              ) : (
+                <p>Cargando detalles</p>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="success"
+                className="d-flex align-items-center"
+                onClick={handleUpdateFood}
+              >
+                <FaUtensils className="me-2" />
+                Editar alimento
+              </Button>
+              <Button
+                variant="danger"
+                className="d-flex align-items-center"
+                onClick={handleDeleteFood}
+              >
+                <FaTrash />
+                Eliminar
               </Button>
             </Modal.Footer>
           </Modal>

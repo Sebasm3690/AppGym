@@ -33,7 +33,7 @@ const SidebarAlimentos = ({ onToggle }) => {
         <Nav className="flex-column mt-4">
           {/* */}
           <Nav.Item>
-            <Nav.Link href="/homeEntrenador" className="text-center">
+            <Nav.Link href="/homeCliente/" className="text-center">
               <FontAwesomeIcon icon={faHome} /> Inicio
             </Nav.Link>
           </Nav.Item>
@@ -43,7 +43,7 @@ const SidebarAlimentos = ({ onToggle }) => {
               placement="right"
               overlay={<Tooltip id="tooltip-home">Inicio</Tooltip>}
             >
-              <Nav.Link href="/homeEntrenador" className="text-center">
+              <Nav.Link href="/homeCliente/" className="text-center">
                 <FontAwesomeIcon icon={faHome} /> Inicio
               </Nav.Link>
             </OverlayTrigger>
@@ -54,7 +54,10 @@ const SidebarAlimentos = ({ onToggle }) => {
               placement="right"
               overlay={<Tooltip id="tooltip-settings">Alimentación</Tooltip>}
             >
-              <Nav.Link href="/crudRutinas" className="text-center">
+              <Nav.Link
+                href="/dashboardControlCalorico/"
+                className="text-center"
+              >
                 <FontAwesomeIcon icon={faBowlFood} /> Alimentación
               </Nav.Link>
             </OverlayTrigger>

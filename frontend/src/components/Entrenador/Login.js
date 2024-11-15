@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
-import Header from "../Otros/header";
+import NavScrollExample from "../Otros/Navbar";
 //import Footer from "../Otros/footer";
 import { useNavigate } from "react-router-dom";
 import "../Entrenador/Login.css";
@@ -63,7 +63,7 @@ class LoginEntrenador extends React.Component {
     const { username, password, error } = this.state;
     return (
       <>
-        <Header />
+        <NavScrollExample />
         <div className="maincontainer">
           <Container fluid className="h-100">
             <Row className="no-gutters h-100 align-items-center">
@@ -79,12 +79,11 @@ class LoginEntrenador extends React.Component {
                   <Container>
                     <Row>
                       <Col lg={9} md={11} sm={12} className="mx-auto">
-                        <h3 className="display-4 mb-3 text-center">
+                        <h3 className="display-4 mb-3 text-left">
                           Iniciar Sesión
                         </h3>
-                        <p className="text-muted mb-4 text-center">
-                          Por favor, introduzca sus credenciales para iniciar
-                          sesión como entrenador.
+                        <p className="text-muted mb-4 text-left">
+                          Introduzca sus datos o credenciales.
                         </p>
                         <Form
                           className="d-flex flex-column align-items-center"
@@ -98,7 +97,7 @@ class LoginEntrenador extends React.Component {
                                 placeholder="Nombre de usuario"
                                 required
                                 autoFocus
-                                className="rounded-3 border-0 shadow px-4"
+                                className="rounded-5 border-0 shadow px-4"
                                 value={username}
                                 onChange={this.handleInputChange}
                               />
@@ -111,7 +110,7 @@ class LoginEntrenador extends React.Component {
                                 type="password"
                                 placeholder="Contraseña"
                                 required
-                                className="rounded-3 border-0 shadow px-4 text-primary"
+                                className="rounded-5 border-0 shadow px-4 text-primary"
                                 value={password}
                                 onChange={this.handleInputChange}
                               />
@@ -119,7 +118,7 @@ class LoginEntrenador extends React.Component {
                           </Form.Group>
                           <Button
                             type="submit"
-                            className="btn-primary btn-block text-uppercase mb-2 rounded-3 shadow-sm"
+                            className="btn-primary btn-block text-uppercase mb-2 rounded-5 shadow-sm"
                             style={{ width: "75%" }}
                           >
                             Iniciar sesión

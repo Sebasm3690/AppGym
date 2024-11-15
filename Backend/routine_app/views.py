@@ -23,6 +23,12 @@ from datetime import date
 from django.db.models import Q, Sum, F,Value, DecimalField
 from django.conf import settings
 from django.db.models.functions import Coalesce
+from datetime import date
+import logging
+from django.db import transaction
+from django.db.models import Prefetch
+
+logger = logging.getLogger(__name__)
 
 # SignUp trainer
 @api_view(['POST'])
@@ -192,23 +198,24 @@ def adminLogin(request):
 	return Response({"error":"Error inesperado en el servidor"},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-#Login client
 @api_view(['POST'])
 def clientLogin(request):
-	username = request.data.get("username")
-	password = request.data.get("password")	
+    username = request.data.get("username")
+    password = request.data.get("password")    
 
-	user = authenticate(username = username, password = password)
+    user = authenticate(username=username, password=password)
 
-	if user is not None:
-		try:
-			cliente = Cliente.objects.get(user = user)
-			token,created = Token.objects.get_or_create(user = user)
-			serializer = ClientSerializer(instance = cliente)
-			return Response({"token":token.key, "cliente":serializer.data}, status= status.HTTP_200_OK)
-		except Cliente.DoesNotExist:
-			return Response({"error":"username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
-	
+    if user is not None:
+        try:
+            cliente = Cliente.objects.get(user=user)
+            token, created = Token.objects.get_or_create(user=user)
+            serializer = ClientSerializer(instance=cliente)
+            return Response({"token": token.key, "cliente": serializer.data}, status=status.HTTP_200_OK)
+        except Cliente.DoesNotExist:
+            return Response({"error": "username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Add a response for failed authentication
+    return Response({"error": "username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
 
 	#entrenador = get_object_or_404(Entrenador, user__email = request.data['email'])
 	#if entrenador.password != request.data['password']: #Si el entrenador me retorna False o se falló en el intento de login 
@@ -233,18 +240,15 @@ def profile(request):
 
 def get_nutrition_data(request):
 	query = request.GET.get('search')
-	url = "https://fatsecret4.p.rapidapi.com/rest/server.api"
+	url = "https://platform.fatsecret.com/rest/foods/search/v3"
 
 	querystring = {
-        "method": "foods.search",
         "search_expression": query,
         "page_number": "0",
         "format": "json"
     }
 
 	headers = {
-		"x-rapidapi-key": settings.FATSECRET_API_KEY,
-		"x-rapidapi-host": "fatsecret4.p.rapidapi.com",
 		"Authorization": settings.FATSECRET_AUTH_TOKEN
 	}
 
@@ -258,39 +262,44 @@ def get_nutrition_data(request):
 #Obtener una comida en base al id en FatSecret
 
 def get_food_by_id(request, food_id):
-	query = request.GET.get('search','food')
-	url = "https://fatsecret4.p.rapidapi.com/rest/server.api"
+	query = request.GET.get('search','')
+	url = "https://platform.fatsecret.com/rest/food/v4"
 
 	querystring = {
-        "method": "foods.search",
-        "search_expression": query,
-        "page_number": "0",
+        "food_id": food_id,
         "format": "json"
     }
 
 	headers = {
-		"x-rapidapi-key": settings.FATSECRET_API_KEY,
-		"x-rapidapi-host": "fatsecret4.p.rapidapi.com",
 		"Authorization": settings.FATSECRET_AUTH_TOKEN
 	}
 
 	# Perform the API request
 	response = requests.get(url, headers=headers, params=querystring)
 
-	if response.status_code != 200:
-		return JsonResponse({"error": "Error al obtener los datos"}, status = response.status_code)
+	# Check if the API request was successful
+
+	if response.status_code == 200:
+		data = response.json()
+		return JsonResponse(data)
+	else:
+		return JsonResponse({"error": "Error al obtener los datos"}, status=response.status_code)
+
+
+	#if response.status_code != 200:
+		#return JsonResponse({"error": "Error al obtener los datos"}, status = response.status_code)
 
 	# Parse the API response
-	data = response.json()
-	foods = data.get('foods',{}).get('food',[])
+	#data = response.json()
+	#foods = data.get('foods',{}).get('food',[])
 
 	# Filter the foods to find the one matching the given food_id
-	filtered_food = next((food for food in foods if str(food.get('food_id')) == str(food_id)), None)
+	#filtered_food = next((food for food in foods if str(food.get('food_id')) == str(food_id)), None)
 
-	if filtered_food:
-		return JsonResponse(filtered_food)
-	else:
-		return JsonResponse({"error": f"No se encontró la comida con el ID {food_id}"},status=404)
+	#if filtered_food:
+		#return JsonResponse(filtered_food)
+	#else:
+		#return JsonResponse({"error": f"No se encontró la comida con el ID {food_id}"},status=404)
 	
 
 
@@ -464,7 +473,7 @@ class calcularTotalMacrosAlimentos(APIView):
 		cliente = Cliente.objects.get(id_cliente=cliente_id)
 
 		#Macros totales
-		consumo_hoy = Consume.objects.filter(
+		consumo_hoy = Dispone.objects.filter(
 			id_cliente = cliente_id,  #All foods consumed by the client today
 			fecha = datetime.now().date()
 		).aggregate(
@@ -882,75 +891,70 @@ def actualizar_rutinas(request):
 @api_view(['POST'])
 def agregar_alimento(request):
 	if request.method == 'POST':
+		today = date.today()
+
 		datos = request.data
 		id_alimento = datos.get('id_alimento')
 		id_cliente = datos.get('id_cliente')
 		parte_dia = datos.get('parte_dia')
 		cantidad = datos.get('cantidad')
+		porcion = datos.get('porcion')
 
 		print(parte_dia)
 
 		#--Alimento
 
-		if not Alimento.objects.filter(api_id_referencia = id_alimento).exists():
-			nombre = datos.get('nombre')
-			calorias = datos.get('calorias')
-			porcion = datos.get('porcion')
-			grasa = datos.get('grasa')
-			carbohidratos = datos.get('carbohidratos')
-			proteina = datos.get('proteina')
+		with transaction.atomic():
 
-			#Create alimento
+			if not Alimento.objects.filter(api_id_referencia = id_alimento).exists():
+				nombre = datos.get('nombre')
+				calorias = datos.get('calorias')
+				
+				grasa = datos.get('grasa')
+				carbohidratos = datos.get('carbohidratos')
+				proteina = datos.get('proteina')
 
-			alimento = Alimento.objects.create(
-				nombre = nombre,
-				calorias = calorias,
-				proteina_g = proteina,
-				carbohidratos_g = carbohidratos,
-				grasa_g = grasa,
-				tamaño_porcion_g = porcion,
-				api_id_referencia = id_alimento
-			)
-			
+				#Create alimento
+
+				alimento = Alimento.objects.create(
+					nombre = nombre,
+					calorias = calorias,
+					proteina_g = proteina,
+					carbohidratos_g = carbohidratos,
+					grasa_g = grasa,
+					api_id_referencia = id_alimento
+				)
+			else:
+				#--Consume
+				alimento = Alimento.objects.get(api_id_referencia = id_alimento)
+
 			cliente = get_object_or_404(Cliente, id_cliente=id_cliente)
-			alimento = get_object_or_404(Alimento, id_alimento=alimento.id_alimento)
+			parte_dia_obj = ParteDia.objects.get(nombre=parte_dia)
+
+
+			# Check if the Consume record already exists
+			consume, _= Consume.objects.get_or_create(
+				id_cliente = cliente,
+				id_alimento = alimento,
+			)
+
 		
-		else:
-
-			#--Consume
-
-			alimento = Alimento.objects.get(api_id_referencia = id_alimento)
-			cliente = get_object_or_404(Cliente, id_cliente=id_cliente)
-
-			#When the client consumed another food in the same day part
-
-		if Consume.objects.filter(id_cliente=id_cliente, id_alimento=alimento.id_alimento).exists():
-			#Update cantidad if client has already been consumed the food in the same parte_dia
-			consume = Consume.objects.get(id_cliente=id_cliente, id_alimento=alimento.id_alimento)
-			consume.cantidad = consume.cantidad + cantidad
-		else:
-			consume = Consume.objects.create(
+			# Check if Dispone entry exists; create if not
+			dispone, dispone_created = Dispone.objects.get_or_create(
 				id_cliente = cliente,
 				id_alimento = alimento,
-				cantidad = cantidad
-			)
-			
-			#Parte del dia 
-
-			parte_dia = ParteDia.objects.get(nombre=parte_dia)
-
-			print(parte_dia.id_parte_dia)
-
-			dispone = Dispone.objects.create(
-				id_cliente = cliente,
-				id_alimento = alimento,
-				id_parte_dia = parte_dia,
+				id_parte_dia = parte_dia_obj,
+				fecha = today,
+				defaults={'cantidad':cantidad, 'tamaño_porcion_g':porcion},
 			)
 
-			dispone.save()
-		consume.save()
+			if not dispone_created:
+				dispone.cantidad += cantidad
+				dispone.tamaño_porcion_g += porcion
+				dispone.save()
 
-		return Response({"mensaje":"Alimento y consume creado exitosamente"}, status=status.HTTP_200_OK)
+	
+		return Response({"mensaje":"Alimento consume y dispone creados o actualizados exitosamente"}, status=status.HTTP_200_OK)
 	else:
 		return Response({"error":"Metodo no permitido"},status=status.HTTP_405_METHOD_NOT_ALLOWED)	
 
@@ -964,8 +968,23 @@ def obtenerConsumoCliente(request,query_param):
 		return Response({"consumo":consumo_serializado.data}, status=status.HTTP_200_OK)
 	else:
 		return Response({"error":"Metodo no permitido"},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 	
+
+
+#Filter everything
+
+@api_view(['GET'])
+def obtenerDisponeCliente(request,query_param):
+	if request.method == 'GET':
+		id_cliente = query_param
+		dispone = Dispone.objects.filter(id_cliente=id_cliente).select_related('id_alimento','id_cliente','id_parte_dia') #Select_related allows to add all alimento atributtes inside consumo, also I have to modify the serializer to chase that
+		dispone_serializado = DisponeSerializer(dispone,many=True)
+		return Response({"dispone":dispone_serializado.data}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Metodo no permitido"},status=status.HTTP_405_METHOD_NOT_ALL)
+	
+
+
 @api_view(['GET'])
 def obtener_consumoCliente(request):
 	if request.method == 'GET':
@@ -976,37 +995,62 @@ def obtener_consumoCliente(request):
 	else:
 		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
+#Filter only one	
+@api_view(['GET'])
+def obtener_datos_dispone_actual(request):
+	if request.method == 'GET':
+		#datos = request.data
+		id_cliente = request.query_params.get('id_cliente')
+		id_alimento = request.query_params.get('id_alimento')
+		id_parte_dia = request.query_params.get('id_parte_dia')
+		fecha = request.query_params.get('fecha')
+
+		print(f"Received data: id_cliente={id_cliente}, id_alimento={id_alimento}, id_parte_dia={id_parte_dia}, fecha={fecha}")
+
+		dispone = Dispone.objects.get(id_cliente=id_cliente, id_alimento=id_alimento, id_parte_dia=id_parte_dia, fecha=fecha)	
+		dispone_serializado = DisponeSerializer(dispone)
+		return Response({"dispone":dispone_serializado.data}, status=status.HTTP_200_OK)
+
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['POST'])
+def update_food(request):
+	if request.method == 'POST':
+		datos = request.data 
+		id_cliente = datos.get('id_cliente')
+		id_alimento = datos.get('id_alimento')
+		id_parte_dia = datos.get('id_parte_dia')
+		fecha = datos.get('fecha')
+		cantidad = datos.get('cantidad')
+
+		print(f"Received data: id_cliente={id_cliente}, id_alimento={id_alimento}, id_parte_dia={id_parte_dia}, fecha={fecha}")
+
+		dispone = Dispone.objects.get(id_cliente=id_cliente, id_alimento=id_alimento, id_parte_dia=id_parte_dia, fecha=fecha)
+		dispone.cantidad = cantidad
+		dispone.save()
+		dispone_serializado = DisponeSerializer(dispone)
+		return Response({"mensaje":"Alimento actualizado correctamente", "dispone":dispone_serializado.data}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT)
 	
+@api_view(['DELETE'])
+def delete_food(request):
+	if request.method == 'DELETE':
+		datos = request.data
+		id_cliente = datos.get('id_cliente')
+		id_alimento = datos.get('id_alimento')
+		id_parte_dia = datos.get('id_parte_dia')
+		fecha = datos.get('fecha')
 
-# 	@api_view(['POST'])
-# def addRoutine(request):
-# 	if request.method == 'POST':
-# 		datos = request.data 
-# 		nombre = datos.get('nombre')	
-# 		descripcion = datos.get('descripcion')
-# 		enfoque = datos.get('enfoque')
-# 		ejercicios = datos.get('ejercicios',[])
-# 		id_entren = datos.get('id_entrenador')
+		print(f"Received data to delete: id_cliente={id_cliente}, id_alimento={id_alimento}, id_parte_dia={id_parte_dia}, fecha={fecha}")
 
-# 		#Crear la rutina
-# 		entrenador = Entrenador.objects.get(id_entrenador=id_entren)
-# 		rutina = Rutina.objects.create(
-# 			id_entrenador= entrenador,
-# 			nombre = nombre,
-# 			descripcion = descripcion,
-# 			enfoque = enfoque,
-# 			tipo = 'Creada'
-# 		)
+		dispone = Dispone.objects.get(id_cliente=id_cliente, id_alimento=id_alimento, id_parte_dia=id_parte_dia, fecha=fecha)
+		dispone.delete()
+		return Response({"mensaje":"Alimento eliminado correctamente"}, status=status.HTTP_200_OK)
+	else:
+		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-# 		#Agregar ejercicios a la rutina
-# 		for ejercicio in ejercicios:
-# 			ej = Ejercicio.objects.get(id_ejercicio=ejercicio)
-# 			Compuesta.objects.create(
-# 				id_rutina = rutina,
-# 				id_ejercicio = ej
-# 			)
 
-# 		return Response({"mensaje":"Rutina creada correctamente"}, status=status.HTTP_201_CREATED)
-# 	else:
-# 		return Response({"error":"Método no permitido"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-	

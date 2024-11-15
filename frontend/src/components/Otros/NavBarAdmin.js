@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   Container,
@@ -13,9 +13,23 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import userAdmin from "../../assets/user-admin.png";
+import "./index.css";
 
 const NavScrollExample = ({ onSearchResults, onLogout }) => {
   const idAdmin = localStorage.getItem("idAdmin");
+  const [admin, setAdmin] = useState({});
+  const url = `http://127.0.0.1:8000/api/v1/admin/${idAdmin}`;
+
+  useEffect(() => {
+    getAdmin();
+  }, []);
+
+  const getAdmin = async () => {
+    const respuesta = await axios.get(url);
+    setAdmin(respuesta.data);
+  };
+
   const [searchParams, setSearchParams] = useState({
     nombre: "",
     apellido: "",
@@ -67,14 +81,19 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
             <Nav>
               <NavDropdown
                 title={
-                  <Image
-                    src="https://source.unsplash.com/250x250?girl"
-                    roundedCircle
-                    width="45"
-                    height="45"
-                    className="d-inline-block align-top"
-                    alt="Profile"
-                  />
+                  <>
+                    <span className="admin-name text-white mt-n2">
+                      {admin.nombre + " " + admin.apellido + "  " || "Admin"}
+                    </span>
+                    <Image
+                      src={userAdmin}
+                      roundedCircle
+                      width="45"
+                      height="45"
+                      className="d-inline-block align-top"
+                      alt="Profile"
+                    />
+                  </>
                 }
                 id="navbarScrollingDropdown"
                 align="end"
@@ -90,13 +109,13 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
         </Container>
       </Navbar>
       <Container className="mt-4">
-        <Row className="justify-content-center" style={{ marginTop: "120px" }}>
+        <Row className="justify-content-center" style={{ marginTop: "25px" }}>
           <Col xs={12} md={10}>
             <Form onSubmit={handleSearch} className="d-flex">
               <Form.Control
                 type="search"
                 name="nombre"
-                placeholder="Buscar nombre"
+                placeholder="Nombre"
                 className="me-2"
                 aria-label="Buscar nombre"
                 value={searchParams.nombre}
@@ -105,7 +124,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
               <Form.Control
                 type="search"
                 name="apellido"
-                placeholder="Buscar apellido"
+                placeholder="Apellido"
                 className="me-2"
                 aria-label="Buscar apellido"
                 value={searchParams.apellido}
@@ -114,7 +133,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
               <Form.Control
                 type="search"
                 name="correo"
-                placeholder="Buscar correo"
+                placeholder="Correo"
                 className="me-2"
                 aria-label="Buscar correo"
                 value={searchParams.correo}

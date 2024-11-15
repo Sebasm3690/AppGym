@@ -21,6 +21,8 @@ router.register(r'seAsigna',AssignedView,'seAsigna')
 router.register(r'parteDia',PartOfDayView,'parteDia')
 router.register(r'dispone',DisponeView,'dispone')
 
+
+
 urlpatterns = [
     # Rutas personalizadas primero
     path('trainerLogin/', trainerLogin),
@@ -61,5 +63,9 @@ urlpatterns = [
     path('nutrition/', get_nutrition_data, name='nutrition_data'),
     path('food/<int:food_id>/', get_food_by_id, name='get_food_details'),
     path("addFood/",agregar_alimento, name="addFood"),
-    path("obtenerConsumoCliente/<query_param>/",obtenerConsumoCliente,name="obtenerConsumoCliente")
+    path("obtenerConsumoCliente/<query_param>/",obtenerConsumoCliente,name="obtenerConsumoCliente"),
+    path("obtenerDisponeCliente/<query_param>/", obtenerDisponeCliente, name="obtenerDisponeCliente"),
+    path("obtenerDatosDisponeActual/",obtener_datos_dispone_actual, name="obtenerDatosDisponeActual"),
+    path("updateFood/",update_food, name="updateFood"),
+    path("deleteFood/",delete_food, name="deleteFood"),
 ]

@@ -1,0 +1,256 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap");
+
+/*General*/
+
+.home {
+  margin: 0;
+  overflow-x: hidden;
+  font-family: Arial sans-serif;
+  background-color: black;
+  color: white;
+}
+
+/*Hero Section*/
+
+.heroSection {
+  position: relative;
+  background: url("../../assets/gymHome.png") no-repeat center center;
+  background-size: cover;
+  padding: 430px 0px 0px 0px;
+  color: white;
+  text-align: center;
+}
+
+.heroSection::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Dark overlay for better text contrast */
+  z-index: 1;
+}
+
+.heroSection h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  z-index: 2;
+  position: relative; /* To put it in front, if we delete this the title will almost dissapear */
+}
+
+.heroSection p {
+  font-size: 1.2rem;
+  z-index: 2;
+  position: relative;
+}
+
+.heroSection .btn-warning {
+  background-color: #f0a500;
+  border: none;
+  font-weight: none;
+  z-index: 2;
+  position: relative;
+}
+
+@media (max-width: 576px) {
+  .heroSection {
+    padding: 240px 0px 0px 0px;
+  }
+
+  .heroSection h1 {
+    font-size: 2rem;
+  }
+
+  .heroSection p {
+    font-size: 1rem;
+  }
+}
+
+/*Logion options*/
+
+.loginOptions {
+  color: #fff;
+  text-align: center;
+  padding: 40px 0px 10px 0px;
+  width: 100%;
+}
+
+.loginOptions h2 {
+  font-family: "Dancing script", cursive;
+  font-size: 2rem;
+  color: #fff;
+  padding: 10px 0px;
+}
+
+.loginImage {
+  width: 250px;
+  height: 180px;
+  border: 4px solid #f0a500;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/*About us section*/
+
+.aboutUs {
+  padding: 20px 0px 20px 100px;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.aboutImage {
+  border: 4px solid #f0a500;
+}
+
+.aboutTitle {
+  font-family: "Dancing script", cursive;
+  font-weight: bold;
+  color: #f0a500;
+  margin-bottom: 0;
+}
+
+.aboutSubtitle {
+  padding: 20px 0px;
+}
+
+.aboutImage {
+  width: 100%;
+  width: 300px;
+  height: 310px;
+  border: 4px solid #f0a500;
+}
+
+@media (max-width: 576px) {
+  .aboutUs {
+    padding: 0px 20px 40px 20px;
+  }
+
+  .aboutTitle {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .aboutSubtitle {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .aboutImage {
+    width: 100%;
+    width: 250px;
+  }
+}
+
+/*Contact section*/
+
+.contactSection {
+  color: #fff;
+  padding: 0 15px;
+  max-width: 1140px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.contactSection .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contactSubtitle {
+  font-family: "Dancing script", cursive;
+  color: #f0a500;
+}
+
+.contactTitle {
+  font-weight: bold;
+}
+
+.contactButton {
+  background-color: #f0a500;
+  border: none;
+  font-size: 1em;
+  padding: 10px 20px;
+}
+
+.contactSection h3 {
+  padding-right: 25rem;
+}
+
+.contactSection h2 {
+  padding-right: 38px;
+}
+
+@media (max-width: 576px) {
+  .contactSection {
+    padding: 20px 0px;
+    text-align: center;
+  }
+
+  .contactSubtitle {
+    font-size: 1.5rem;
+  }
+
+  .contactTitle {
+    font-size: 1.2rem;
+  }
+
+  .contactButton {
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .contactSection h3,
+  .contactSection h2 {
+    padding-right: 0;
+  }
+}
+
+/*Footer*/
+
+.footer {
+  background-color: #000;
+}
+
+.footer h5 {
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  padding-left: 11rem;
+}
+
+.footer a {
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.footer p {
+  margin: 0;
+  margin-left: 11rem;
+  font-size: 12px;
+}
+
+@media (max-width: 576px) {
+  .footer h5 {
+    text-align: center;
+    font-size: 1.2rem;
+    padding-left: 0;
+  }
+
+  .footer a {
+    display: block;
+    text-align: center;
+    margin: 5px 0;
+  }
+
+  .footer p {
+    text-align: center;
+    margin-left: 0;
+  }
+}

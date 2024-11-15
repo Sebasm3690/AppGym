@@ -123,6 +123,18 @@ class ClientSerializer(serializers.ModelSerializer):
 	nivel_actividad = ActivityLevelSerializer(source='id_nivel_actividad', read_only=True)
 	objetivo = TargetSerializer(source='id_objetivo',read_only=True)
 
+	def create(self,validated_data):
+		# Extract the password before removing it from validated_data
+		password = validated_data.pop('password')
+		user = User(username=validated_data['username'])
+
+		# Set and hash the password
+		user.set_password(password)
+		user.save()
+
+		# Create the Cliente instance linked to this user
+		cliente = Cliente.objects.create(user=user, **validated_data)
+		return cliente
 
 	class Meta:
 		model = Cliente
@@ -202,6 +214,25 @@ class ConsumeSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
+class PartOfDaySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ParteDia
+		fields = '__all__'
+
+
+
+class DisponeSerializer(serializers.ModelSerializer):
+	id_cliente = serializers.PrimaryKeyRelatedField(read_only=True)  # Shows only the integer ID
+	id_alimento = FoodSerializer()
+	#id_registro_serializer = RegistroIngestaSerializer()
+	#id_parte_dia = PartOfDaySerializer()
+
+	class Meta:
+		model = Dispone
+		fields = '__all__'
+
+
+
 class ExerciseSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Ejercicio
@@ -222,15 +253,6 @@ class AssignedSerializer(serializers.ModelSerializer):
 		model = SeAsigna
 		fields = '__all__'
 
-class PartOfDaySerializer(serializers.ModelSerializer):
-	class Meta:
-		model = ParteDia
-		fields = '__all__'
-
-class DisponeSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Dispone
-		fields = '__all__'
 
 
 

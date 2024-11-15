@@ -4,42 +4,124 @@ p {
   color: #333; /* Darker gray for better readability */
 }
 
+/****Food search-bar*****/
+
+.search-bar-form {
+  margin-top: 20px;
+}
+
+.search-bar-input-group {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.search-bar-input {
+  border: none;
+  border-radius: 0;
+  padding: 12px 20px;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.search-bar-input::placeholder {
+  color: #888;
+}
+
+.search-bar-button {
+  background-color: #007bff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+/***Food cards***/
+.food-list-row {
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+.food-list-col {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
 /* Ensure all cards have the same height and width */
 .food-card {
-  width: 100%; /* Takes full width of the column */
-  max-width: 300px; /* Ensures a consistent max width */
-  height: 540px; /* Same height for all cards */
-  margin: auto; /* Center the card horizontally */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Space out content */
-  border-radius: 10px; /* Rounded corners for a modern look */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-.food-card img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px 10px 0 0;
-}
-
-/* Make the card footer align items properly */
-.food-card .card-footer {
-  border-top: none; /* Remove border between body and footer */
-  background-color: #f8f9fa; /* Light background for footer */
-}
-
-@media (max-width: 576px) {
-  .food-card {
-    width: 100%;
-  }
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth scaling effect */
 }
 
 /* Optional: Enhance hover effect for a subtle interaction */
 .food-card:hover {
   transform: scale(1.02);
   transition: transform 0.3s ease;
+}
+
+/* Make the card footer align items properly */
+.food-card .card-footer {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.food-card-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.food-card-serving {
+  text-align: center;
+  color: #28a745;
+  font-weight: 500;
+  margin: 0;
+}
+
+.food-card-calories {
+  text-align: center;
+  color: #555;
+  font-size: 0.95rem;
+  margin: 0.5rem 0;
+}
+
+.food-card-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 0;
+}
+
+.food-card-button {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.food-card-button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/******************************/
+
+@media (max-width: 576px) {
+  .food-card {
+    width: 100%;
+  }
 }
 
 .image-container {
@@ -116,13 +198,13 @@ p {
   }
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
   body {
     padding-top: 70px; /* Desktop navbar height */
-  }
-}
-@media (max-width: 767px) {
+/*}
+}*/
+/*@media (max-width: 767px) {
   body {
     padding-top: 56px; /* Mobile navbar height */
-  }
-}
+/*}
+}*/
