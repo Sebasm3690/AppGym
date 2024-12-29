@@ -7,10 +7,12 @@
 
 .card {
   width: 18rem;
-  margin: 1rem;
+  margin: 1rem 0 0 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
+  border: 1px solid #ddd;
+  transition: transform 0.2 ease, box-shadow 0.2 ease;
 }
 
 .card img {
@@ -24,14 +26,18 @@
   text-align: center;
 }
 
-.card-title {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: "bold";
+  text-align: center;
+  margin-top: 10px;
+  color: #333;
 }
 
-.card-text {
-  font-size: 1rem;
-  color: #6c757d;
+.cardText {
+  font-size: 0.9rem;
+  text-align: center;
+  color: #555;
 }
 
 .button-group {
@@ -50,12 +56,31 @@
 
 .overlayText {
   position: absolute;
-  bottom: 70px;
+  bottom: 86px;
   left: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   text-align: center;
   padding: 10px;
   font-size: 2em;
+}
+
+.weekdaysContent {
+  transition: all 0.3s ease-in-out;
+  padding-left: 85px;
+  padding-right: 50px;
+}
+
+.showWeekDaysButton {
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+}
+
+@media (max-width: 768px) {
+  .weekdaysContent {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

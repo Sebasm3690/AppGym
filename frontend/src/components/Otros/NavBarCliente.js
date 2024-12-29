@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   Container,
@@ -13,7 +13,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import "../Otros/navBar.css";
+import "./index.css";
 
 const NavScrollExample = ({
   onSearchResults,
@@ -21,11 +21,23 @@ const NavScrollExample = ({
   showWeekDays,
   showTableRoutines,
 }) => {
+  const idClient = localStorage.getItem("idCliente");
+  const [client, setClient] = useState({});
+  const url = `http://127.0.0.1:8000/api/v1/client/${idClient}/`;
   const [searchParams, setSearchParams] = useState({
     nombre: "",
     apellido: "",
     correo: "",
   });
+
+  useEffect(() => {
+    getClient();
+  }, []);
+
+  const getClient = async () => {
+    const respuesta = await axios.get(url);
+    setClient(respuesta.data);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,16 +49,20 @@ const NavScrollExample = ({
 
   return (
     <>
-      <Navbar expand="lg" className="navbar-dark bg-dark" fixed="top">
+      <Navbar
+        expand="lg"
+        className="navbar-dark bg-dark" /*style={{ background: "#000C17" }}*/
+        fixed="top"
+      >
         <Container fluid>
-          <Navbar.Brand href="#">
+          <Navbar.Brand href="#" className="d-flex align-items-center">
             <img
               src={
                 "https://png.pngtree.com/png-clipart/20220620/original/pngtree-orange-gym-logo-design-templete-png-png-image_8128901.png"
               }
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
+              width="40"
+              height="40"
+              className="d-inline-block align-top me-2"
               alt="Campos Fitness Logo"
             />
           </Navbar.Brand>
@@ -54,20 +70,26 @@ const NavScrollExample = ({
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav className="me-auto my-2 my-lg-0" navbarScroll />
-            <Nav>
+            <Nav className="ms-auto">
               <NavDropdown
                 title={
-                  <Image
-                    src="https://previews.123rf.com/images/metelsky/metelsky1809/metelsky180900233/109815470-man-avatar-profile-male-face-icon-vector-illustration.jpg"
-                    roundedCircle
-                    width="45"
-                    height="45"
-                    className="d-inline-block align-top"
-                    alt="Profile"
-                  />
+                  <span className="profile-section">
+                    <span className="admin-name me-2">
+                      {client.nombre + " " + client.apellido}
+                    </span>
+                    <Image
+                      src={client.imagen}
+                      roundedCircle
+                      width="45"
+                      height="45"
+                      className="profile-avatar me-2"
+                      alt="Profile"
+                    />
+                  </span>
                 }
                 id="navbarScrollingDropdown"
                 align="end"
+                className="profile-menu"
               >
                 <NavDropdown.Item href="#action3">Cuenta</NavDropdown.Item>
                 <NavDropdown.Divider />

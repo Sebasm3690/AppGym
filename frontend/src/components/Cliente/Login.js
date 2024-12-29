@@ -11,9 +11,12 @@ import {
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 //import "../Admin/Login.css";
-import Header from "../Otros/header";
+import NavScrollExample from "../Otros/Navbar";
+import "../Entrenador/Login.css";
 //import Footer from "../Otros/footer";
 import { useNavigate } from "react-router-dom";
+import "../Otros/navBar.css";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 class LoginCliente extends React.Component {
   constructor(props) {
@@ -35,6 +38,17 @@ class LoginCliente extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
+
+    // Show loading SweetAlert
+    Swal.fire({
+      title: "Cargando...",
+      text: "Estamos validando tus credenciales.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // Show loading spinner
+      },
+    });
+
     try {
       const response = await axios.post("http://localhost:8000/clientLogin/", {
         username,
@@ -44,16 +58,30 @@ class LoginCliente extends React.Component {
       console.log("Token:", token);
       console.log("Datos del cliente:", cliente);
 
-      // Guardar el id del admin en el estado y en localStorage
-      this.setState({ idCliente: cliente.id_cliente }); //Actualiza el estado del id administrador
-      localStorage.setItem("idCliente", cliente.id_cliente); //Persiste aunque la página se recargue
-      localStorage.setItem("userRole", "cliente");
-      // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
-      this.navigate("/homeCliente/"); // Cambia '/crudTrainers' por la ruta correcta
+      // Close loading and show success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Inicio de sesión exitoso",
+        text: "¡Bienvenido al panel del cliente!",
+        timer: 2000, // Auto-close after 2 seconds
+        timerProgressBar: true, // Show timer progress bar
+        showConfirmButton: false, // Hide the "Confirm" button
+      }).then(() => {
+        // Guardar el id del admin en el estado y en localStorage
+        this.setState({ idCliente: cliente.id_cliente }); //Actualiza el estado del id administrador
+        localStorage.setItem("idCliente", cliente.id_cliente); //Persiste aunque la página se recargue
+        localStorage.setItem("userRole", "cliente");
+        // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
+        this.navigate("/homeCliente/"); // Cambia '/crudTrainers' por la ruta correcta
+      });
     } catch (error) {
-      this.setState({
-        error:
-          error.response?.data.error || "Error desconocido al iniciar sesión",
+      Swal.fire({
+        icon: "error",
+        title: "Error al iniciar sesión",
+        text:
+          error.response?.data.error ||
+          "Hubo un problema al validar tus credenciales. Inténtelo nuevamente.",
+        confirmButtonText: "Entendido",
       });
       console.log("Error al iniciar sesión", error.response?.data.error);
     }
@@ -63,7 +91,7 @@ class LoginCliente extends React.Component {
     const { username, password, error } = this.state;
     return (
       <>
-        <Header />
+        <NavScrollExample />
         <div className="maincontainer">
           <Container fluid className="h-100">
             <Row className="no-gutters h-100 align-items-center">
@@ -83,8 +111,7 @@ class LoginCliente extends React.Component {
                           Iniciar Sesión
                         </h3>
                         <p className="text-muted mb-4 text-center">
-                          Por favor, introduzca sus credenciales para iniciar
-                          sesión como cliente.
+                          Por favor, introduzca sus credenciales
                         </p>
                         <Form
                           className="d-flex flex-column align-items-center"

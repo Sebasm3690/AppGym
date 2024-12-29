@@ -15,6 +15,13 @@ import AssignRoutines from "./components/Entrenador/dashboardAsignarRutina";
 import ClientControl from "./components/Cliente/dashboardCliente";
 import HomeClient from "./components/Cliente/Home";
 import Home from "./components/Otros/Home";
+import Catalogo from "./components/Entrenador/dashboardCatalogo";
+import CaloriesDashboard from "./components/Cliente/dashboardCalories";
+import FollowRoutines from "./components/Cliente/dashboardSeguimientoRutina";
+import WeekdayCards from "./components/Entrenador/weekdays";
+import HistorialClienteCompleto from "./components/Cliente/dashboardHistorial";
+import ForgotPassword from "./components/Admin/forgotPassword";
+import ResetPassword from "./components/Admin/resetPassword";
 library.add(fas);
 
 function App() {
@@ -31,6 +38,20 @@ function App() {
         <Route path="/dashboardControlCalorico/" element={<ClientControl />} />
         <Route path="/homeCliente/" element={<HomeClient />} />
         <Route path="/" element={<Home />} />
+        <Route path="/catalogo/" element={<Catalogo />} />
+        <Route path="/dashboardCalorias/" element={<CaloriesDashboard />} />
+        <Route
+          path="/dashboardSeguimientoRutina/"
+          element={<FollowRoutines />}
+        />
+        <Route path="/dashboardWeekDays"></Route>
+        <Route path="/weekdays/" element={<WeekdayCards />} />
+        <Route
+          path="/dashboardHistorial/"
+          element={<HistorialClienteCompleto />}
+        ></Route>
+        <Route path="/forgotPassword/" element={<ForgotPassword />} />
+        <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

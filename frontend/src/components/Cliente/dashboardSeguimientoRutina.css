@@ -1,0 +1,17 @@
+.body {
+  background-color: black !important;
+}
+
+.completed-set {
+  background-color: #e6ffe6; /* Light green color */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.table-bordered tr.completed-set {
+  background-color: #e6ffe6 !important;
+}
+
+table tr.completed-set {
+  background-color: #e6ffe6 !important;
+  transition: background-color 0.3s ease;
+}

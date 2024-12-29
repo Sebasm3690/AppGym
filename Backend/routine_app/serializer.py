@@ -10,7 +10,7 @@ class AdminSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Administrador
-		fields = ['id_administrador','nombre','apellido','email', 'username', 'password','borrado']
+		fields = ['id_administrador','nombre','apellido','email', 'cedula', 'username', 'password','borrado']
 	
 	def create(self, validated_data): #validated_data contiene los datos que se han enviado a través de una solicitud HTTP
 		user_data = validated_data.pop('user') #se elimina la clave 'user' de validated_data
@@ -30,7 +30,7 @@ class TrainerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Entrenador 
-		fields = ['id_entrenador', 'nombre', 'apellido' ,'email', 'username', 'password', 'id_administrador','borrado']
+		fields = ['id_entrenador', 'nombre', 'apellido' ,'email', 'cedula', 'username', 'password', 'id_administrador','borrado','imagen']
 	
 	def create(self, validated_data): #validated_data contiene datos validados y limpiados provenientes del cliente
 		# Extraemos los datos del usuario del diccionario validated_data
@@ -59,8 +59,17 @@ class TrainerSerializer(serializers.ModelSerializer):
 		# Actualizar los datos del entrenador
 		instance.nombre = validated_data.get('nombre', instance.nombre)
 		instance.apellido = validated_data.get('apellido', instance.apellido)
+		instance.cedula = validated_data.get('cedula', instance.cedula)
 		instance.id_administrador = validated_data.get('id_administrador', instance.id_administrador)
 		instance.borrado = validated_data.get('borrado', instance.borrado)
+		
+		# Handle image updates
+		imagen = validated_data.get('imagen', None)
+		if imagen:
+			instance.imagen = imagen
+
+		# Debugging instance before saving
+		
 		instance.save()
 		return instance
 
@@ -109,40 +118,51 @@ class TargetSerializer(serializers.ModelSerializer):
 
 class ClientSerializer(serializers.ModelSerializer):
 	username = serializers.CharField(source='user.username')
-	email = serializers.CharField(source='user.email')
+	email = serializers.EmailField(source='user.email')
 	password = serializers.CharField(source='user.password')
-	 #Los 4 serializer de abajo me permiten obtener los nombres en el frontend mediante "client.id_genero.nombre"
+
+	#Los 4 serializer de abajo me permiten obtener los nombres en el frontend mediante "client.id_genero.nombre"
+	# Serializers for related fields
 	id_genero = serializers.PrimaryKeyRelatedField(queryset=Genero.objects.all())
 	id_nivel_gym = serializers.PrimaryKeyRelatedField(queryset=NivelGym.objects.all())
 	id_nivel_actividad = serializers.PrimaryKeyRelatedField(queryset=NivelActividad.objects.all())
 	id_objetivo = serializers.PrimaryKeyRelatedField(queryset=Objetivo.objects.all())
 
 	#Serializadores para las respuestas get 
+	# Read-only nested serializers
 	genero = GenreSerializer(source='id_genero', read_only=True)
 	nivel_gym = GymLevelSerializer(source='id_nivel_gym', read_only=True)
 	nivel_actividad = ActivityLevelSerializer(source='id_nivel_actividad', read_only=True)
 	objetivo = TargetSerializer(source='id_objetivo',read_only=True)
 
-	def create(self,validated_data):
+	#def create(self,validated_data):
 		# Extract the password before removing it from validated_data
-		password = validated_data.pop('password')
-		user = User(username=validated_data['username'])
+		#password = validated_data.pop('password')
+		#user = User(username=validated_data['username'])
 
 		# Set and hash the password
-		user.set_password(password)
-		user.save()
+		#user.set_password(password)
+		#user.save()
 
 		# Create the Cliente instance linked to this user
-		cliente = Cliente.objects.create(user=user, **validated_data)
-		return cliente
+		#cliente = Cliente.objects.create(user=user, **validated_data)
+		#return cliente
 
 	class Meta:
 		model = Cliente
-		fields = ['id_cliente','nombre','apellido','email', 'username', 'password', 'id_entrenador', 'id_genero', 'id_nivel_gym', 'id_nivel_actividad', 'id_objetivo', 'tmb', 'peso', 'altura', 'fecha_nacimiento', 'carbohidratos_g','proteina_g','grasas_g','borrado','genero','nivel_gym','nivel_actividad','objetivo']
+		fields = ['id_cliente','nombre','apellido','email', 'cedula', 'username', 'password', 'id_entrenador', 'id_genero', 'id_nivel_gym', 'id_nivel_actividad', 'id_objetivo', 'id_membresia', 'tmb', 'peso', 'altura', 'fecha_nacimiento', 'carbohidratos_g','proteina_g','grasas_g','borrado','genero','nivel_gym','nivel_actividad','objetivo','fecha_inicio','fecha_fin','imagen']
 
 	def create(self,validated_data):
+		# Extract user-related data
 		user_data = validated_data.pop('user')
-		user = User.objects.create(username=user_data['username'], password=user_data['password'])
+		password = user_data.pop('password')
+
+		# Create the User instance
+		user = User.objects.create(username=user_data['username'], email=user_data['email'])
+		user.set_password(password)
+		user.save()
+
+		# Create the Cliente instance linked to the User
 		cliente = Cliente.objects.create(user=user, **validated_data)
 		return cliente
 	
@@ -155,7 +175,8 @@ class ClientSerializer(serializers.ModelSerializer):
 			user = instance.user
 			user.username = user_data.get('username', user.username)
 			user.email = user_data.get('email',user.email)
-			user.password = user_data.get('password', user.password)
+			if 'password' in user_data:
+				user.set_password(user_data['password']) # Hash the password
 			user.save()
 
 		 # Actualizamos los campos de la instancia del cliente con los datos validados
@@ -169,10 +190,17 @@ class ClientSerializer(serializers.ModelSerializer):
 		instance.id_nivel_gym = validated_data.get('id_nivel_gym', instance.id_nivel_gym)
 		instance.id_nivel_actividad = validated_data.get('id_nivel_actividad', instance.id_nivel_actividad)
 		instance.id_objetivo = validated_data.get('id_objetivo', instance.id_objetivo)
+		instance.id_membresia = validated_data.get('id_membresia', instance.id_membresia)
+		instance.fecha_inicio = validated_data.get('fecha_inicio', instance.fecha_inicio)
+		instance.fecha_fin = validated_data.get('fecha_fin', instance.fecha_fin)
+
+		imagen = validated_data.get('imagen', None)
+		if imagen:
+			print("Updating image field")
+			instance.imagen = imagen
 
 		# Guardamos la instancia actualizada
 		instance.save()
-
 		# Devolvemos la instancia actualizada
 		return instance
 
@@ -253,6 +281,15 @@ class AssignedSerializer(serializers.ModelSerializer):
 		model = SeAsigna
 		fields = '__all__'
 
+class NivelActividadSerializer (serializers.ModelSerializer):
+	class Meta:
+		model = NivelActividad
+		fields = "__all__"
+
+class MembresiaSerializer (serializers.ModelSerializer):
+	class Meta:
+		model = Membresia
+		fields = "__all__"
 
 
 

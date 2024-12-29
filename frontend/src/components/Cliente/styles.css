@@ -44,8 +44,10 @@ p {
 
 /***Food cards***/
 .food-list-row {
-  margin-left: 80px;
-  margin-right: 80px;
+  margin-left: 10%; /* Default left alignment */
+  margin-right: auto;
+  max-width: 1200px;
+  gap: 1.5rem; /* Spacing between cards */
 }
 
 .food-list-col {
@@ -177,6 +179,20 @@ p {
   }
 }
 
+.main-content-wrapper {
+  display: grid;
+  place-items: center; /* Centers content vertically and horizontally */
+  /*min-height: 100vh;*/
+  background-color: #f8f9fa;
+}
+
+.main-content-food {
+  width: 100%;
+  max-width: 100%;
+  justify-self: start; /* Aligns it to the left of the grid */
+  box-sizing: border-box;
+}
+
 /*This is an animation that is applied after a click in an image*/
 .image-container img:active {
   animation: bounce 0.3s ease;
@@ -195,6 +211,14 @@ p {
   .image-container img:hover {
     transform: none;
     filter: none;
+  }
+  .modal-update-food .modal-dialog {
+    width: 100%;
+    margin-right: 300px !important;
+  }
+  /***Food cards***/
+  .food-list-row {
+    margin-left: auto; /* Spacing between cards */
   }
 }
 

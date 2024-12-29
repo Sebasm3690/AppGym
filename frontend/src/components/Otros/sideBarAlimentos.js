@@ -1,83 +1,110 @@
-// components/Otros/Sidebar.js
 import React, { useState } from "react";
-import { Nav, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
+import { Accordion, Nav } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHome,
   faUser,
-  faBars,
   faDumbbell,
-  faClipboardList,
+  faList,
+  faClipboard,
+  faBars,
   faBowlFood,
-  faChartBar,
+  faBarChart,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
-import "./sideBar.css"; // Archivo CSS para estilos personalizados
+import "./sideBar.css";
 
-const SidebarAlimentos = ({ onToggle }) => {
+const Sidebar = (/*{ isOpen, toggleSidebar }*/) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState(null);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLinkClick = (activeLink) => {
+    setActiveLink(activeLink);
+  };
+
   return (
     <>
-      <Button className="sidebar-toggle" onClick={toggleSidebar}>
+      {/* Sidebar Toggle Button */}
+      <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
         <FontAwesomeIcon icon={faBars} />
-      </Button>
-      <div
-        className={`sidebar d-flex flex-column flex-shrink-0 p-3 ${
-          isOpen ? "open" : ""
-        }`}
-      >
-        <Nav className="flex-column mt-4">
-          {/* */}
-          <Nav.Item>
-            <Nav.Link href="/homeCliente/" className="text-center">
-              <FontAwesomeIcon icon={faHome} /> Inicio
+      </button>
+
+      {/* Sidebar appears */}
+      <div className={`sidebar ${isOpen ? "visible" : ""}`}>
+        {/*Sidebar content*/}
+        <div className="main-title-container">
+          <h2 className="main-title">Dashboard</h2>
+        </div>
+        <Accordion defaultActiveKey="0" flush>
+          {/* Navigation One - Home */}
+          <Accordion.Item eventKey="0">
+            <Nav.Link href="/homeCliente/">
+              <Accordion.Header>
+                {" "}
+                <FontAwesomeIcon icon={faHome} className="icon" />
+                Inicio
+              </Accordion.Header>
             </Nav.Link>
-          </Nav.Item>
+          </Accordion.Item>
 
-          <Nav.Item>
-            <OverlayTrigger
-              placement="right"
-              overlay={<Tooltip id="tooltip-home">Inicio</Tooltip>}
-            >
-              <Nav.Link href="/homeCliente/" className="text-center">
-                <FontAwesomeIcon icon={faHome} /> Inicio
-              </Nav.Link>
-            </OverlayTrigger>
-          </Nav.Item>
+          {/* Navigation Two - Asignar Rutinas */}
+          <Accordion.Item eventKey="0">
+            <Nav.Link href="/dashboardControlCalorico/">
+              <Accordion.Header>
+                {" "}
+                <FontAwesomeIcon icon={faList} className="icon" />
+                Control calórico
+              </Accordion.Header>
+            </Nav.Link>
+          </Accordion.Item>
 
-          <Nav.Item>
-            <OverlayTrigger
-              placement="right"
-              overlay={<Tooltip id="tooltip-settings">Alimentación</Tooltip>}
-            >
-              <Nav.Link
-                href="/dashboardControlCalorico/"
-                className="text-center"
-              >
-                <FontAwesomeIcon icon={faBowlFood} /> Alimentación
-              </Nav.Link>
-            </OverlayTrigger>
-          </Nav.Item>
+          {/* Navigation Three */}
+          {/* <Accordion.Item eventKey="2">
+            <Accordion.Header>
+              <FontAwesomeIcon icon={faClipboard} className="icon" />
+              Asignar rutinas
+            </Accordion.Header>
+            <Accordion.Body>
+              <Nav className="flex-column">
+                <Nav.Link href="#" className="sidebar-link">
+                  Option 7
+                </Nav.Link>
+                <Nav.Link href="#" className="sidebar-link">
+                  Option 8
+                </Nav.Link>
+              </Nav>
+            </Accordion.Body>
+          </Accordion.Item> */}
 
-          <Nav.Item>
-            <OverlayTrigger
-              placement="right"
-              overlay={<Tooltip id="tooltip-settings">Progreso</Tooltip>}
-            >
-              <Nav.Link href="/assignRoutines/" className="text-center">
-                <FontAwesomeIcon icon={faChartBar} /> Progreso
-              </Nav.Link>
-            </OverlayTrigger>
-          </Nav.Item>
-          {/* */}
-        </Nav>
+          {/* Group */}
+          <Accordion.Item eventKey="3">
+            <Accordion.Header>
+              <FontAwesomeIcon icon={faBarChart} className="icon" />
+              Progreso
+            </Accordion.Header>
+            <Accordion.Body>
+              <Nav className="flex-column">
+                <Nav.Link href="/dashboardCalorias/" className="sidebar-link">
+                  Calorías
+                </Nav.Link>
+                <Nav.Link href="#" className="sidebar-link">
+                  Macronutrientes
+                </Nav.Link>
+              </Nav>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
       </div>
+
+      {/* Sidebar Overlay */}
+      {isOpen && (
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+      )}
     </>
   );
 };
 
-export default SidebarAlimentos;
+export default Sidebar;

@@ -30,9 +30,9 @@ const WeekdayCards = ({ onSelectDay }) => {
       "https://steelsupplements.com/cdn/shop/articles/shutterstock_312591206_1000x.jpg?v=1617749471",
   };
   return (
-    <Row>
+    <Row className={styles.weekdaysContent}>
       {days.slice(0, 3).map((day) => (
-        <Col md={4} className="mb-4" key={day}>
+        <Col xd={12} sm={6} md={4} className="mb-4" key={day}>
           <Card className={styles.card}>
             <Card.Img variant="top" src={dayImages[day]}></Card.Img>
             <Card.Body className={styles.cardBody}>
@@ -51,7 +51,7 @@ const WeekdayCards = ({ onSelectDay }) => {
         </Col>
       ))}
       {days.slice(3).map((day) => (
-        <Col md={4} className="mb-4" key={day}>
+        <Col xd={12} sm={6} md={4} className="mb-4" key={day}>
           <Card className={styles.card}>
             <Card.Img variant="top" src={dayImages[day]}></Card.Img>
             <Card.Body className={styles.cardBody}>

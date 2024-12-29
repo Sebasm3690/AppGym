@@ -12,9 +12,15 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+from datetime import datetime
+import pytz
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
@@ -85,7 +91,7 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppGym5',
+        'NAME': 'AppGym6',
         'USER': 'postgres',
         'PASSWORD': 'awayouname11',
         'HOST': 'localhost',  
@@ -117,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Guayaquil'  # Ecuador's timezone
 
 USE_I18N = True
 
@@ -139,8 +145,49 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-FATSECRET_API_KEY = os.getenv('FATSECRET_API_KEY', '940907e4c1msh2523358c0fb13dep15b731jsnfd364151b589')
-FATSECRET_AUTH_TOKEN = os.getenv('FATSECRET_AUTH_TOKEN', "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwOEFEREZGRjZBNDkxOUFBNDE4QkREQTYwMDcwQzE5NzNDRjMzMUUiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJFSXJkX19ha2tacWtHTDNhWUFjTUdYUFBNeDQifQ.eyJuYmYiOjE3MzEwNzYyNTUsImV4cCI6MTczMTE2MjY1NSwiaXNzIjoiaHR0cHM6Ly9vYXV0aC5mYXRzZWNyZXQuY29tIiwiYXVkIjoicHJlbWllciIsImNsaWVudF9pZCI6IjJiMGZjOTRmZTIwMTQzMmQ5N2UwNDAzOTI5YWExNDU5Iiwic2NvcGUiOlsicHJlbWllciJdfQ.IKutJgzAIbx1zz9BIbMQud0RURcXI1A7xF_AsuOSgGW7-ZEyDAxdp56Vc_VS4HO5Avamy-M5zBotKJZWwzVUup_dn8pJPM0G5XzDHbwE5_FtfMqP8-I9GwanNlWZH5sIHWIl-yb9AdzmzBh5HDTwzP0h_6u4A-pNls8PdZIPRqqG7qoV1_6i2G9_ZtMiDod03cjFptoNraLBbmWdI9PTzEEQJZKGqi7Eef2WuB5hBXufMIF_upH0fvL1F2AMk79WHHuy1WgoKu2bwhP4o9gU69D58VuJzYmpum9xUkCr9NVRo6jzdgXRXdytJl7IWWXwJ3_pYb-_ThUBzY0TintrIhNtjmkOWV-H5Y8hu4pmNuuR7O2pQI_aPaiuCNjzMk38nlzc2vVkkdgSddsYAoCEbxaSguWkJRfXJWCChdpcwb_gfK-ADZlbOGekNObL_ofqMxxyDT2_uaO6Snpf4dJDnBERBp8qLbA9WfRFPJ2IwiSU5FUE8XiiWA9scOvWvPNE4k0WiNt_sXJxnYDq1tE31pqX3WRLQnixXZXathJlYVWvw_VcnPl52ncNpdtt6PvsDh8e51jLwamaDlyxLLHtqxjxbUykLGnNlL7ShUhj95PCHK1fD7wqy5Q2IL_H_4ahcD5cCmVbqTidB7D7w4aWk7H69klIwsVApMCAP7RaON8")
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,  # Continue without caching if Redis fails
+        },
+        'KEY_PREFIX': 'routine_app',
+    }
+}
 
 
 
+# Initialize environment variables
+env = environ.Env(
+    DEBUG=(bool, False)  # Default value for DEBUG is False
+)
+
+# Load the .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
+# Example environment variable usage
+DEBUG = env('DEBUG')
+FATSECRET_API_KEY = env('FATSECRET_API_KEY')
+FATSECRET_CLIENT_ID = env('FATSECRET_CLIENT_ID')
+FATSECRET_CLIENT_SECRET = env('FATSECRET_CLIENT_SECRET')
+
+# Media files configuration
+MEDIA_URL = '/media/'  # URL path to access media files
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+# Verify Ecuador timezone during startup
+ecuador_timezone = pytz.timezone('America/Guayaquil')
+ecuador_time = datetime.now(ecuador_timezone)
+print(f"Ecuador timezone datetime on startup: {ecuador_time}")
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sebasm6004@gmail.com'
+EMAIL_HOST_PASSWORD = 'bjnn toit gggb lcjk'

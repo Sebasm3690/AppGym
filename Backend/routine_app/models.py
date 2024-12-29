@@ -7,6 +7,7 @@ class Administrador(models.Model):
     borrado = models.BooleanField(default=False)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
+    cedula = models.CharField(max_length=10)
 
 class Entrenador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -14,7 +15,9 @@ class Entrenador(models.Model):
     borrado = models.BooleanField(default=False)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    id_administrador = models.ForeignKey(Administrador, on_delete=models.CASCADE)
+    id_administrador = models.ForeignKey("Administrador", on_delete=models.CASCADE) #I put "Administrador" instad of Administrador
+    cedula = models.CharField(max_length=10)
+    imagen = models.ImageField(upload_to='trainer_images/', default='trainer_images/default.jpg')
 
 class NivelGym(models.Model):
     id_nivel_gym = models.AutoField(primary_key=True)
@@ -33,11 +36,17 @@ class Objetivo(models.Model):
     id_objetivo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30)
 
+
+class Membresia(models.Model):
+    id_membresia = models.AutoField(primary_key=True)
+    duracion = models.CharField(max_length=15)
+
 class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id_cliente = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
+    cedula = models.CharField(max_length=10)
     tmb = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     altura = models.DecimalField(decimal_places=2, max_digits=5, default=0)
     peso = models.DecimalField(decimal_places=2, max_digits=5, default=0)
@@ -51,6 +60,10 @@ class Cliente(models.Model):
     id_nivel_actividad = models.ForeignKey(NivelActividad, on_delete=models.CASCADE)
     id_genero = models.ForeignKey(Genero, on_delete=models.CASCADE)
     id_objetivo = models.ForeignKey(Objetivo, on_delete=models.CASCADE)
+    id_membresia = models.ForeignKey(Membresia, on_delete=models.CASCADE)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    imagen = models.ImageField(upload_to='trainer_images/', default='client_images/default.png')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -125,13 +138,17 @@ class SeAsigna(models.Model):
     id_rutina = models.ForeignKey(Rutina, on_delete=models.CASCADE)
     id_ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    notas = models.CharField(max_length=200, blank = True, null=True)
+    tiempo_descanso = models.IntegerField(blank=True, null=True, help_text="Tiempo estimado en minutos")
     serie = models.IntegerField()
     repeticiones = models.IntegerField()
     peso = models.IntegerField()
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateTimeField(auto_now_add=True)
     dia = models.CharField(max_length=30)
+    tipo = models.CharField(max_length=30)
+    asignado = models.CharField(max_length=50, blank = True, null=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['id_rutina', 'id_ejercicio', 'id_cliente', 'serie'], name='unique_seasigna_rutina_ejercicio_cliente_serie')
-        ]
+    #class Meta:
+        #constraints = [
+            #models.UniqueConstraint(fields=['id_rutina', 'id_ejercicio', 'id_cliente', 'serie'], name='unique_seasigna_rutina_ejercicio_cliente_serie')
+        #]

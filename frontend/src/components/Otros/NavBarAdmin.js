@@ -61,28 +61,32 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
 
   return (
     <>
+      {/*Navbar*/}
       <Navbar expand="lg" className="navbar-dark bg-dark">
         <Container fluid>
-          <Navbar.Brand href="#">
+          <Navbar.Brand href="#" className="d-flex align-items-center">
             <img
               src={
                 "https://png.pngtree.com/png-clipart/20220620/original/pngtree-orange-gym-logo-design-templete-png-png-image_8128901.png"
               }
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
+              width="40"
+              height="40"
+              className="d-inline-block align-top me-2"
               alt="Campos Fitness Logo"
             />
           </Navbar.Brand>
-          <Navbar.Brand href="#">CAMPOS FITNESS</Navbar.Brand>
+          <Navbar.Brand href="navbar-title">CAMPOS FITNESS</Navbar.Brand>
+
+          {/* Toggle for mobile view */}
           <Navbar.Toggle aria-controls="navbarScroll" />
+
           <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0" navbarScroll />
-            <Nav>
+            {/* Main navigation with ms-auto to push it to the right */}
+            <Nav className="ms-auto">
               <NavDropdown
                 title={
-                  <>
-                    <span className="admin-name text-white mt-n2">
+                  <span className="profile-section">
+                    <span className="admin-name me-2">
                       {admin.nombre + " " + admin.apellido + "  " || "Admin"}
                     </span>
                     <Image
@@ -90,13 +94,14 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
                       roundedCircle
                       width="45"
                       height="45"
-                      className="d-inline-block align-top"
+                      className="profile-avatar me-2"
                       alt="Profile"
                     />
-                  </>
+                  </span>
                 }
                 id="navbarScrollingDropdown"
                 align="end"
+                className="profile-menu"
               >
                 <NavDropdown.Item href="#action3">Cuenta</NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -108,15 +113,17 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      {/*Searchbar*/}
       <Container className="mt-4">
         <Row className="justify-content-center" style={{ marginTop: "25px" }}>
           <Col xs={12} md={10}>
-            <Form onSubmit={handleSearch} className="d-flex">
+            <Form onSubmit={handleSearch} className="d-flex search-bar">
               <Form.Control
                 type="search"
                 name="nombre"
                 placeholder="Nombre"
-                className="me-2"
+                className="me-2 rounded-input"
                 aria-label="Buscar nombre"
                 value={searchParams.nombre}
                 onChange={handleInputChange}
@@ -125,21 +132,21 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
                 type="search"
                 name="apellido"
                 placeholder="Apellido"
-                className="me-2"
+                className="me-2 rounded-input"
                 aria-label="Buscar apellido"
                 value={searchParams.apellido}
                 onChange={handleInputChange}
               />
               <Form.Control
                 type="search"
-                name="correo"
-                placeholder="Correo"
-                className="me-2"
-                aria-label="Buscar correo"
-                value={searchParams.correo}
+                name="cedula"
+                placeholder="Cédula"
+                className="me-2 rounded-input"
+                aria-label="Buscar cedula"
+                value={searchParams.cedula}
                 onChange={handleInputChange}
               />
-              <Button variant="primary" type="submit">
+              <Button variant="primary" type="submit" className="search-button">
                 <FontAwesomeIcon icon={faSearch} />
               </Button>
             </Form>

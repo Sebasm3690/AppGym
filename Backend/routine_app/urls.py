@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
 from .views import *
+from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 router.register(r'admin', AdminView, 'admin') #api/v1/admin/
@@ -20,6 +21,8 @@ router.register(r'compuesta',CompoundView,'compuesta')
 router.register(r'seAsigna',AssignedView,'seAsigna')
 router.register(r'parteDia',PartOfDayView,'parteDia')
 router.register(r'dispone',DisponeView,'dispone')
+router.register(r'nivelActividad',NivelActividadView,'nivelActividad')
+router.register(r'membresia',MembresiaView,'membresia')
 
 
 
@@ -39,7 +42,7 @@ urlpatterns = [
     path("consumeFood/",ConsumeView.as_view({'get':'list'}), name='consumeFood'),
     path("calcularTMB/<query_param>/",CalcularTMBAPIView.as_view(), name='calcularTMB'),
     path("calcularMacros/<query_param>/",calcularMacroNutrientes.as_view(), name='calcularMacros'),
-    path("calcularTotalMacrosAlimentos/<query_param>/",calcularTotalMacrosAlimentos.as_view(), name='calcularTotalMacrosAlimentos)'),
+    path("calcularTotalMacrosAlimentos/<int:query_param>/",calcularTotalMacrosAlimentos.as_view(), name='calcularTotalMacrosAlimentos)'),
     path('borradoLogicoEntrenador/<query_param>/', BorradoLogicoEntrenador.as_view(), name='borradoLogicoEntrenador'),
     path('borradoLogicoCliente/<query_param>/', BorradoLogicoCliente.as_view(), name='borradoLogicoEntrenador'),
     path('borradoLogicoCliente/<query_param>/', BorradoLogicoCliente.as_view(), name='borradoLogicoCliente'),
@@ -68,4 +71,29 @@ urlpatterns = [
     path("obtenerDatosDisponeActual/",obtener_datos_dispone_actual, name="obtenerDatosDisponeActual"),
     path("updateFood/",update_food, name="updateFood"),
     path("deleteFood/",delete_food, name="deleteFood"),
+    path("updateTrainer/<int:id>/",update_trainer, name="updateTrainer"),
+    path("updateClient/<int:id>/",update_client, name="updateClient"),
+    path("calcularTotalMacroAlimentosParteDia/<query_param>/",calcularTotalMacroAlimentosParteDia.as_view(), name="calcularTotalMacroAlimentosParteDia"),
+    path("obtenerTMB/<int:query_param>/",obtener_tmb, name="obtenerTMB"),
+    path("clienteRutinas/",obtener_rutinas_dia_cliente, name="clienteRutinas"),
+    path("agregarProgreso/", agregarProgreso, name="agregarProgreso"),
+    path("historialCliente/", getHistorialCliente, name="historialCliente"),
+    path("obtenerRutinaProgresoDetalleCompleto/", obtenerRutinaProgresoDetalleCompleto, name="obtenerRutinaProgresoDetalleCompleto"),
+    path("getHistorialCompletoFechas/<int:query_param>/", getHistorialCompletoFechas,name="getHistorialCompletoFechas"),
+    path("getFuerzaRutina/", getFuerzaRutina,name="getFuerzaRutina"),
+    path("getFuerzaEjercicio/", getFuerzaEjercicio,name="getFuerzaRutinaDetalle"),
+    path("getFuerzaEjercicioAsignado/", getFuerzaEjercicioAsignado,name="getFuerzaEjercicioAsignado"),
+    path("getFuerzaRutinaFecha/", getFuerzaRutinaFecha,name="getFuerzaRutinaFecha"),
+    path("mostrarEstadoRutina/", mostrarEstadoRutina,name="mostrarEstadoRutina"),
+    path("controlClienteMembresia/",controlClienteMembresia, name="controlClienteMembresia"),
+    path("allowDelete/",allowDelete,name="allowDelete"),
+    path("updateRutina/",update_rutinas,name="updateRutina"),
+    path("allowUpdate/",allowUpdate,name="allowUpdate"),
+    path("eliminarSets/",eliminar_sets,name="eliminar_sets"),
+    path("getRestClient/",getRestClient,name="getRestClient"),
+    path("reset-password-request/", reset_password_request, name="reset_password_request"),
+    path("reset-password/<uidb64>/<token>/", reset_password_confirm, name="reset_password_confirm"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -16,6 +16,7 @@ import NavScrollExample from "../Otros/Navbar";
 //import Footer from "../Otros/footer";
 import { useNavigate } from "react-router-dom";
 import "../Otros/navBar.css";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 class LoginAdmin extends React.Component {
   constructor(props) {
@@ -37,6 +38,17 @@ class LoginAdmin extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
+
+    // Show loading SweetAlert
+    Swal.fire({
+      title: "Cargando...",
+      text: "Estamos validando tus credenciales.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // Show loading spinner
+      },
+    });
+
     try {
       const response = await axios.post("http://localhost:8000/adminLogin/", {
         username,
@@ -46,16 +58,30 @@ class LoginAdmin extends React.Component {
       console.log("Token:", token);
       console.log("Datos del administrador", administrador);
 
-      // Guardar el id del admin en el estado y en localStorage
-      this.setState({ idAdmin: administrador.id_administrador }); //Actualiza el estado del id administrador
-      localStorage.setItem("idAdmin", administrador.id_administrador); //Persiste aunque la página se recargue
-      localStorage.setItem("userRole", "administrador");
-      // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
-      this.navigate("/homeAdmin/"); // Cambia '/crudTrainers' por la ruta correcta
+      // Close loading and show success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Inicio de sesión exitoso",
+        text: "¡Bienvenido a tu panel de administración!",
+        timer: 2000, // Auto-close after 2 seconds
+        timerProgressBar: true, // Show timer progress bar
+        showConfirmButton: false, // Hide the "Confirm" button
+      }).then(() => {
+        // Guardar el id del admin en el estado y en localStorage
+        this.setState({ idAdmin: administrador.id_administrador }); //Actualiza el estado del id administrador
+        localStorage.setItem("idAdmin", administrador.id_administrador); //Persiste aunque la página se recargue
+        localStorage.setItem("userRole", "administrador");
+        // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
+        this.navigate("/homeAdmin/"); // Cambia '/crudTrainers' por la ruta correctav
+      });
     } catch (error) {
-      this.setState({
-        error:
-          error.response?.data.error || "Error desconocido al iniciar sesión",
+      Swal.fire({
+        icon: "error",
+        title: "Error al iniciar sesión",
+        text:
+          error.response?.data.error ||
+          "Hubo un problema al validar tus credenciales. Inténtalo nuevamente.",
+        confirmButtonText: "Entendido",
       });
       console.log("Error al iniciar sesión", error.response?.data.error);
     }
@@ -133,7 +159,7 @@ class LoginAdmin extends React.Component {
                             ¿Iniciar sesión como entrenador?
                           </a>
                           <a
-                            href="/forgot-password"
+                            href="/forgotPassword"
                             className="text-primary mt-3 d-block"
                           >
                             ¿Olvidaste tu contraseña?

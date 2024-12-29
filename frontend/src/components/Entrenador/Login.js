@@ -15,6 +15,7 @@ import NavScrollExample from "../Otros/Navbar";
 //import Footer from "../Otros/footer";
 import { useNavigate } from "react-router-dom";
 import "../Entrenador/Login.css";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 class LoginEntrenador extends React.Component {
   constructor(props) {
@@ -36,6 +37,16 @@ class LoginEntrenador extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
+
+    // Show loading SweetAlert
+    Swal.fire({
+      title: "Cargando...",
+      text: "Estamos validando tus credenciales.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // Show loading spinner
+      },
+    });
     try {
       const response = await axios.post("http://localhost:8000/trainerLogin/", {
         username,
@@ -45,15 +56,28 @@ class LoginEntrenador extends React.Component {
       console.log("Token:", token);
       console.log("Datos del entrenador", entrenador);
 
-      // Guardar el id del admin en el estado y en localStorage
-      this.setState({ idAdmin: entrenador.id_administrador }); //Actualiza el estado del id entrenador
-      localStorage.setItem("idEntrenador", entrenador.id_entrenador); //Persiste aunque la página se recargue
-      localStorage.setItem("userRole", "entrenador");
-      this.navigate("/homeEntrenador/");
+      // Close loading and show success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Inicio de sesión exitoso",
+        text: "¡Bienvenido a tu panel de entrenador!",
+        timer: 2000, // Auto-close after 2 seconds
+        timerProgressBar: true, // Show timer progress bar
+        showConfirmButton: false, // Hide the "Confirm" button
+      }).then(() => {
+        this.setState({ idAdmin: entrenador.id_administrador });
+        localStorage.setItem("idEntrenador", entrenador.id_entrenador);
+        localStorage.setItem("userRole", "entrenador");
+        this.navigate("/homeEntrenador/");
+      });
     } catch (error) {
-      this.setState({
-        error:
-          error.response?.data.error || "Error desconocido al iniciar sesión",
+      Swal.fire({
+        icon: "error",
+        title: "Error al iniciar sesión",
+        text:
+          error.response?.data.error ||
+          "Hubo un problema al validar tus credenciales. Inténtalo nuevamente.",
+        confirmButtonText: "Entendido",
       });
       console.log("Error al iniciar sesión", error.response?.data.error);
     }

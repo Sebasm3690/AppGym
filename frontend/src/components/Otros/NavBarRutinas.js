@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   Container,
@@ -13,15 +13,26 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import "../Otros/navBar.css";
+import "./index.css";
 
 const NavScrollExample = ({ onSearchResults, onLogout }) => {
   const idEntrenador = localStorage.getItem("idEntrenador");
+  const [trainer, setTrainer] = useState({});
+  const url = `http://127.0.0.1:8000/api/v1/trainer/${idEntrenador}`;
   const [searchParams, setSearchParams] = useState({
     nombre: "",
     enfoque: "",
     tipo: "",
   });
+
+  useEffect(() => {
+    getTrainer();
+  }, []);
+
+  const getTrainer = async () => {
+    const respuesta = await axios.get(url);
+    setTrainer(respuesta.data);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,37 +59,48 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
 
   return (
     <>
-      <Navbar expand="lg" className="navbar-dark bg-dark">
+      <Navbar
+        expand="lg"
+        /*className="navbar-dark bg-dark"*/ style={{ background: "#000C17" }}
+        fixed="top"
+      >
         <Container fluid>
-          <Navbar.Brand href="#">
+          <Navbar.Brand href="#" className="d-flex align-items-center">
             <img
               src={
                 "https://png.pngtree.com/png-clipart/20220620/original/pngtree-orange-gym-logo-design-templete-png-png-image_8128901.png"
               }
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
+              width="40"
+              height="40"
+              className="d-inline-block align-top me-2"
               alt="Campos Fitness Logo"
             />
           </Navbar.Brand>
           <Navbar.Brand href="#">CAMPOS FITNESS</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
+            {/* Toggle for mobile view */}
             <Nav className="me-auto my-2 my-lg-0" navbarScroll />
-            <Nav>
+            <Nav className="ms-auto">
               <NavDropdown
                 title={
-                  <Image
-                    src="https://previews.123rf.com/images/metelsky/metelsky1809/metelsky180900233/109815470-man-avatar-profile-male-face-icon-vector-illustration.jpg"
-                    roundedCircle
-                    width="45"
-                    height="45"
-                    className="d-inline-block align-top"
-                    alt="Profile"
-                  />
+                  <span className="profile-section">
+                    <span className="admin-name me-2">
+                      {trainer.nombre + " " + trainer.apellido}
+                    </span>
+                    <Image
+                      src="https://previews.123rf.com/images/metelsky/metelsky1809/metelsky180900233/109815470-man-avatar-profile-male-face-icon-vector-illustration.jpg"
+                      roundedCircle
+                      width="45"
+                      height="45"
+                      className="profile-avatar me-2"
+                      alt="Profile"
+                    />
+                  </span>
                 }
                 id="navbarScrollingDropdown"
                 align="end"
+                className="profile-menu"
               >
                 <NavDropdown.Item href="#action3">Cuenta</NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -91,14 +113,22 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
         </Container>
       </Navbar>
       <Container className="mt-4">
-        <Row className="justify-content-center" style={{ marginTop: "120px" }}>
-          <Col xs={12} md={10} className="search-container">
-            <Form onSubmit={handleSearch} className="search-form">
+        <Row
+          className="justify-content-center align-items-center"
+          style={{ marginTop: "120px" }}
+        >
+          {/* Page Title */}
+          <Col xs={12} md={{ span: 12, offset: 2 }} className="text-center">
+            <h3 className="mb-4">Lista de rutinas</h3>
+          </Col>
+          {/* Search Bar */}
+          <Col xs={12} md={{ span: 8, offset: 3 }} lg={{ span: 5, offset: 2 }}>
+            <Form onSubmit={handleSearch} className="d-flex search-bar">
               <Form.Control
                 type="search"
                 name="nombre"
-                placeholder="Buscar por nombre"
-                className="search-input"
+                placeholder="Nombre"
+                className="me-2 rounded-input"
                 aria-label="Buscar por nombre"
                 value={searchParams.nombre}
                 onChange={handleInputChange}
@@ -106,22 +136,22 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
               <Form.Control
                 type="search"
                 name="enfoque"
-                placeholder="Buscar por enfoque"
-                className="search-input"
+                placeholder="Enfoque"
+                className="me-2 rounded-input"
                 aria-label="Buscar por enfoque"
                 value={searchParams.enfoque}
                 onChange={handleInputChange}
               />
-              <Form.Control
+              {/*<Form.Control
                 type="search"
                 name="tipo"
-                placeholder="Buscar por tipo"
-                className="search-input"
+                placeholder="Tipo"
+                className="me-2 rounded-input"
                 aria-label="Buscar por tipo"
                 value={searchParams.tipo}
                 onChange={handleInputChange}
-              />
-              <Button variant="primary" type="submit">
+              /> */}
+              <Button variant="primary" type="submit" className="search-button">
                 <FontAwesomeIcon icon={faSearch} />
               </Button>
             </Form>

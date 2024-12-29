@@ -372,6 +372,7 @@ const ClientControl = () => {
             item.fecha !== fecha
         );
       });
+      window.location.reload();
     });
   };
 
@@ -424,7 +425,7 @@ const ClientControl = () => {
       {showNavbar && <NavScrollExample onLogout={handleCerrarSesion} />}
       {showNavbar && <SidebarAlimentos />}
       <Container fluid className="pt-5 mt-4 d-flex justify-content-center">
-        <Row className="w-100" style={{ maxWidth: "800px" }}>
+        <Row className="w-100" style={{ maxWidth: "1000px" }}>
           {" "}
           {/*w-100 helped me to move the content to the right*/}
           {/*{showImages && (
@@ -456,26 +457,27 @@ const ClientControl = () => {
               className="search-bar-form mb-4"
             >
               {/* Image Section */}
-              <Row className="justify-content-center">
-                <Col md={6} className="text-center">
-                  {/*The styles has applied to move everything inside here*/}
-                  {/* <img
+              {/*<Row className="justify-content-center">
+                <Col md={6} className="text-center">*/}
+              {/*The styles has applied to move everything inside here*/}
+              {/* <img
                     src={CamposNutrition2}
                     alt=""
                     className="img-fluid"
                     style={{ height: "180px", marginBottom: "-10px" }}
                   /> */}
-                </Col>
-              </Row>
+              {/*</Col>
+              </Row>*/}
               {/* Search Bar Section */}
               <Row className="justify-content-center mt-3">
-                <Col md={10} className="offset-md-2 offset-lg-3">
+                <Col xs={12} md={10} lg={8} className="offset-md-2 offset-lg-3">
                   <FormGroup controlId="searchQuery">
                     <div className="input-group search-bar-input-group">
                       <Form.Control
                         type="text"
                         placeholder="Ingrese un alimento..."
                         value={searchQuery}
+                        className="search-bar-input-group"
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
                       <Button
@@ -492,198 +494,223 @@ const ClientControl = () => {
             </Form>
           )}
           {/*This is the main screen when the user click on the food picture*/}
-          {showDetails && (
-            <Col xs={12} style={{ marginLeft: "103px" }}>
-              <Card className="p-4 shadow">
-                {/* Calories Section */}
-                <Row className="text-center mb-4">
-                  <Col>
-                    <h3>Calorias Restantes</h3>
-                    <h1>{macrosRestante.calorias_restantes} kcal</h1>
-                  </Col>
-                  <Col>
-                    <h3>Calorías Consumidas</h3>
-                    <h1>{macrosHoy.total_calorias} kcal</h1>
-                  </Col>
-                </Row>
-                {/* Meal Sections */}
-                {meals.map((meal, index) => (
-                  <div key={index}>
-                    <Card
-                      className="mb-3 shadow-sm"
-                      key={index}
-                      style={{ borderRadius: "10px" }}
-                    >
-                      <Card.Body>
-                        <Row className="align-items-center">
-                          <Col xs={2} className="text-center">
-                            <FontAwesomeIcon
-                              icon={getIcono(meal.icono)}
-                              size="2x"
-                            />
-                          </Col>
-                          <Col xs={6}>
-                            <h4>{meal.nombre}</h4>
-                            <hr
-                              style={{
-                                margin: "13px 0",
-                                borderTop: "3.5px solid #ccc",
-                              }}
-                            />
-                            {dispones
-                              .filter(
-                                (dispone) =>
-                                  dispone.id_parte_dia === meal.id_parte_dia &&
-                                  dispone.id_cliente === parseInt(idCliente) &&
-                                  dispone.fecha === today
-                              )
-                              .map((dispone) => (
-                                <div
-                                  style={{ marginBottom: "10px" }}
-                                  key={dispone.id_alimento.id_alimento}
-                                >
-                                  <div style={{ display: "flex", gap: "10px" }}>
-                                    <h6>{dispone.id_alimento.nombre} </h6>
-                                    <FaEdit
-                                      onClick={() =>
-                                        handleShowModalUpdate(
-                                          dispone.id_alimento.id_alimento,
-                                          dispone.id_parte_dia,
-                                          dispone.fecha
-                                        )
-                                      }
+          <div className="main-content-wrapper mt-3 mb-3">
+            {showDetails && (
+              <Col
+                xs={12}
+                md={{ span: 12, offset: 2 }}
+                lg={8}
+                xl={6}
+                className="main-content-food"
+              >
+                <Card className="p-4 shadow">
+                  {/* Calories Section */}
+                  <Row className="text-center mb-4">
+                    <Col xs={12} md={6} className="mb-3 mb-md-0">
+                      <h3 className="fs-4">Calorias Restantes</h3>
+                      <h1 className="fs-2">
+                        {macrosRestante.calorias_restantes} kcal
+                      </h1>
+                    </Col>
+                    <Col xd={12} md={6}>
+                      <h3 className="fs-4">Calorías Consumidas</h3>
+                      <h1 className="fs-2">{macrosHoy.total_calorias} kcal</h1>
+                    </Col>
+                  </Row>
+                  {/* Meal Sections */}
+                  {meals.map((meal, index) => (
+                    <div key={index}>
+                      <Card
+                        className="mb-3 shadow-sm"
+                        style={{ borderRadius: "10px" }}
+                      >
+                        <Card.Body>
+                          {/* Flexbox layout for header */}
+                          <Row className="align-items-center d-flex justify-content-between">
+                            {/* Left: Icon */}
+                            <Col xs={2} md={1} className="text-center">
+                              <FontAwesomeIcon
+                                icon={getIcono(meal.icono)}
+                                size="2x"
+                              />
+                            </Col>
+
+                            {/* Center: Meal Name */}
+                            <Col xs={6} md={2}>
+                              <h4 className="fs-5 text-center">
+                                {meal.nombre}
+                              </h4>
+                            </Col>
+                            <Col>
+                              <hr
+                                style={{
+                                  margin: "13px 0",
+                                  borderTop: "3.5px solid #ccc",
+                                }}
+                              />
+                              {dispones
+                                .filter(
+                                  (dispone) =>
+                                    dispone.id_parte_dia ===
+                                      meal.id_parte_dia &&
+                                    dispone.id_cliente ===
+                                      parseInt(idCliente) &&
+                                    dispone.fecha === today
+                                )
+                                .map((dispone) => (
+                                  <div
+                                    style={{ marginBottom: "10px" }}
+                                    key={dispone.id_alimento.id_alimento}
+                                  >
+                                    <div
                                       style={{
-                                        cursor: "pointer",
-                                        color: "#17a2b8",
-                                        fontSize: "20px",
+                                        display: "flex",
+                                        gap: "10px",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <div
+                                        style={{
+                                          overflow: "hidden",
+                                          textOverflow: "ellipsis",
+                                          maxWidth: "80%",
+                                        }}
+                                      >
+                                        {" "}
+                                        <h6>{dispone.id_alimento.nombre} </h6>
+                                      </div>
+
+                                      <FaEdit
+                                        onClick={() =>
+                                          handleShowModalUpdate(
+                                            dispone.id_alimento.id_alimento,
+                                            dispone.id_parte_dia,
+                                            dispone.fecha
+                                          )
+                                        }
+                                        style={{
+                                          cursor: "pointer",
+                                          color: "#17a2b8",
+                                          fontSize: "1.25rem", // Consistent font size
+                                          verticalAlign: "middle", // Align icon properly with text
+                                        }}
+                                      />
+                                    </div>
+
+                                    <h6 style={{ color: "green", margin: "0" }}>
+                                      {dispone.id_alimento.calorias *
+                                        dispone.cantidad +
+                                        " kcal"}
+                                    </h6>
+
+                                    {/*Button update and delete*/}
+
+                                    {/*Divider */}
+                                    <hr
+                                      style={{
+                                        margin: "15px 0",
+                                        borderTop: "3.5px solid #ccc",
                                       }}
                                     />
                                   </div>
+                                ))}
+                            </Col>
+                            <Col md={4} xs={8} className="text-end">
+                              <Button
+                                variant="outline-success"
+                                onClick={() => handleSearchClick(index)}
+                                className="me-3"
+                              >
+                                <FontAwesomeIcon icon={faPlusCircle} /> Agregar
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
+                    </div>
+                  ))}
 
-                                  <h6 style={{ color: "green" }}>
-                                    {dispone.id_alimento.calorias *
-                                      dispone.cantidad +
-                                      " kcal"}
-                                  </h6>
-
-                                  {/*Button update and delete*/}
-
-                                  {/*Divider */}
-                                  <hr
-                                    style={{
-                                      margin: "15px 0",
-                                      borderTop: "3.5px solid #ccc",
-                                    }}
-                                  />
-                                </div>
-                              ))}
-                          </Col>
-                          <Col xs={4} className="text-end">
-                            <Button
-                              variant="outline-success"
-                              onClick={() => handleSearchClick(index)}
-                            >
-                              <FontAwesomeIcon icon={faPlusCircle} /> Agregar
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                ))}
-
-                {/* Macronutrient Summary */}
-                {/*<Row className="text-center">
+                  {/* Macronutrient Summary */}
+                  {/*<Row className="text-center">
                   <Col>
                     <h4>Resumen Macronutrientes</h4>
                   </Col>
                 </Row> */}
-                <Row className="text-center mb-4">
-                  <Col xs={4}>
-                    <hr
-                      style={{
-                        margin: "20px 0",
-                        borderTop: "3.5px solid #ccc",
-                      }}
-                    />
+                  <Row className="text-center mb-4">
+                    <Col md={4} xs={12}>
+                      <hr className="my-3" />
 
-                    <h5>
-                      <FontAwesomeIcon icon={faBreadSlice} /> Carbohidratos
-                    </h5>
-                    <p className="mb-1">
-                      {toFixedCalculate(
-                        macrosPorcentaje.carbohidratos_logrados
-                      )}
-                      %
-                    </p>
-                    <ProgressBar
-                      now={macrosPorcentaje.carbohidratos_logrados}
-                      variant="warning"
-                      style={{ height: "15px", borderRadius: "8px" }}
-                    />
-                  </Col>
-
-                  <Col xs={4}>
-                    <hr
-                      style={{
-                        margin: "20px 0",
-                        borderTop: "3.5px solid #ccc",
-                      }}
-                    />
-
-                    <h5>
-                      <FontAwesomeIcon icon={faBacon} /> Grasa
-                    </h5>
-                    <p className="mb-1">
-                      {toFixedCalculate(macrosPorcentaje.grasa_lograda)}%
-                    </p>
-                    {/*Here I add a custom color for te bar*/}
-                    <ProgressBar
-                      now={macrosPorcentaje.grasa_lograda}
-                      variant="custom"
-                    >
-                      <div
-                        className="progress-bar"
-                        style={{
-                          backgroundColor: "#FF6384", // Rose color for the fill
-                          width: `${macrosPorcentaje.grasa_lograda}%`,
-                          height: "100%",
-                          borderRadius: "8px",
-                        }}
+                      <h5>
+                        <FontAwesomeIcon icon={faBreadSlice} /> Carbohidratos
+                      </h5>
+                      <p className="mb-1">
+                        {toFixedCalculate(
+                          macrosPorcentaje.carbohidratos_logrados
+                        )}
+                        %
+                      </p>
+                      <ProgressBar
+                        now={macrosPorcentaje.carbohidratos_logrados}
+                        variant="warning"
+                        style={{ height: "15px", borderRadius: "8px" }}
                       />
-                    </ProgressBar>
-                    {/*************/}
-                  </Col>
+                    </Col>
 
-                  <Col xs={4}>
+                    <Col md={4} xs={12}>
+                      <hr className="my-3" />
+
+                      <h5>
+                        <FontAwesomeIcon icon={faBacon} /> Grasa
+                      </h5>
+                      <p className="mb-1">
+                        {toFixedCalculate(macrosPorcentaje.grasa_lograda)}%
+                      </p>
+                      {/*Here I add a custom color for te bar*/}
+                      <ProgressBar
+                        now={macrosPorcentaje.grasa_lograda}
+                        variant="custom"
+                      >
+                        <div
+                          className="progress-bar"
+                          style={{
+                            backgroundColor: "#FF6384", // Rose color for the fill
+                            width: `${macrosPorcentaje.grasa_lograda}%`,
+                            height: "100%",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      </ProgressBar>
+                      {/*************/}
+                    </Col>
+
+                    <Col md={4} xs={12}>
+                      <hr className="my-3" />
+                      <h5>
+                        <FontAwesomeIcon icon={faEgg} /> Proteina
+                      </h5>
+                      <p className="mb-1">
+                        {toFixedCalculate(macrosPorcentaje.proteina_lograda)}%
+                      </p>
+                      <ProgressBar
+                        now={macrosPorcentaje.proteina_lograda}
+                        variant="info"
+                        style={{ height: "15px", borderRadius: "8px" }}
+                      />
+                    </Col>
+
                     <hr
                       style={{
-                        margin: "20px 0",
+                        margin: "30px 0",
                         borderTop: "3.5px solid #ccc",
                       }}
                     />
-                    <h5>
-                      <FontAwesomeIcon icon={faEgg} /> Proteina
-                    </h5>
-                    <p className="mb-1">
-                      {toFixedCalculate(macrosPorcentaje.proteina_lograda)}%
-                    </p>
-                    <ProgressBar
-                      now={macrosPorcentaje.proteina_lograda}
-                      variant="info"
-                      style={{ height: "15px", borderRadius: "8px" }}
-                    />
-                  </Col>
 
-                  <hr
-                    style={{ margin: "30px 0", borderTop: "3.5px solid #ccc" }}
-                  />
+                    {/* Macronutrients details */}
+                  </Row>
 
-                  {/* Macronutrients details */}
-                </Row>
-
-                {/* Macronutrient Pie Chart */}
-                <Row className="text-center mb-4">
+                  {/* Macronutrient Pie Chart */}
+                  {/*<Row className="text-center mb-4">
                   <Col xs={6}>
                     <p
                       style={{
@@ -734,7 +761,7 @@ const ClientControl = () => {
                     style={{ display: "flex", justifyContent: "flex-end" }}
                   >
                     {/* Pie Chart showing the macronutrient distribution */}
-                    <div
+                  {/*  <div
                       style={{
                         width: "250px",
                         height: "250px",
@@ -754,13 +781,14 @@ const ClientControl = () => {
                       borderTop: "3.5px solid #ccc",
                     }}
                   />
-                </Row>
-              </Card>
-            </Col>
-          )}
+                </Row>*/}
+                </Card>
+              </Col>
+            )}
+          </div>
           {/*Appears all the food after push "Search" button*/}
           {foods.length > 0 && (
-            <Row className="food-list-row">
+            <Row className="justify-content-center food-list-row ">
               {foods.map((food) => (
                 <Col
                   xs={12}
@@ -803,11 +831,10 @@ const ClientControl = () => {
             show={showModalNutrients}
             onHide={() => setShowModalNutrients(false)}
             centered
-            style={{ marginLeft: "80px" }}
           >
             <Modal.Header closeButton>
-              <Modal.Title>
-                {selectedFood?.brand_name || "Food Item"}
+              <Modal.Title className="w-100 text-center">
+                {selectedFood?.food_name || "Food Item"}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -879,10 +906,12 @@ const ClientControl = () => {
             show={showModalUpdateFood}
             onHide={() => setShowModalUpdateFood(false)}
             centered
-            style={{ marginLeft: "100px" }}
+            className="modal-update-food"
           >
             <Modal.Header closeButton>
-              <Modal.Title>{foodToUpdate?.nombre || "Food Item"}</Modal.Title>
+              <Modal.Title className="w-100 text-center">
+                {foodToUpdate?.nombre || "Food Item"}
+              </Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {foodToUpdate ? (

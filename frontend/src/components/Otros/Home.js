@@ -52,11 +52,8 @@ const Home = () => {
       <NavScrollExample />
       {/* Hero Section */}
       <div className={`${styles.heroSection} text-center text-white`}>
-        <h1>Work hard or go home</h1>
-        <p>
-          Tu salud y bienestar es nuestra prioridad. Únete a nosotros para
-          alcanzar tus objetivos de fitness
-        </p>
+        <h1>Entrena con nosotros</h1>
+        <p>Tu salud y bienestar es nuestra prioridad.</p>
       </div>
       {/* Login Option */}
       <Container className={`${styles.loginOptions} text-center my-4`}>
@@ -106,7 +103,7 @@ const Home = () => {
           <Col xs={12} md={6} className="text-left">
             <h3 className={styles.aboutTitle}>¿Quiénes somos?</h3>
             <h2 className={styles.aboutSubtitle}>SOBRE NOSOTROS</h2>
-            <p>
+            <p style={{ color: "rgba(255, 255, 255, 0.649)" }}>
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the industry's standard dummy text
               ever since the 1500s, when an unknown printer took a galley of

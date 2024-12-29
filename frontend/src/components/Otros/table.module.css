@@ -1,3 +1,12 @@
+/* Card Styling */
+.cardTableRoutine {
+  background-color: #fff; /* White background for contrast */
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  margin: 0 auto 1rem auto; /* Center and add bottom margin */
+}
+
 .planContainer {
   padding: 20px;
 }
@@ -15,5 +24,12 @@
 
 .planTable {
   width: 100%;
-  margin-top: 10px;
+  margin: 40px 0 0 12px;
+}
+
+@media (max-width: 768px) {
+  .cardMainContent {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }

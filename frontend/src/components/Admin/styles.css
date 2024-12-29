@@ -1,3 +1,22 @@
+/*Fonts*/
+
+body {
+  font-family: "Roboto", sans-serif; /* or 'Poppins', sans-serif */
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Poppins", sans-serif; /* Stylish headers */
+  font-weight: 700;
+}
+
+p,
+span {
+  font-family: "Roboto", sans-serif; /* Clean and readable body text */
+  font-weight: 400;
+}
+
 /*Table*/
 
 .table-container {
@@ -53,10 +72,6 @@
   display: none;
 }
 
-.cards-modal {
-  display: none;
-}
-
 .trainer-card {
   max-width: 400px;
   width: 100%;
@@ -85,6 +100,10 @@
     display: none;
   }
 
+  /* Specific override for the Asignar Rutina modal to show the table */
+  .asignar-rutina-modal .table {
+    display: table !important; /* Force display back to table */
+  }
   .card-container {
     display: flex;
     flex-direction: column;
@@ -199,4 +218,21 @@
 
 .modal-button:hover {
   background-color: #333;
+}
+
+/*Input buttons*/
+/*.custom-file-upload {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}*/
+
+.custom-file-upload .btn {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.custom-file-upload .file-name {
+  font-size: 14px;
+  color: #555;
 }

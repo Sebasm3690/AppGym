@@ -10,7 +10,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60vh;
+  height: 100vh;
   padding: 0;
   margin: 0;
 }
@@ -26,6 +26,7 @@ body {
   background-position: center center;
   background-repeat: no-repeat;
   min-height: 95vh;
+  height: 100%;
 }
 
 .login {
@@ -61,5 +62,8 @@ body {
   }
   .login {
     min-height: 30vh;
+  }
+  .maincontainer {
+    height: 60vh;
   }
 }
