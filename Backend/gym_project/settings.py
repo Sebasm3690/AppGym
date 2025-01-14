@@ -107,7 +107,9 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        conn_max_age=600
+        default='postgres://postgres:awayouname11@localhost:5432/AppGym6',  # Local fallback
+        conn_max_age=600,
+        ssl_require=False  # Set this to True if using SSL in production
     ) 
     #{
         #'ENGINE': 'django.db.backends.postgresql_psycopg2',

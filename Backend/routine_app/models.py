@@ -26,7 +26,7 @@ class NivelGym(models.Model):
 class NivelActividad(models.Model):
     id_nivel_actividad = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30)
-    factor = models.DecimalField(decimal_places=2, max_digits=5)
+    factor = models.DecimalField(decimal_places=2, max_digits=5, default="0.00")
 
 class Genero(models.Model):
     id_genero = models.AutoField(primary_key=True)
@@ -47,13 +47,13 @@ class Cliente(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     cedula = models.CharField(max_length=10)
-    tmb = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    altura = models.DecimalField(decimal_places=2, max_digits=5, default=0)
-    peso = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+    tmb = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    altura = models.DecimalField(decimal_places=2, max_digits=5, default=0.00)
+    peso = models.DecimalField(decimal_places=2, max_digits=5, default=0.00)
     fecha_nacimiento = models.DateField()
-    carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=7, default=0)
-    proteina_g = models.DecimalField(decimal_places=2, max_digits=7, default=0)
-    grasas_g = models.DecimalField(decimal_places=2, max_digits=7, default=0)
+    carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=7, default=0.00)
+    proteina_g = models.DecimalField(decimal_places=2, max_digits=7, default=0.00)
+    grasas_g = models.DecimalField(decimal_places=2, max_digits=7, default=0.00)
     borrado = models.BooleanField(default=False)
     id_entrenador = models.ForeignKey(Entrenador, on_delete=models.CASCADE)
     id_nivel_gym = models.ForeignKey(NivelGym, on_delete=models.CASCADE)
@@ -71,12 +71,12 @@ class Cliente(models.Model):
 class Alimento(models.Model):
     id_alimento = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=150)
-    calorias = models.DecimalField(decimal_places=2, max_digits=7)
-    proteina_g = models.DecimalField(decimal_places=2, max_digits=6)
-    carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=6)
-    grasa_g = models.DecimalField(decimal_places=2, max_digits=6)
+    calorias = models.DecimalField(decimal_places=2, max_digits=7, default=0.00)
+    proteina_g = models.DecimalField(decimal_places=2, max_digits=6, default=0.00)
+    carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=6, default=0.00)
+    grasa_g = models.DecimalField(decimal_places=2, max_digits=6, default=0.00)
     api_id_referencia = models.CharField(max_length=10)
-    metrica_g = models.DecimalField(decimal_places=2, max_digits=5)
+    metrica_g = models.DecimalField(decimal_places=2, max_digits=5, default=0.00)
     unidad_medida = models.CharField(max_length=20)
 
 
@@ -104,9 +104,9 @@ class Dispone(models.Model):
     id_alimento = models.ForeignKey(Alimento, on_delete=models.CASCADE,related_name='alimento_dispone')
     id_parte_dia = models.ForeignKey(ParteDia, on_delete=models.CASCADE)
     fecha = models.DateField(auto_now_add=True)
-    cantidad = models.DecimalField(decimal_places=2, max_digits=5)
+    cantidad = models.DecimalField(decimal_places=2, max_digits=5, default=0.00)
     tamaño_porcion_g = models.CharField(max_length=50)
-    gramos = models.DecimalField(decimal_places=2, max_digits=5)
+    gramos = models.DecimalField(decimal_places=2, max_digits=5, default=0.00)
    
 
 
