@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='alimento',
             name='unidad_medida',
-            field=models.DecimalField(decimal_places=2, default="", max_digits=5),
+            field=models.CharField(decimal_places=2, default="", max_digits=5),
             preserve_default=False,
         ),
     ]
