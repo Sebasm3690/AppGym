@@ -15,6 +15,7 @@ import os
 import environ
 from datetime import datetime
 import pytz
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # Base directory
@@ -27,12 +28,21 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pqpluknjk)4bux^w)@1wyiznic#9^xmr#v+aye6)#+h004uad('
+#SECRET_KEY = 'django-insecure-pqpluknjk)4bux^w)@1wyiznic#9^xmr#v+aye6)#+h004uad('
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = ['192.168.100.11', 'localhost', '127.0.0.1']
+# https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+#ALLOWED_HOSTS = ['192.168.100.11', 'localhost', '127.0.0.1']
 
 
 
@@ -55,6 +65,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
 
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
@@ -95,14 +106,18 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppGym6',
-        'USER': 'postgres',
-        'PASSWORD': 'awayouname11',
-        'HOST': 'localhost',  
-        'PORT': '5432',
-    }      
+    'default': dj_database_url.config(
+        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        conn_max_age=600
+    ) 
+    #{
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'NAME': 'AppGym6',
+        #'USER': 'postgres',
+        #'PASSWORD': 'awayouname11',
+        #'HOST': 'localhost',  
+        #'PORT': '5432',
+    #}      
 }
 
 # Password validation
@@ -140,6 +155,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# This production code might break development mode, so we check whether we're in DEBUG mode
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
