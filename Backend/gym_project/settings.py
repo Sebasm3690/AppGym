@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-pqpluknjk)4bux^w)@1wyiznic#9^xmr#v+aye6)#+h004uad(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.100.11', 'localhost', '127.0.0.1']
 
 
 
@@ -66,10 +66,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'gym_project.urls'
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # For local development on your computer
+    "http://192.168.100.11:3000",  # For access from your mobile device
+]
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add this line
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,6 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORSALLOWEDORIGINS = []
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
+    "http://192.168.100.11:3000",  # Add this line
 ]
 
 

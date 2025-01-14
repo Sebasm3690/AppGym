@@ -61,6 +61,7 @@ import {
 //import "../Otros/form.css";
 //import "./ModalDesign.css";
 import "./dashboardSeguimientoRutina.css";
+import "../Entrenador/setsTable.css";
 
 const FollowRoutines = () => {
   const navigate = useNavigate();
@@ -791,7 +792,7 @@ const FollowRoutines = () => {
           day: selectDay,
           peso: set.peso,
           repeticiones: set.repeticiones,
-          notas: allNotas[exerciseId] || "",
+          notas: allNotasProgreso[exerciseId] || "",
           exerciseTimers: {
             initialTime: timer.initialTime,
             timeLeft: timer.timeLeft,
@@ -980,8 +981,7 @@ const FollowRoutines = () => {
   };
 
   const handleNotasChange = (id_ejercicio, value) => {
-    //alert(id_ejercicio + " " + value);
-    setAllNotas((prevNotas) => ({
+    setAllNotasProgreso((prevNotas) => ({
       ...prevNotas,
       [id_ejercicio]: value,
     }));
@@ -1045,6 +1045,10 @@ const FollowRoutines = () => {
       });
   };
 
+  const toggleSideBar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div>
       <NavScrollExample
@@ -1052,12 +1056,12 @@ const FollowRoutines = () => {
         onLogout={handleCerrarSesion}
         showWeekDays={showWeekDays}
       />
+      <Sidebar isOpen={isOpen} toggleSideBar={toggleSideBar} />
       {!showWeekDays && (
         <Container>
           <Row>
             <Col md={2} className="d-none d-md-block">
-              {" "}
-              <Sidebar isOpen={isOpen} toggleSideBar={handleOpenSideBar} />
+              <Sidebar />
             </Col>
             <Col md={{ span: 12, offset: 1 }}>
               <div className={`main-content ${isOpen ? "shrinked" : ""}`}>
@@ -1093,7 +1097,7 @@ const FollowRoutines = () => {
                     Rutinas del día {selectDay}
                   </h3>
                   {routines.map((routine, index) => (
-                    <Col md={4} key={routine.id_rutina} className="mb-4">
+                    <Col md={4} key={routine.id_rutina} className="mb-4 mt-3">
                       <Card
                         className={index % 2 === 0 ? "bg-light" : "bg-white"}
                       >
@@ -1103,31 +1107,39 @@ const FollowRoutines = () => {
                             <strong>{routine.nombre}</strong>
                           </Card.Title>
                           <Card.Text className="w-100 text-start">
-                            {routine.descripcion
-                              ? routine.descripcion
-                              : "Sin descripción"}
+                            {routine.descripcion ? (
+                              routine.descripcion
+                            ) : (
+                              <span className="text-muted">
+                                Sin descripción
+                              </span>
+                            )}
                           </Card.Text>
                           <Card.Text>
                             {" "}
                             {/*Duración: {routine.duracion} mins*/}
                             <Card.Text className="w-100 text-start">
                               <strong>Enfoque:</strong>{" "}
-                              {routine.enfoque.toLowerCase()}
+                              {routine.enfoque /*.toLowerCase()*/}
                             </Card.Text>
-                            <Card.Text className="w-100 text-start">
-                              <strong>Estado:</strong>{" "}
+                            <Card.Text className="w-100 text-start d-flex align-items-center">
+                              <strong>Estado de la rutina:</strong>{" "}
                               {findEstado(routine.id_rutina) ? (
-                                <FontAwesomeIcon
-                                  icon={faHourglassHalf}
-                                  className="text-success w-100 icon"
-                                  title="Completado"
-                                />
+                                <div className="estado-icon bg-warning">
+                                  <FontAwesomeIcon
+                                    icon={faHourglassHalf}
+                                    className="text-white"
+                                    title="Completado"
+                                  />
+                                </div>
                               ) : (
-                                <FontAwesomeIcon
-                                  icon={faCheckCircle}
-                                  className="text-success w-100 icon"
-                                  title="Completado"
-                                />
+                                <div className="estado-icon bg-success">
+                                  <FontAwesomeIcon
+                                    icon={faCheckCircle}
+                                    className="text-white"
+                                    title="Completado"
+                                  />
+                                </div>
                               )}
                             </Card.Text>
                             <div className="w-100 text-center">
@@ -1182,7 +1194,7 @@ const FollowRoutines = () => {
             <Col md={2} className="d-none d-md-block">
               <Sidebar />
             </Col>
-            <Col md={{ span: 12, offset: 1 }}>
+            <Col md={{ span: 12, offset: 1 }} className="title-dia-semana">
               <center>
                 <h3>Selecciona el día de la semana</h3>
               </center>
@@ -1704,7 +1716,7 @@ const FollowRoutines = () => {
                   timer?.isRunning &&
                   ejercicioId === lastSelectedExerciseId && (
                     // Ensure activeTimer matches
-                    <div className="d-flex justify-content-center align-items-center text-muted mb-3  ">
+                    <div className="rest-time-input-container d-flex justify-content-center mb-4">
                       <FontAwesomeIcon icon={faClock} className="mt-3 me-2" />
                       <ProgressBar
                         now={
@@ -1729,7 +1741,7 @@ const FollowRoutines = () => {
 
                     <div className="p-3 border rounded shadow-sm w-100">
                       <h5
-                        className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                        className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                         style={{ cursor: "pointer" }}
                         onClick={() =>
                           setShowTrainerSection(!showTrainerSection)
@@ -1744,8 +1756,8 @@ const FollowRoutines = () => {
                       </h5>
 
                       {showTrainerSection && (
-                        <div className="d-flex justify-content-between align-items-center">
-                          <div className="d-flex align-items-center w-100">
+                        <div className="trainer-notes-container d-flex justify-content-between align-items-center">
+                          <div className="notes-input-container">
                             <FontAwesomeIcon icon={faBook} className="me-2" />
                             <Form.Control
                               as="textarea"
@@ -1753,8 +1765,9 @@ const FollowRoutines = () => {
                               rows={2}
                               value={allNotasEntrenador[ejercicioId] || ""} // Controlled input
                               readOnly
+                              style={{ resize: "none" }}
+                              className="notes-input form-control"
                             />
-                            {/*<Button variant="primary">Finalizar</Button>*/}
                           </div>
                         </div>
                       )}
@@ -1762,7 +1775,7 @@ const FollowRoutines = () => {
 
                     <div className="p-3 border rounded shadow-sm w-100">
                       <h5
-                        className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                        className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                         style={{ cursor: "pointer" }}
                         onClick={() => setShowClientSection(!showClientSection)}
                       >
@@ -1774,8 +1787,8 @@ const FollowRoutines = () => {
                         />
                       </h5>
                       {showClientSection && (
-                        <div className="d-flex justify-content-between align-items-center">
-                          <div className="d-flex align-items-center w-100">
+                        <div className="trainer-notes-container d-flex justify-content-between align-items-center">
+                          <div className="notes-input-container">
                             <FontAwesomeIcon icon={faBook} className="me-2" />
                             <Form.Control
                               as="textarea"
@@ -1785,6 +1798,8 @@ const FollowRoutines = () => {
                               onChange={(e) =>
                                 handleNotasChange(ejercicioId, e.target.value)
                               }
+                              style={{ resize: "none" }}
+                              className="notes-input form-control"
                             />
                           </div>
                         </div>
@@ -1809,7 +1824,7 @@ const FollowRoutines = () => {
                   {/* Workout Timer and Notes Section */}
 
                   <Card.Title
-                    className="text-primary m-0 w-100 text-center"
+                    className="text-primary m-0 w-100 text-center exercise-name"
                     onClick={() =>
                       handleMostrarInstruccionesEjercicio(ejercicioId)
                     }
@@ -1818,7 +1833,7 @@ const FollowRoutines = () => {
                   </Card.Title>
 
                   <Card.Body>
-                    <div className="table-responsive">
+                    <div className="table-responsive-progress">
                       <table className="table table-bordered">
                         <thead>
                           <tr>
@@ -1955,6 +1970,7 @@ const FollowRoutines = () => {
         show={showModalDescanso}
         onHide={() => setShowModalDescanso(false)}
         centered
+        className="h-100"
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">
@@ -2022,7 +2038,7 @@ const FollowRoutines = () => {
         show={showModalHistorial}
         onHide={() => setShowModalHistorial(false)}
         centered
-        className="asignar-rutina-modal"
+        className="assign-routine-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">Historial</Modal.Title>
@@ -2035,7 +2051,7 @@ const FollowRoutines = () => {
                 type="month"
                 value={fecha}
                 onChange={(e) => setFecha(e.target.value)}
-                className="w-100 mb-5"
+                className="w-100 mb-4"
                 placeholder="Selecciona un mes"
               />
             </Col>
@@ -2049,11 +2065,14 @@ const FollowRoutines = () => {
             historial.map((entry, index) => (
               <Col md={12} key={index} className="mb-4">
                 {/* Date Header */}
-                <h5 className="text-center text-primary">
-                  {entry.fecha
-                    ? handleHistorialDate(entry.fecha)
-                    : "Fecha no disponible"}
-                </h5>
+                <div className="mb-4" style={{ marginBottom: "30px" }}>
+                  {" "}
+                  <h5 className="text-center text-primary ">
+                    {entry.fecha
+                      ? handleHistorialDate(entry.fecha)
+                      : "Fecha no disponible"}
+                  </h5>
+                </div>
                 {entry.rutinas.map((rutina) => (
                   <Card
                     className={
@@ -2071,12 +2090,17 @@ const FollowRoutines = () => {
                           {entry.fecha}
                         </Card.Text>*/}
                       <Card.Text>
-                        {rutina.descripcion || "Sin descripción"}
+                        {rutina.descripcion || (
+                          <span className="text-muted text-descripcion">
+                            Sin descripción
+                          </span>
+                        )}
                       </Card.Text>
                       <Card.Text>
-                        <strong>Enfoque:</strong> {rutina.enfoque}
+                        <strong className="text-enfoque">Enfoque:</strong>{" "}
+                        <span className="text-enfoque">{rutina.enfoque}</span>
                       </Card.Text>
-                      <Table responsive bordered className="table">
+                      <Table responsive bordered className="table-summary">
                         <thead>
                           <tr>
                             <th>Ejercicio</th>
@@ -2143,7 +2167,7 @@ const FollowRoutines = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">
-            Rutina asignada
+            Rutina asignada1
           </Modal.Title>
         </Modal.Header>
 
@@ -2159,7 +2183,7 @@ const FollowRoutines = () => {
                 <div className="mb-4 p-3 border rounded shadow-sm ">
                   {" "}
                   <h5
-                    className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                     style={{ cursor: "pointer" }}
                     onClick={() => setShowClientSection(!showClientSection)}
                   >
@@ -2169,14 +2193,14 @@ const FollowRoutines = () => {
                     />
                   </h5>
                   {showClientSection && (
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="trainer-notes-container d-flex justify-content-between align-items-center">
                       {/* Trainer Notes */}
                       <div
-                        className="d-flex align-items-center me-2"
-                        style={{
+                        className="notes-input-container"
+                        /*style={{
                           flexGrow: 1,
                           marginRight: "15px", // Add space between the inputs
-                        }}
+                        }}*/
                       >
                         <FontAwesomeIcon icon={faBook} className="me-2" />
                         <Form.Control
@@ -2185,11 +2209,12 @@ const FollowRoutines = () => {
                           placeholder="Tus notas"
                           value={allNotas[ejercicioId] || ""} // Controlled input
                           style={{ resize: "none" }}
+                          className="notes-input form-control"
                         />
                         {/*<Button variant="primary">Finalizar</Button>*/}
                       </div>
 
-                      <div className="d-flex align-items-center">
+                      <div className="rest-time-input-container">
                         <FontAwesomeIcon icon={faClock} className="me-2" />
                         <Form.Control
                           type="number"
@@ -2197,23 +2222,24 @@ const FollowRoutines = () => {
                           placeholder="Tiempo de descanso (minutos)"
                           value={allDescansos[ejercicioId] || ""}
                           readOnly
-                          style={{
+                          /*style={{
                             width: "80px", // Keep the input narrow
                             padding: "8px",
                             border: "1px solid #ccc",
                             borderRadius: "5px",
                             textAlign: "center", // Center-align text
                             fontSize: "14px",
-                          }}
+                          }}*/
+                          className="rest-time-input form-control"
                         />
                       </div>
                     </div>
                   )}
                 </div>
 
-                <div className="mb-4 p-3 border rounded shadow-sm bg-light">
+                <div className="client-notes-section mb-4 p-3 border rounded shadow-sm bg-light">
                   <h5
-                    className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                     style={{ cursor: "pointer" }}
                     onClick={() => setShowTrainerSection(!showTrainerSection)}
                   >
@@ -2225,21 +2251,21 @@ const FollowRoutines = () => {
                   </h5>
 
                   {showTrainerSection && (
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="client-notes-container d-flex justify-content-between align-items-center">
                       <div
-                        className="d-flex align-items-center me-2"
-                        style={{
+                        className="notes-input-container"
+                        /*style={{
                           flexGrow: 1,
                           marginRight: "15px", // Add space between the inputs
-                        }}
+                        }}*/
                       >
                         <FontAwesomeIcon
                           icon={faBook}
                           className="me-2"
-                          style={{
+                          /*style={{
                             flexGrow: 1,
                             marginRight: "15px", // Add space between the inputs
-                          }}
+                          }}*/
                         />
                         <Form.Control
                           as="textarea"
@@ -2247,9 +2273,10 @@ const FollowRoutines = () => {
                           placeholder="Sin notas que mostrar"
                           value={allNotasProgreso[ejercicioId] || ""} // Controlled input
                           style={{ resize: "none" }}
+                          className="notes-input form-control"
                         />
                       </div>
-                      <div className="d-flex align-items-center">
+                      <div className="rest-time-input-container">
                         <FontAwesomeIcon icon={faClock} className="me-2" />
                         <Form.Control
                           type="number"
@@ -2257,14 +2284,15 @@ const FollowRoutines = () => {
                           placeholder="Sin descanso que mostrar"
                           value={allDescansosProgreso[ejercicioId] || ""}
                           readOnly
-                          style={{
+                          /*style={{
                             width: "80px", // Keep the input narrow
                             padding: "8px",
                             border: "1px solid #ccc",
                             borderRadius: "5px",
                             textAlign: "center", // Center-align text
                             fontSize: "14px",
-                          }}
+                          }}*/
+                          className="rest-time-input form-control"
                         />
                       </div>
                     </div>
@@ -2285,12 +2313,12 @@ const FollowRoutines = () => {
 
                   {/* Workout Timer and Notes Section */}
 
-                  <Card.Title className="text-primary m-0 w-100 text-center">
+                  <Card.Title className="text-primary m-0 w-100 text-center exercise-name">
                     {nombresEjercicios[imgIndex]} ({imgIndex + 1})
                   </Card.Title>
 
                   <Card.Body>
-                    <div className="table-responsive">
+                    <div className="table-responsive-progress">
                       <table className="table table-bordered">
                         <thead>
                           <tr>

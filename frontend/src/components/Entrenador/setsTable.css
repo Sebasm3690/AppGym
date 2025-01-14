@@ -1,0 +1,145 @@
+/*Align icons and inputs*/
+
+.input-with-icon {
+  display: flex; /* Use flexbox to align the icon and input */
+  align-items: center; /* Vertically center the icon and input */
+  gap: 10px; /* Add space between the icon and input */
+}
+
+.input-with-icon .form-control {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.input-with-icon svg {
+  font-size: 18px; /* Adjust the icon size */
+  color: #6c757d; /* Use a muted color for the icon */
+}
+
+/*Increase the size of KG*/
+
+.table .form-control {
+  font-size: 16px;
+  padding: 8px;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+}
+
+.assign-routine-modal .table {
+  display: table !important; /* Force display back to table */
+}
+
+.assign-routine-modal .modal-title {
+  text-align: center;
+  color: #333;
+}
+
+/* Ensure the input fits properly within the table cell */
+.input-container {
+  display: flex;
+  justify-content: center; /* Center the input */
+  align-items: center;
+  width: 100%; /* Take up the full width of the table cell */
+  overflow: hidden; /* Prevent the input from breaking out */
+}
+
+.input-kg {
+  width: 100%; /* Limit the width relative to the cell */
+  max-width: 100px; /* Set a maximum width for larger screens */
+  padding: 8px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.table-responsive-assign .table {
+  min-width: 290px; /* Prevent shrinking */
+  white-space: nowrap;
+}
+
+.table-responsive-assign .table th,
+.table-responsive-assign .table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px;
+  /*font-size: 14px;*/
+}
+
+.table-responsive-assign
+.table th:nth-child(2), /* KG column */
+.table-responsive-assign .table td:nth-child(2), 
+.table-responsive-assign .table th:nth-child(3),  /* REPS */
+.table-responsive-assign .table td:nth-child(3) {
+  width: 55%; /* Allocate more width to KG and Reps */
+}
+
+.table-responsive-assign .table th:nth-child(4),  /* ACCION */
+.table-responsive-assign .table td:nth-child(4) {
+  width: 5%; /* Allocate less space for the action column */
+}
+
+.table-responsive-assign .form-control {
+  width: 100%;
+}
+
+.exercise-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/*filter date container in dashboard historial*/
+.filter-date-container {
+  margin-right: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .table .form-control {
+    font-size: 12px;
+    padding: 12px;
+    max-width: unset;
+  }
+
+  .btn-delete-set {
+    width: 40px;
+    height: 40px;
+  }
+
+  .table-responsive-assign .table th,
+  .table-responsive-assign .table td {
+    font-size: 11px;
+  }
+
+  .table-responsive-assign .form-control {
+    font-size: 11px;
+  }
+
+  .table-responsive-assign td .btn-danger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+    padding: 12px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgb(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .exercise-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .assign-routine-modal .table-summary td {
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .assign-routine-modal .text-enfoque,
+  .text-descripcion {
+    font-size: 15px;
+  }
+}

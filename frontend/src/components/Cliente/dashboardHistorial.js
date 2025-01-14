@@ -19,6 +19,8 @@ import {
   faPencil,
   faEye,
   faSearch,
+  faChevronUp,
+  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -59,6 +61,7 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import "../Entrenador/setsTable.css"; //Affects table for assign routines, set,peso,reps,etc
 
 //import "../Otros/form.css";
 //import "./ModalDesign.css";
@@ -130,6 +133,14 @@ const HistorialClienteCompleto = () => {
 
   const getCurrentDate = () => new Date().toISOString().split("T")[0];
   const [startDate, setStartDate] = useState(getCurrentMonday());
+  // State for collapsibility
+  const [showTrainerSection, setShowTrainerSection] = useState(true); // Trainer's section
+  const [showClientSection, setShowClientSection] = useState(true); // Client's section
+  const [allNotas, setAllNotas] = useState([]);
+  const [allDescansos, setAllDescansos] = useState([]);
+  const [allDescansosProgreso, setAllDescansosProgreso] = useState([]);
+  const [allNotasProgreso, setAllNotasProgreso] = useState([]);
+  const [allNotasEntrenador, setAllNotasEntrenador] = useState([]);
 
   useEffect(() => {
     getRoutines();
@@ -411,6 +422,7 @@ const HistorialClienteCompleto = () => {
   };
 
   const handleLlenarCamposRutinaProgreso = (id_rutina, fecha, dia) => {
+    alert("Si entra");
     setIdRutina(id_rutina);
     setSelectedDay(dia);
     console.log("El id del cliente es: " + idCliente);
@@ -433,6 +445,51 @@ const HistorialClienteCompleto = () => {
         setImagenes(response.data.imagenes);
         setEjerciciosIds(response.data.ejerciciosIds);
         setNombresEjercicios(response.data.nombresEjercicios);
+        setAllDescansos(
+          response.data.ejerciciosIds.reduce((acc, id, index) => {
+            acc[id] = response.data.descansos_asigna[index] || "";
+            return acc;
+          }, {})
+        );
+        setAllDescansosProgreso(
+          response.data.ejerciciosIds.reduce((acc, id, index) => {
+            if (!acc[id]) {
+              acc[id] = { total: 0, count: 0 };
+            }
+            // Sum the rest times for this exercise
+            if (response.data.descansos_progreso[index]) {
+              acc[id].total += response.data.descansos_progreso[index];
+              acc[id].count += 1;
+            }
+            return acc;
+          }, {})
+        );
+        setAllDescansosProgreso((prev) =>
+          Object.keys(prev).reduce((averageAcc, id) => {
+            const { total, count } = prev[id];
+            averageAcc[id] = count > 0 ? total / count : 0;
+            return averageAcc;
+          }, {})
+        );
+
+        setAllNotas(
+          response.data.ejerciciosIds.reduce((acc, id, index) => {
+            //alert("Acumulador:" + JSON.stringify(acc, null, 2)); //Accumulator:{"30":"asd"}, Id:31, Index:1
+            //alert("Id" + id);
+            //alert("Index" + index);
+            acc[id] = response.data.notas_asigna[index] || "";
+            return acc;
+          }, {})
+        );
+        setAllNotasProgreso(
+          response.data.ejerciciosIds.reduce((acc, id, index) => {
+            //alert("Acumulador:" + JSON.stringify(acc, null, 2)); //Accumulator:{"30":"asd"}, Id:31, Index:1
+            //alert("Id" + id);
+            //alert("Index" + index);
+            acc[id] = response.data.notas_progreso[index] || "";
+            return acc;
+          }, {})
+        );
         setShowModalFullProgreso(true);
         const setsData = response.data.sets || {};
         setSets(setsData);
@@ -748,11 +805,11 @@ const HistorialClienteCompleto = () => {
         onLogout={handleCerrarSesion}
         showWeekDays={showWeekDays}
       />
+      <Sidebar isOpen={isOpen} toggleSideBar={handleOpenSideBar} />
       <Container>
         <Row>
           <Col md={2} className="d-none d-md-block">
-            {" "}
-            <Sidebar isOpen={isOpen} toggleSideBar={handleOpenSideBar} />
+            <Sidebar />
           </Col>
           <Col md={{ span: 12, offset: 1 }}>
             <div className={`main-content ${isOpen ? "shrinked" : ""}`}>
@@ -783,11 +840,15 @@ const HistorialClienteCompleto = () => {
             </div>
 
             <div className="main-content">
-              <Row>
-                <h3 className="w-100 text-center">Rutinas de toda la semana</h3>
+              <Row className="d-flex justify-content-center align-items-center">
+                <h3 className="w-100 text-center">Historial de la semana</h3>
                 {/* Navigation */}
-                <Row className="mb-4 justify-content-center">
-                  <Col xs="auto">
+                <Row className="mb-4 justify-content-center mt-3">
+                  <Col
+                    xs="auto"
+                    className="filter-date-container"
+                    //style={{ marginRight: "20px" }}
+                  >
                     <div className="date-navigation ">
                       <Button
                         variant="outline-primary"
@@ -848,7 +909,7 @@ const HistorialClienteCompleto = () => {
                     historial.map((entry, index) => (
                       <React.Fragment key={index}>
                         {/* Date Header */}
-                        <Col xs={12} className="mb-3">
+                        <Col xs={12}>
                           {" "}
                           <h5 className="text-center text-primary">
                             {entry.fecha
@@ -873,7 +934,7 @@ const HistorialClienteCompleto = () => {
                               >
                                 {" "}
                                 <Card
-                                  className="asignar-rutina-modal h-100"
+                                  className="assign-routine-modal d-flex justify-content-center"
                                   key={rutina.id_rutina}
                                 >
                                   <Card.Body>
@@ -885,15 +946,24 @@ const HistorialClienteCompleto = () => {
                           {entry.fecha}
                         </Card.Text>*/}
                                     <Card.Text>
-                                      {rutina.descripcion || "Sin descripción"}
+                                      {rutina.descripcion || (
+                                        <span className="text-muted text-descripcion">
+                                          Sin descripción
+                                        </span>
+                                      )}
                                     </Card.Text>
                                     <Card.Text>
-                                      <strong>Enfoque:</strong> {rutina.enfoque}
+                                      <strong className="text-enfoque">
+                                        Enfoque:
+                                      </strong>{" "}
+                                      <span className="text-enfoque">
+                                        {rutina.enfoque}
+                                      </span>
                                     </Card.Text>
                                     <Table
                                       responsive
                                       bordered
-                                      className="table text-center"
+                                      className="table-summary"
                                     >
                                       <thead>
                                         <tr>
@@ -951,7 +1021,9 @@ const HistorialClienteCompleto = () => {
                       </React.Fragment>
                     ))
                   ) : (
-                    <p>No hay historial para mostrar</p>
+                    <p className="w-100 text-center">
+                      No hay historial para mostrar
+                    </p>
                   )}
                 </Row>
               </Row>
@@ -1450,10 +1522,19 @@ const HistorialClienteCompleto = () => {
 
         <Modal.Body>
           {/* Workout Timer and Notes Section */}
-          <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="d-flex flex-column align-items-center">
             <FontAwesomeIcon icon={faBook} />
-            <div className="w-100" style={{ flexGrow: 1, margin: "0 10px" }}>
-              <Form.Control type="text" placeholder="Notas" />
+            <div className="p-3 border rounded shadow-sm w-100">
+              <h5
+                className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                style={{ cursor: "pointer" }}
+                onClick={() => setShowTrainerSection(!showTrainerSection)}
+              >
+                Notas entrenador
+                <FontAwesomeIcon
+                  icon={showTrainerSection ? faChevronUp : faChevronDown}
+                />
+              </h5>
             </div>
             {/*<Button variant="primary">Finalizar</Button>*/}
           </div>
@@ -1593,20 +1674,11 @@ const HistorialClienteCompleto = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">
-            Rutina asignada
+            Rutina asignada1
           </Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          {/* Workout Timer and Notes Section */}
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <FontAwesomeIcon icon={faBook} />
-            <div className="w-100" style={{ flexGrow: 1, margin: "0 10px" }}>
-              <Form.Control type="text" placeholder="Notas" />
-            </div>
-            {/*<Button variant="primary">Finalizar</Button>*/}
-          </div>
-
           {/* Exercise List */}
 
           {imagenes.map((imagen, imgIndex) => {
@@ -1615,6 +1687,126 @@ const HistorialClienteCompleto = () => {
 
             return (
               <Col key={imgIndex} md={12} className="mb-4">
+                {/* Workout Timer and Notes Section */}
+                <div className="mb-4 p-3 border rounded shadow-sm ">
+                  {" "}
+                  <h5
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowClientSection(!showClientSection)}
+                  >
+                    Notas entrenador y descanso
+                    <FontAwesomeIcon
+                      icon={showClientSection ? faChevronUp : faChevronDown}
+                    />
+                  </h5>
+                  {showClientSection && (
+                    <div className="trainer-notes-container d-flex justify-content-between align-items-center">
+                      {/* Trainer Notes */}
+                      <div
+                        className="notes-input-container"
+                        /*style={{
+                                          flexGrow: 1,
+                                          marginRight: "15px", // Add space between the inputs
+                                        }}*/
+                      >
+                        <FontAwesomeIcon icon={faBook} className="me-2" />
+                        <Form.Control
+                          as="textarea"
+                          rows={2}
+                          placeholder="Tus notas"
+                          value={allNotas[ejercicioId] || ""} // Controlled input
+                          style={{ resize: "none" }}
+                          className="notes-input form-control"
+                        />
+                        {/*<Button variant="primary">Finalizar</Button>*/}
+                      </div>
+
+                      <div className="rest-time-input-container">
+                        <FontAwesomeIcon icon={faClock} className="me-2" />
+                        <Form.Control
+                          type="number"
+                          id="restTime"
+                          placeholder="Tiempo de descanso (minutos)"
+                          value={allDescansos[ejercicioId] || ""}
+                          readOnly
+                          /*style={{
+                                            width: "80px", // Keep the input narrow
+                                            padding: "8px",
+                                            border: "1px solid #ccc",
+                                            borderRadius: "5px",
+                                            textAlign: "center", // Center-align text
+                                            fontSize: "14px",
+                                          }}*/
+                          className="rest-time-input form-control"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="client-notes-section mb-4 p-3 border rounded shadow-sm bg-light">
+                  <h5
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowTrainerSection(!showTrainerSection)}
+                  >
+                    Tus notas y descanso
+                    <FontAwesomeIcon
+                      icon={showTrainerSection ? faChevronUp : faChevronDown}
+                      className="d-flex align-items-center me-2"
+                    />
+                  </h5>
+
+                  {showTrainerSection && (
+                    <div className="client-notes-container d-flex justify-content-between align-items-center">
+                      <div
+                        className="notes-input-container"
+                        /*style={{
+                                          flexGrow: 1,
+                                          marginRight: "15px", // Add space between the inputs
+                                        }}*/
+                      >
+                        <FontAwesomeIcon
+                          icon={faBook}
+                          className="me-2"
+                          /*style={{
+                                            flexGrow: 1,
+                                            marginRight: "15px", // Add space between the inputs
+                                          }}*/
+                        />
+                        <Form.Control
+                          as="textarea"
+                          rows={2}
+                          placeholder="Sin notas que mostrar"
+                          value={allNotasProgreso[ejercicioId] || ""} // Controlled input
+                          style={{ resize: "none" }}
+                          className="notes-input form-control"
+                        />
+                      </div>
+                      <div className="rest-time-input-container">
+                        <FontAwesomeIcon icon={faClock} className="me-2" />
+                        <Form.Control
+                          type="number"
+                          id="restTime"
+                          placeholder="Sin descanso que mostrar"
+                          value={allDescansosProgreso[ejercicioId] || ""}
+                          readOnly
+                          /*style={{
+                                            width: "80px", // Keep the input narrow
+                                            padding: "8px",
+                                            border: "1px solid #ccc",
+                                            borderRadius: "5px",
+                                            textAlign: "center", // Center-align text
+                                            fontSize: "14px",
+                                          }}*/
+                          className="rest-time-input form-control"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <Card className="d-flex align-items-center mb-2">
                   <Card.Img
                     src={imagen}
@@ -1626,12 +1818,12 @@ const HistorialClienteCompleto = () => {
                       margin: "0 auto",
                     }}
                   />
-                  <Card.Title className="text-primary m-0 w-100 text-center">
+                  <Card.Title className="text-primary m-0 w-100 text-center exercise-name">
                     {nombresEjercicios[imgIndex]} ({imgIndex + 1})
                   </Card.Title>
 
                   <Card.Body>
-                    <div className="table-responsive">
+                    <div className="table-responsive-progress">
                       <table className="table table-bordered">
                         <thead>
                           <tr>

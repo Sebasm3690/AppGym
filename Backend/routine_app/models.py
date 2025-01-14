@@ -76,6 +76,8 @@ class Alimento(models.Model):
     carbohidratos_g = models.DecimalField(decimal_places=2, max_digits=6)
     grasa_g = models.DecimalField(decimal_places=2, max_digits=6)
     api_id_referencia = models.CharField(max_length=10)
+    metrica_g = models.DecimalField(decimal_places=2, max_digits=5)
+    unidad_medida = models.CharField(max_length=20)
 
 
 class Consume(models.Model):
@@ -102,8 +104,10 @@ class Dispone(models.Model):
     id_alimento = models.ForeignKey(Alimento, on_delete=models.CASCADE,related_name='alimento_dispone')
     id_parte_dia = models.ForeignKey(ParteDia, on_delete=models.CASCADE)
     fecha = models.DateField(auto_now_add=True)
-    cantidad = models.IntegerField()
+    cantidad = models.DecimalField(decimal_places=2, max_digits=5)
     tamaño_porcion_g = models.CharField(max_length=50)
+    gramos = models.DecimalField(decimal_places=2, max_digits=5)
+   
 
 
 

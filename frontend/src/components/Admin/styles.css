@@ -64,6 +64,8 @@ span {
 
 .lista-entrenadores {
   font-size: 25px;
+  font-weight: 700;
+  color: #333;
 }
 
 /*Card*/
@@ -206,7 +208,7 @@ span {
 }
 
 .modal-button {
-  background-color: #000000;
+  /*background-color: #000000;*/
   color: #ffffff;
   border-radius: 8px;
   width: 300px;

@@ -6,7 +6,7 @@ import {
   faCheckCircle,
   faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, CardBody } from "react-bootstrap";
 import styles from "../Otros/table.module.css";
 import {
   faPencilAlt,
@@ -21,8 +21,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faChartLine } from "@fortawesome/free-solid-svg-icons";
-import "../Admin/styles.css";
+//import "../Admin/styles.css";
 import "./routines.css";
+import { Card, Col, Row } from "react-bootstrap";
+import "./tablePlan.css";
+//import "../Otros/cards.module.css";
 
 const WeeklyRoutinePlan = ({
   assignedRoutines,
@@ -57,7 +60,7 @@ const WeeklyRoutinePlan = ({
   const daysOfWeek = [
     "Lunes",
     "Martes",
-    "Miercoles",
+    "Miércoles",
     "Jueves",
     "Viernes",
     "Sabado",
@@ -80,14 +83,14 @@ const WeeklyRoutinePlan = ({
   };
 
   return (
-    <div className="main-content">
+    <div className="routine-table-container">
       <Table striped bordered hover className={styles.planTable}>
         <thead className="w-100">
           <tr>
             <th className="text-dark text-center">Día</th>
             <th className="text-dark text-center">Rutina</th>
             <th className="text-dark text-center">Enfoque</th>
-            <th className="text-dark text-center">Estado</th>
+            <th className="text-dark text-center">Estado de asignación</th>
             <th className="text-dark text-center">Acciones</th>
           </tr>
         </thead>
@@ -157,57 +160,88 @@ const WeeklyRoutinePlan = ({
         </tbody>
       </Table>
       {/* Cards for Mobile */}
-      <div className="d-block d-md-none">
+      <Row className="mt-4">
         {routinesByDay.map(({ day, assignedRoutines }) => (
-          <div key={day} className={styles.cardTableRoutine}>
-            {/* Day Title */}
-            <h5 className="w-100 text-center card-title mb-3">{day}</h5>
+          <Col key={day} xs={12} className="mb-4 d-md-none">
+            <Card>
+              <CardBody>
+                {/* Day Title */}
+                <Card.Title className="w-100 text-center mb-3 card-title-table-plan">
+                  <strong>{day}</strong>
+                </Card.Title>
 
-            {/* Routine Details */}
-            {assignedRoutines.length > 0 ? (
-              assignedRoutines.map((routine) => (
-                <div key={routine.id_rutina} className={styles.cardMainContent}>
-                  <p className="mb-1">
-                    {" "}
-                    <strong>Nombre: </strong>
-                    {routine.nombre}
+                {/* Routine Details */}
+                {assignedRoutines.length > 0 ? (
+                  assignedRoutines.map((routine) => (
+                    <div
+                      key={routine.id_rutina}
+                      className="card-main-content-plan"
+                    >
+                      <Card.Text className="mb-1">
+                        {" "}
+                        <strong>Nombre: </strong>
+                        {routine.nombre}
+                      </Card.Text>
+                      <Card.Text className="mb-1">
+                        {routine.descripcion || (
+                          <span className="text-muted">Sin descripción</span>
+                        )}
+                      </Card.Text>
+                      <Card.Text className="mb-1">
+                        <strong>Enfoque: </strong>
+                        {routine.enfoque}
+                      </Card.Text>
+                      <Card.Text className="mt-1 w-100 text-center">
+                        <strong>Estado de asignación: </strong>
+                        {assignedRoutines.length > 0
+                          ? assignedRoutines.map((routine) => (
+                              <div key={routine.id_rutina}>
+                                {findEstado(routine.id_rutina) ? (
+                                  <FontAwesomeIcon
+                                    icon={faCheckCircle}
+                                    className="text-success w-100 icon"
+                                    title="Completado"
+                                  />
+                                ) : (
+                                  <FontAwesomeIcon
+                                    icon={faHourglassHalf}
+                                    className="text-success w-100 icon"
+                                    title="Completado"
+                                  />
+                                )}
+                              </div>
+                            ))
+                          : null}
+                      </Card.Text>
+                    </div>
+                  ))
+                ) : (
+                  <p className="w-100 text-center text-muted">
+                    No hay rutinas asignadas
                   </p>
-                  <p className="mb-1">
-                    <strong>Descripción: </strong>
-                    {routine.descripcion}
-                  </p>
-                  <p className="mb-1">
-                    <strong>Enfoque: </strong>
-                    {routine.enfoque}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="w-100 text-center text-muted">
-                No hay rutinas asignadas
-              </p>
-            )}
+                )}
 
-            {/* Action Buttons */}
+                {/* Action Buttons */}
 
-            <div className="d-flex justify-content-between mt-3">
-              <Button
-                variant="primary"
-                className="me-2 fw-bold gradient-primary btn-responsive"
-                onClick={() => onSelectAssignedRoutines(day)}
-              >
-                <FontAwesomeIcon icon={faEye} /> Asignadas
-              </Button>
-              <Button
-                variant="success"
-                className="me-2 fw-bold gradient-success btn-responsive"
-              >
-                <FontAwesomeIcon icon={faChartLine} /> Progreso
-              </Button>
-            </div>
-          </div>
+                <Button
+                  variant="primary"
+                  className="me-4 fw-bold gradient-primary btn-responsive"
+                  style={{ width: "100%", marginBottom: "20px" }}
+                  onClick={() => onSelectAssignedRoutines(day)}
+                >
+                  <FontAwesomeIcon icon={faEye} /> Rutinas asignadas
+                </Button>
+                {/*<Button
+                    variant="success"
+                    className="me-4 fw-bold gradient-success btn-responsive"
+                  >
+                    <FontAwesomeIcon icon={faChartLine} /> Progreso
+                  </Button>*/}
+              </CardBody>
+            </Card>
+          </Col>
         ))}
-      </div>
+      </Row>
     </div>
   );
 };

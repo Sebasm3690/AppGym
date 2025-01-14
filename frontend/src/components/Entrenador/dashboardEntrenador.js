@@ -266,7 +266,7 @@ const CrudClients = () => {
           // Now that id_cliente is available, make subsequent requests using this value
           const urlCalcularTMB = `http://127.0.0.1:8000/calcularTMB/${id_cliente}/`;
 
-          alert("El id del cliente es:" + id_cliente);
+          //alert("El id del cliente es:" + id_cliente);
           // Calculate TMB
           axios
             .post(urlCalcularTMB)
@@ -466,34 +466,36 @@ const CrudClients = () => {
 
           // Extract id_cliente from the response
 
-          const id_cliente = parseInt(response.data.cliente.id_cliente);
+          //const id_cliente = parseInt(response.data.cliente.id_cliente);
+
+          //alert(id);
 
           // Now that id_cliente is available, make subsequent requests using this value
-          const urlCalcularTMB = `http://127.0.0.1:8000/calcularTMB/${id_cliente}/`;
+          const urlCalcularTMB = `http://127.0.0.1:8000/calcularTMB/${id}/`;
 
           // Calculate TMB
           axios
             .post(urlCalcularTMB)
             .then(() => {
-              show_alerta(
+              /*show_alerta(
                 "El TMB del cliente se actualizó exitosamente",
                 "success"
-              );
+              );*/
             })
             .catch((error) => {
               console.error("Error calculando TMB", error.response || error);
             });
 
           // Delay the calculation of macronutrients to ensure TMB is calculated first
-          const urlCalcularMN = `http://127.0.0.1:8000/calcularMacros/${id_cliente}/`;
+          const urlCalcularMN = `http://127.0.0.1:8000/calcularMacros/${id}/`;
           setTimeout(() => {
             axios
               .post(urlCalcularMN)
               .then(() => {
-                show_alerta(
+                /*show_alerta(
                   "Los macronutrientes del cliente se actualizaron exitosamente",
                   "success"
-                );
+                );*/
               })
               .catch((error) => {
                 console.error(
@@ -565,7 +567,7 @@ const CrudClients = () => {
 
   const handleShowSecondModal = () => {
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const regexSoloLetras = /^[A-Za-z\s]+$/; // Only letters and spaces
+    const regexSoloLetras = /^[A-Za-zñÑ\s]+$/; // Only letters and spaces
     if (nombre.trim() === "") {
       show_alerta("El nombre es requerido", "warning");
       return;
@@ -643,7 +645,7 @@ const CrudClients = () => {
 
   const handleNextFirstModalUpdate = () => {
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const regexSoloLetras = /^[A-Za-z\s]+$/; // Only letters and spaces
+    const regexSoloLetras = /^[A-Za-zñÑ\s]+$/; // Only letters and spaces
     if (nombre.trim() === "") {
       show_alerta("El nombre es requerido", "warning");
       return;
@@ -747,10 +749,7 @@ const CrudClients = () => {
       <Sidebar isOpen={isSideBarOpen} toggleSideBar={toggleSideBar} />
       <Container className="mt-5">
         <Row>
-          <Col md={2} className="d-none d-md-block">
-            <Sidebar />
-          </Col>
-          <Col md={{ span: 12, offset: 1 }}>
+          <Col md={{ span: 12, offset: 1 }} className="mb-5">
             <div className={`main-content ${isSideBarOpen ? "shrinked" : ""}`}>
               <div className="panel-heading">
                 <Row className="d-flex align-items-center mb-3">
@@ -905,6 +904,9 @@ const CrudClients = () => {
                     }}
                   />
                 )}
+              </div>
+              <div className="trainer-card-item" data-label="Nombre">
+                {client.nombre + " " + client.apellido}
               </div>
               <div className="trainer-card-item" data-label="Email">
                 {client.email}
@@ -1123,9 +1125,9 @@ const CrudClients = () => {
         </ModalBody>
         <ModalFooter className="modal-footer-custom justify-content-center">
           <Button
-            variant="primary"
             onClick={() => handleShowSecondModal()}
             className="modal-button"
+            variant="primary"
           >
             Siguiente
           </Button>

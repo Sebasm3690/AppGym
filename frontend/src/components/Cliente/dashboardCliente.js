@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Container,
   Row,
@@ -23,6 +23,7 @@ import {
   faBreadSlice,
   faBacon,
   faEgg,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import ControlCalorico from "../../assets/ControlCalorico.jpg"; // Replace with your image path
 import Rutinas from "../../assets/Rutinas.jpg"; // Replace with your image path
@@ -75,6 +76,7 @@ const ClientControl = () => {
   const [porcion, setPorcion] = useState("");
   const [fecha, setFecha] = useState("");
   //***********************************************/ */
+  const [mainQuantity, setMainQuantity] = useState(0);
   const [dispones, setDispones] = useState([]);
   const [client, setClient] = useState([]);
   const [foods, setFoods] = useState([]);
@@ -85,7 +87,20 @@ const ClientControl = () => {
   const [consumos, setConsumos] = useState([]);
   const [showModalUpdateFood, setShowModalUpdateFood] = useState(false);
   const [foodToUpdate, setFoodToUpdate] = useState([]);
+  const [measurementType, setMeasurementType] = useState("portion");
   const navigate = useNavigate();
+  const [band, setBand] = useState(false);
+  const [equivalencia, setEquivalencia] = useState(1);
+  const [metricServingUnit, setMetrincServingUnit] = useState("");
+  const [unidadMedida, setUnidadMedida] = useState("");
+  //gramos
+  const [gramos, setGramos] = useState(100);
+  const [metrica_g, setMetrica_g] = useState(0);
+  const [gramsEnabled, setGramsEnabled] = useState(true);
+  //Load
+  const [loading, setLoading] = useState(false);
+  //width responsive
+  const isDesktop = window.innerWidth >= 768;
 
   useEffect(() => {
     getClient();
@@ -156,19 +171,79 @@ const ClientControl = () => {
     setShowSearchBar(true);
   };
 
-  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const increaseQuantity = () =>
+    setQuantity((prev) => parseFloat(parseFloat(prev) + 1).toFixed(2));
 
-  const decreaseQuantity = () => setQuantity((prev) => prev - 1);
+  const decreaseQuantity = () =>
+    setQuantity((prev) =>
+      parseFloat(Math.max(parseFloat(prev) - 1, 0).toFixed(2))
+    );
+
+  const increaseGrams = () => {
+    setBand(true);
+    setGramos((prev) => parseFloat(parseFloat(prev) + 1).toFixed(2));
+  };
+
+  const decreaseGrams = () => {
+    setBand(true);
+    setGramos((prev) =>
+      parseFloat(Math.max(parseFloat(prev) - 1, 0).toFixed(2))
+    );
+  };
 
   const getIcono = (iconName) => Icons[iconName];
 
   const getNutrientValue = (value) => {
-    var numericValue = parseFloat(value);
-    const unit = value.replace(/[0-9.]/g, "").trim(); //it allows to only mantain the words and remove the numeric part
-    return `${numericValue * quantity} ${unit}`; //36 chips
+    // Separate the numeric portion (fractions or decimals) from the unit
+    const fractionRegex = /^(\d+\/\d+|\d+(\.\d+)?)(.*)$/; // Matches fractions or decimals followed by a unit
+    const match = value.match(fractionRegex);
+
+    if (!match) return value;
+
+    const numericPart = match[1]; // "1/4" or "1.5"
+    const unit = match[3].trim(); // "cup", "g", etc.
+
+    // Convert fraction (e.g., "1/4") to decimal
+    const numericValue = numericPart.includes("/")
+      ? numericPart
+          .split("/")
+          .reduce((numerator, demoninator) => numerator / demoninator)
+      : parseFloat(numericPart);
+
+    return `${(numericValue * quantity).toFixed(2)} ${unit}`;
   };
 
-  const getTotalValue = (value) => value * quantity;
+  const calculateNutrientValue = (value, metricServingAmount) => {
+    const numericValue = parseFloat(value); // Extract the numeric part
+    const perGram = numericValue / metricServingAmount; // Calculate value per gram
+    if (measurementType === "grams") {
+      return ((perGram * quantity) / equivalencia).toFixed(2); // Multiply by grams
+    } else {
+      return (numericValue * quantity).toFixed(2); // Multiply by portions
+    }
+  };
+
+  const getTotalValue = (value) => {
+    //alert(metrica_g);
+    let finalValue = 0;
+    console.log("Valor:" + value + "Cantidad:" + quantity + "Gramos:" + gramos);
+    //alert(quantity);
+    //alert(gramos);
+    if (measurementType === "grams") {
+      finalValue = band
+        ? (value * gramos) / metrica_g // Use `gramos` if manually adjusted // Use `gramos` if manually adjusted
+        : (value / metrica_g) * gramos; // Default to `mainQuantity`
+      if (unidadMedida === "oz") {
+        finalValue = finalValue / 28.3495;
+      }
+    } else {
+      finalValue = value * quantity; // For portions
+    }
+
+    console.log("finalValue:" + finalValue);
+
+    return parseFloat(finalValue).toFixed(2);
+  };
 
   const toFixedCalculate = (value) => {
     const fixedValue =
@@ -206,21 +281,64 @@ const ClientControl = () => {
         `http://127.0.0.1:8000/food/${food_id}/?search=${query}`
       );
 
-      setSelectedFood(response.data.food);
-      /*Split nutrients*/
-      //const parsedNutrients = parseNutrients(response.data.food);
-      const parsedNutrients = response.data.food.servings.serving;
+      const parsedNutrients = response.data.food.servings?.serving;
 
-      setNutrients(parsedNutrients);
+      if (!parsedNutrients) {
+        alert("No nutrient data found for this food item.");
+        return;
+      }
+
+      // Translate serving descriptions
+      const translatedServings = await Promise.all(
+        parsedNutrients.map(async (serving) => {
+          try {
+            const translatedDescription = await translateToSpanish(
+              serving.serving_description
+            );
+            return {
+              ...serving,
+              serving_description: translatedDescription,
+            };
+          } catch (error) {
+            console.error(
+              `Error translating serving description for ${serving.serving_id}`,
+              error
+            );
+            return serving; // Fallback to original serving if translation fails
+          }
+        })
+      );
+
+      setNutrients(translatedServings); // Set the translated nutrients
+
+      const firstNutrient = translatedServings[0]; // Use translated data
+
+      const metricServingAmount = firstNutrient?.metric_serving_amount || null;
+      const metricServingUnit = firstNutrient?.metric_serving_unit || null;
+
+      // Handle missing data
+      if (!metricServingAmount || !metricServingUnit) {
+        setMeasurementType("portion"); // Default to portion
+        setGramsEnabled(false); // Disable grams calculations
+        show_alerta(
+          "El cálculo por gramos de este alimento no está disponible.",
+          "warning"
+        );
+      } else {
+        setGramsEnabled(true);
+        setMetrincServingUnit(metricServingUnit);
+        setEquivalencia(metricServingUnit === "oz" ? 28.3495 : 1); // Set equivalence
+      }
+
+      setSelectedFood(response.data.food);
       setShowModalNutrients(true);
-      /*******************/
-      //alert(JSON.stringify(response.data, null, 2));
     } catch (error) {
-      console.log("Error obteniendo el alimento", error);
+      console.error("Error obteniendo el alimento", error);
+      alert("An error occurred while fetching the food details.");
     }
   };
 
-  /*const translateToSpanish = async (text) => {
+  const translateToSpanish = async (text) => {
     try {
       const response = await axios.post(
         "https://translation.googleapis.com/language/translate/v2",
@@ -238,10 +356,11 @@ const ClientControl = () => {
       console.error("Translation error", error);
       return text; // Fallback to original text if translation fails
     }
-  }; */
+  };
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://127.0.0.1:8000/nutrition/?search=${searchQuery}`
@@ -249,20 +368,37 @@ const ClientControl = () => {
 
       console.log("Foods v3:", JSON.stringify(response.data, null, 2));
 
-      const foods = response.data.foods_search.results?.food || [];
+      //const foods = response.data.foods_search.results?.food || [];
 
-      setFoods(foods);
-      /*const foods = response.data.foods.food;
+      //setFoods(foods);
+      const foods = response.data.foods_search.results?.food || [];
+      //alert(JSON.stringify(foods, null, 2));
+      //food.servings.serving[0].serving_description
+      //alert(foods.servings.serving[0].serving_description);
 
       const translatedFoods = await Promise.all(
         foods.map(async (food) => {
-          const translatedFood = await translateToSpanish(food.food_name);
-          return { ...food, food_name: translatedFood };
+          const translatedFoodName = await translateToSpanish(food.food_name);
+          const translatedServings = await Promise.all(
+            food.servings?.serving?.map(async (serving) => {
+              const translatedDescription = await translateToSpanish(
+                serving.serving_description
+              );
+              return { ...serving, serving_description: translatedDescription };
+            })
+          );
+          return {
+            ...food,
+            food_name: translatedFoodName,
+            servings: { ...food.servings, serving: translatedServings },
+          };
         })
       );
-      setFoods(translatedFoods);*/
+      setFoods(translatedFoods);
     } catch (error) {
       console.error("Error oteniendo comidas", error);
+    } finally {
+      setLoading(false); //stop loading
     }
   };
 
@@ -275,6 +411,7 @@ const ClientControl = () => {
   const handleAddFood = () => {
     const urlAddFood = "http://127.0.0.1:8000/addFood/";
     console.log("Selected food:", JSON.stringify(selectedFood, null, 2));
+    alert(JSON.stringify(selectedFood, null, 2));
     const datos = {
       id_alimento: selectedFood.food_id,
       nombre: selectedFood.food_name,
@@ -282,11 +419,16 @@ const ClientControl = () => {
       grasa: parseFloat(nutrients[0].fat),
       carbohidratos: parseFloat(nutrients[0].carbohydrate),
       proteina: parseFloat(nutrients[0].protein),
-      cantidad: quantity,
+      cantidad: parseFloat(quantity),
       porcion: nutrients[0].serving_description,
       parte_dia: parteDia,
       id_cliente: parseInt(idCliente),
+      measurementType: measurementType,
+      metric: nutrients[0].metric_serving_amount,
+      metric_serving_unit: nutrients[0].metric_serving_unit,
+      gramsEnabled: gramsEnabled,
     };
+    alert(JSON.stringify(datos, null, 2));
     console.log("Si entra 2");
     try {
       axios.post(urlAddFood, datos).then((response) => {
@@ -310,11 +452,30 @@ const ClientControl = () => {
     axios.get(urlGetFoodUpdate, { params: datos }).then(
       (response) => {
         setShowModalUpdateFood(true);
+        //alert(JSON.stringify(response.data.dispone), null, 2);
         setFoodToUpdate(response.data.dispone.id_alimento);
         setQuantity(response.data.dispone.cantidad);
+        setMainQuantity(response.data.dispone.cantidad);
         setPorcion(response.data.dispone.tamaño_porcion_g);
         setParteDia(response.data.dispone.id_parte_dia);
         setFecha(response.data.dispone.fecha);
+        setGramos(response.data.dispone.gramos);
+        setMetrica_g(response.data.dispone.id_alimento.metrica_g);
+        setUnidadMedida(response.data.dispone.id_alimento.unidad_medida);
+        //alert(parseInt(response.data.dispone.id_alimento.metrica_g));
+        //alert(response.data.dispone.id_alimento.unidad_medida);
+        if (
+          parseInt(response.data.dispone.id_alimento.metrica_g) === 0 ||
+          response.data.dispone.id_alimento.unidad_medida === "" ||
+          response.data.dispone.id_alimento.unidad_medida === null
+        ) {
+          show_alerta(
+            "Los gramos no están disponibles para este alimento",
+            "warning"
+          );
+          setGramsEnabled(false);
+        }
+        //alert(response.data.dispone.id_alimento.unidad_medida);
       },
       (err) => {
         console.log(err);
@@ -324,12 +485,22 @@ const ClientControl = () => {
 
   const handleUpdateFood = () => {
     const urlUpdateFood = `http://127.0.0.1:8000/updateFood/`;
+    //alert(quantity);
+    //alert(gramos);
+    //alert(measurementType);
+    //alert(metrica_g);
+    //alert(unidadMedida);
     const datos = {
       id_alimento: foodToUpdate.id_alimento,
       id_cliente: parseInt(idCliente),
       id_parte_dia: parseInt(parteDia),
       fecha: fecha,
       cantidad: quantity,
+      gramos: gramos,
+      measurementType: measurementType,
+      metric: metrica_g,
+      metric_serving_unit: unidadMedida,
+      gramsEnabled: gramsEnabled,
     };
     axios.post(urlUpdateFood, datos).then((response) => {
       show_alerta("El alimento ha sido actualizado exitosamente", "success");
@@ -414,6 +585,22 @@ const ClientControl = () => {
     return <Doughnut data={data} options={options} />;
   };
 
+  const handleShowModalUpdateFood = () => {
+    setMeasurementType("portion");
+    setShowModalUpdateFood(false);
+    setGramsEnabled(true);
+    setQuantity(1);
+    setGramos(100);
+  };
+
+  const handleShowModalNutrients = () => {
+    setMeasurementType("portion");
+    setShowModalNutrients(false);
+    setGramsEnabled(true);
+    setQuantity(1);
+    setGramos(100);
+  };
+
   /*const meals = [
     { icon: faCoffee, name: "Desayuno", calories: 200 },
     { icon: faUtensils, name: "Almuerzo", calories: 300 },
@@ -493,12 +680,57 @@ const ClientControl = () => {
               </Row>
             </Form>
           )}
+          {loading && (
+            <div className="loading-spinner">
+              <FontAwesomeIcon icon={faSpinner} size="4x" spin />
+              <p>Cargando...</p>
+            </div>
+          )}
+          {!loading && foods.length > 0 && (
+            <Row className="justify-content-center food-list-row mt-2 me-2 ">
+              {foods.map((food) => (
+                <Col
+                  xs={{ span: 12 }}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  key={food.food_id}
+                  className="food-list-col"
+                >
+                  <Card className="food-card">
+                    <Card.Body>
+                      <Card.Title className="food-card-title">
+                        {food.food_name}
+                      </Card.Title>
+                      <p className="food-card-serving">
+                        {food.servings.serving[0].serving_description}
+                      </p>
+                      <p className="food-card-calories">
+                        {food.servings.serving[0].calories + "kcal"}
+                      </p>
+                    </Card.Body>
+                    <Card.Footer className="food-card-footer">
+                      <Button
+                        variant="success"
+                        className="food-card-button"
+                        onClick={() => handleViewDetails(food.food_id, "")}
+                        aria-label={`View details for ${food.food_name}`}
+                      >
+                        Ver mas
+                        <BiChevronRight size={20} />
+                      </Button>
+                    </Card.Footer>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          )}
           {/*This is the main screen when the user click on the food picture*/}
-          <div className="main-content-wrapper mt-3 mb-3">
+          <div className="main-content-wrapper d-flex align-items-center justify-content-center mt-3 mb-3">
             {showDetails && (
               <Col
                 xs={12}
-                md={{ span: 12, offset: 2 }}
+                md={{ span: 10, offset: 3 }}
                 lg={8}
                 xl={6}
                 className="main-content-food"
@@ -599,9 +831,10 @@ const ClientControl = () => {
                                     </div>
 
                                     <h6 style={{ color: "green", margin: "0" }}>
-                                      {dispone.id_alimento.calorias *
-                                        dispone.cantidad +
-                                        " kcal"}
+                                      {(
+                                        dispone.id_alimento.calorias *
+                                        dispone.cantidad
+                                      )?.toFixed(2) + " kcal"}
                                     </h6>
 
                                     {/*Button update and delete*/}
@@ -787,50 +1020,12 @@ const ClientControl = () => {
             )}
           </div>
           {/*Appears all the food after push "Search" button*/}
-          {foods.length > 0 && (
-            <Row className="justify-content-center food-list-row ">
-              {foods.map((food) => (
-                <Col
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  key={food.food_id}
-                  className="food-list-col"
-                >
-                  <Card className="food-card">
-                    <Card.Body>
-                      <Card.Title className="food-card-title">
-                        {food.food_name}
-                      </Card.Title>
-                      <p className="food-card-serving">
-                        {food.servings.serving[0].serving_description}
-                      </p>
-                      <p className="food-card-calories">
-                        {food.servings.serving[0].calories + "kcal"}
-                      </p>
-                    </Card.Body>
-                    <Card.Footer className="food-card-footer">
-                      <Button
-                        variant="success"
-                        className="food-card-button"
-                        onClick={() => handleViewDetails(food.food_id, "")}
-                        aria-label={`View details for ${food.food_name}`}
-                      >
-                        Ver mas
-                        <BiChevronRight size={20} />
-                      </Button>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          )}
           {/*Modal for food detail*/}
           <Modal
             show={showModalNutrients}
-            onHide={() => setShowModalNutrients(false)}
+            onHide={() => handleShowModalNutrients()}
             centered
+            className="modal-update-food"
           >
             <Modal.Header closeButton>
               <Modal.Title className="w-100 text-center">
@@ -840,22 +1035,53 @@ const ClientControl = () => {
             <Modal.Body>
               {selectedFood ? (
                 <div className="text-center">
+                  <div className="d-flex justify-content-center mb-3">
+                    <Button
+                      variant={
+                        measurementType === "portion"
+                          ? "primary"
+                          : "outline-primary"
+                      }
+                      onClick={() => {
+                        setMeasurementType("portion");
+                        setQuantity(1);
+                      }}
+                      className="me-2"
+                    >
+                      Porción
+                    </Button>
+                    <Button
+                      disabled={!gramsEnabled}
+                      variant={
+                        measurementType === "grams"
+                          ? "primary"
+                          : "outline-primary"
+                      }
+                      onClick={() => {
+                        setMeasurementType("grams");
+                        setQuantity(1);
+                      }}
+                    >
+                      Gramos
+                    </Button>{" "}
+                  </div>
+
                   {/* Quantity Input with +/- Buttons */}
-                  <div className="d-flex justify-content-center align-items-center mb-3">
-                    {" "}
+                  <div className="d-flex flex-row justify-content-center align-items-center mb-3">
                     {/*d-flex help us to put everything in the same line*/}
                     <Button
                       variant="outline-secondary"
                       onClick={decreaseQuantity}
+                      disabled={quantity <= 1}
                     >
                       <BiMinus />
                     </Button>
                     <FormControl
                       type="number"
                       value={quantity}
-                      readOnly
                       className="text-center mx-2"
-                      style={{ maxWidth: "60px" }}
+                      style={{ maxWidth: "80px" }}
+                      onChange={(e) => e.target.value}
                     ></FormControl>
                     <Button
                       variant="outline-secondary"
@@ -864,49 +1090,104 @@ const ClientControl = () => {
                       <BiPlus />
                     </Button>
                   </div>
-                  <p>
-                    <strong>Porción: </strong>
-                    {getNutrientValue(nutrients[0].serving_description) ||
-                      "N/A"}
-                  </p>
-                  <p>
-                    <strong>Calorías:</strong>{" "}
-                    {getNutrientValue(nutrients[0].calories + "kcal") || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Grasa:</strong>{" "}
-                    {getNutrientValue(nutrients[0].fat + "g") || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Carbohidratos:</strong>{" "}
-                    {getNutrientValue(nutrients[0].carbohydrate + "g") || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Proteina:</strong>{" "}
-                    {getNutrientValue(nutrients[0].protein + "g") || "N/A"}
-                  </p>
+
+                  {measurementType === "grams" ? (
+                    <div>
+                      <p>
+                        <strong>Porción: </strong>
+                        {measurementType === "grams"
+                          ? `${quantity} g`
+                          : nutrients[0].serving_description || "N/A"}{" "}
+                      </p>
+                      <p>
+                        <strong>Calorías:</strong>{" "}
+                        {calculateNutrientValue(
+                          nutrients[0].calories,
+                          nutrients[0].metric_serving_amount
+                        ) + "kcal" || "N/A"}{" "}
+                      </p>
+                      <p>
+                        <strong>Grasa:</strong>{" "}
+                        {calculateNutrientValue(
+                          nutrients[0].fat,
+                          nutrients[0].metric_serving_amount
+                        ) + "g" || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Carbohidratos:</strong>{" "}
+                        {calculateNutrientValue(
+                          nutrients[0].carbohydrate,
+                          nutrients[0].metric_serving_amount
+                        ) + "g" || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Proteina:</strong>{" "}
+                        {calculateNutrientValue(
+                          nutrients[0].protein,
+                          nutrients[0].metric_serving_amount
+                        ) + "g" || "N/A"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>
+                        <strong>Porción: </strong>
+                        {getNutrientValue(nutrients[0].serving_description) ||
+                          "N/A"}
+                      </p>
+                      <p>
+                        <strong>Calorías:</strong>{" "}
+                        {getNutrientValue(
+                          nutrients[0].calories,
+                          nutrients[0].metric_serving_amount
+                        ) + "kcal" || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Grasa:</strong>{" "}
+                        {getNutrientValue(
+                          nutrients[0].fat,
+                          nutrients[0].metric_serving_amount
+                        ) + "g" || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Carbohidratos:</strong>{" "}
+                        {getNutrientValue(
+                          nutrients[0].carbohydrate,
+                          nutrients[0].metric_serving_amount
+                        ) + "g" || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Proteina:</strong>{" "}
+                        {getNutrientValue(
+                          nutrients[0].protein,
+                          nutrients[0].metric_serving_amount
+                        ) + "g" || "N/A"}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p>Cargando detalles</p>
               )}
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className="d-flex justify-content-center">
               <Button
                 variant="success"
                 className="d-flex align-items-center"
                 onClick={handleAddFood}
               >
                 <FaUtensils className="me-2" />
-                Agregar alimento
+                Agregar
               </Button>
             </Modal.Footer>
           </Modal>
           {/*Modal for update food*/}
           <Modal
             show={showModalUpdateFood}
-            onHide={() => setShowModalUpdateFood(false)}
+            onHide={() => handleShowModalUpdateFood()}
             centered
             className="modal-update-food"
+            //style={isDesktop >= 768 ? {} : {}}
           >
             <Modal.Header closeButton>
               <Modal.Title className="w-100 text-center">
@@ -914,66 +1195,162 @@ const ClientControl = () => {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+              <div className="d-flex justify-content-center mb-3">
+                <Button
+                  variant={
+                    measurementType === "portion"
+                      ? "primary"
+                      : "outline-primary"
+                  }
+                  onClick={() => {
+                    setMeasurementType("portion");
+                    //setQuantity(1);
+                  }}
+                  className="me-2"
+                >
+                  Porción
+                </Button>
+                <Button
+                  variant={
+                    measurementType === "grams" ? "primary" : "outline-primary"
+                  }
+                  disabled={!gramsEnabled}
+                  onClick={() => {
+                    setMeasurementType("grams");
+                    //setQuantity(1);
+                  }}
+                >
+                  Gramos
+                </Button>{" "}
+              </div>
               {foodToUpdate ? (
                 <div className="text-center">
                   {/* Quantity Input with +/- Buttons */}
-                  <div className="d-flex justify-content-center align-items-center mb-3">
-                    {" "}
-                    {/*d-flex help us to put everything in the same line*/}
-                    <Button
-                      variant="outline-secondary"
-                      onClick={decreaseQuantity}
-                    >
-                      <BiMinus />
-                    </Button>
-                    <FormControl
-                      type="number"
-                      value={quantity}
-                      readOnly
-                      className="text-center mx-2"
-                      style={{ maxWidth: "60px" }}
-                    ></FormControl>
-                    <Button
-                      variant="outline-secondary"
-                      onClick={increaseQuantity}
-                    >
-                      <BiPlus />
-                    </Button>
-                  </div>
-                  <p>
-                    <strong>Porción:</strong>{" "}
-                    {getNutrientValue(porcion) || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Calorías:</strong>{" "}
-                    {getTotalValue(foodToUpdate.calorias) + " kcal" || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Grasa:</strong>{" "}
-                    {getTotalValue(foodToUpdate.grasa_g) + " g" || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Carbohidratos:</strong>{" "}
-                    {getTotalValue(foodToUpdate.carbohidratos_g) + " g" ||
-                      "N/A"}
-                  </p>
-                  <p>
-                    <strong>Proteina:</strong>{" "}
-                    {getTotalValue(foodToUpdate.proteina_g) + " g" || "N/A"}
-                  </p>
+
+                  {measurementType === "grams" ? (
+                    <>
+                      <div className="d-flex flex-row justify-content-center align-items-center mb-3">
+                        {" "}
+                        {/*d-flex help us to put everything in the same line*/}
+                        <Button
+                          variant="outline-secondary"
+                          onClick={decreaseGrams}
+                        >
+                          <BiMinus />
+                        </Button>
+                        <FormControl
+                          type="number"
+                          value={gramos}
+                          className="text-center mx-2"
+                          style={{ maxWidth: "80px" }}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "") {
+                              setGramos(""); // Allow temporary empty state
+                            } else {
+                              setGramos(Math.max(0, parseFloat(value))); // Ensure only positive numbers
+                            }
+                          }}
+                        />
+                        <Button
+                          variant="outline-secondary"
+                          onClick={increaseGrams}
+                        >
+                          <BiPlus />
+                        </Button>
+                      </div>
+                      <p>
+                        <strong>Porción:</strong>{" "}
+                        {getNutrientValue(porcion) || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Calorías:</strong>{" "}
+                        {getTotalValue(foodToUpdate.calorias) + " kcal" ||
+                          "N/A"}
+                      </p>
+                      <p>
+                        <strong>Grasa:</strong>{" "}
+                        {getTotalValue(foodToUpdate.grasa_g) + " g" || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Carbohidratos:</strong>{" "}
+                        {getTotalValue(foodToUpdate.carbohidratos_g) + " g" ||
+                          "N/A"}
+                      </p>
+                      <p>
+                        <strong>Proteina:</strong>{" "}
+                        {getTotalValue(foodToUpdate.proteina_g) + " g" || "N/A"}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="d-flex flex-row justify-content-center align-items-center mb-3">
+                        {" "}
+                        {/*d-flex help us to put everything in the same line*/}
+                        <Button
+                          variant="outline-secondary"
+                          onClick={decreaseQuantity}
+                        >
+                          <BiMinus />
+                        </Button>
+                        <FormControl
+                          type="number"
+                          value={quantity}
+                          className="text-center mx-2"
+                          style={{ maxWidth: "80px" }}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "") {
+                              setQuantity(""); // Allow temporary empty state
+                            } else {
+                              setQuantity(Math.max(0, parseFloat(value))); // Ensure only positive numbers
+                            }
+                          }}
+                        ></FormControl>
+                        <Button
+                          variant="outline-secondary"
+                          onClick={increaseQuantity}
+                        >
+                          <BiPlus />
+                        </Button>
+                      </div>
+                      <p>
+                        <strong>Porción:</strong>{" "}
+                        {getNutrientValue(porcion) || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Calorías:</strong>{" "}
+                        {getTotalValue(foodToUpdate.calorias) + " kcal" ||
+                          "N/A"}
+                      </p>
+                      <p>
+                        <strong>Grasa:</strong>{" "}
+                        {getTotalValue(foodToUpdate.grasa_g) + " g" || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Carbohidratos:</strong>{" "}
+                        {getTotalValue(foodToUpdate.carbohidratos_g) + " g" ||
+                          "N/A"}
+                      </p>
+                      <p>
+                        <strong>Proteina:</strong>{" "}
+                        {getTotalValue(foodToUpdate.proteina_g) + " g" || "N/A"}
+                      </p>
+                    </>
+                  )}
                 </div>
               ) : (
                 <p>Cargando detalles</p>
               )}
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className="w-100 d-flex justify-content-center">
               <Button
                 variant="success"
                 className="d-flex align-items-center"
                 onClick={handleUpdateFood}
               >
                 <FaUtensils className="me-2" />
-                Editar alimento
+                Editar
               </Button>
               <Button
                 variant="danger"

@@ -10,6 +10,7 @@ import {
   faEyeSlash,
   faUndo,
   faDeleteLeft,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -474,7 +475,7 @@ const CrudRoutines = () => {
                 >
                   <Button
                     variant="primary"
-                    className="btn-agregar me-2 mb-5 btn-responsive"
+                    className="btn-agregar me-2 mt-4 mb-4  btn-responsive"
                     onClick={() => handleShowModalAgregar(true)}
                   >
                     {" "}
@@ -508,16 +509,19 @@ const CrudRoutines = () => {
                             <strong>{routine.nombre}</strong>
                           </Card.Title>
                           <Card.Text>
-                            {routine.descripcion
-                              ? routine.descripcion
-                              : "Sin descripción"}
+                            {routine.descripcion ? (
+                              routine.descripcion
+                            ) : (
+                              <span className="text-muted">
+                                Sin descripción
+                              </span>
+                            )}
                           </Card.Text>
                           <Card.Text>
                             {" "}
                             {/*Duración: {routine.duracion} mins*/}
                             <Card.Text>
-                              <strong>Enfoque:</strong>{" "}
-                              {routine.enfoque.toLowerCase()}
+                              <strong>Enfoque:</strong> {routine.enfoque}
                             </Card.Text>
                             <div className="w-100 text-center">
                               <Button
@@ -680,6 +684,7 @@ const CrudRoutines = () => {
               onChange={handleSearchChange} //En los valores seleccionados no se puede utilizar e.target.value
               value={searchTerm}
             />
+
             <DropdownButton
               as={InputGroup.Append}
               variant="outline-secondary"
@@ -796,27 +801,15 @@ const CrudRoutines = () => {
               onSelect={handleBodyPartChange}
             >
               <Dropdown.Item eventKey="All">Todas</Dropdown.Item>
-              <Dropdown.Item eventKey="Espalda">
-                Espalda{/*brazos superiores*/}
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="Pecho">Pecho</Dropdown.Item>
-              <Dropdown.Item eventKey="Hombros">Hombros</Dropdown.Item>
-              <Dropdown.Item eventKey="Bíceps">Bíceps</Dropdown.Item>
-              <Dropdown.Item eventKey="Tríceps">Tríceps</Dropdown.Item>
-              <Dropdown.Item eventKey="Antebrazos">Antebrazos</Dropdown.Item>
-              <Dropdown.Item eventKey="Core">Core</Dropdown.Item>
-              <Dropdown.Item eventKey="Piernas">Piernas</Dropdown.Item>
-              <Dropdown.Item eventKey="Isquiotibiales">
-                Isquiotibiales
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="Glúteos">Glúteos</Dropdown.Item>
-              <Dropdown.Item eventKey="Pantorrillas">
-                Pantorrillas
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="abductores">Abductores</Dropdown.Item>
-              <Dropdown.Item eventKey="Piernas" /*"piernas inferiores"*/>
-                Piernas
-              </Dropdown.Item>
+              {enfoqueBodyParts[enfoqueRutina]?.map((part) => (
+                <Dropdown.Item key={part} eventKey={part}>
+                  {part}
+                </Dropdown.Item>
+              )) || (
+                <Dropdown.Item disabled>
+                  No hay partes del cuerpo disponible
+                </Dropdown.Item>
+              )}
             </DropdownButton>
           </InputGroup>
           <Form>
@@ -930,10 +923,11 @@ const CrudRoutines = () => {
                 style={{ marginBottom: "15px" }}
                 value={enfoqueRutina}
               >
+                <option value="">Enfoque</option>
                 <option value="Cuerpo completo">Cuerpo completo</option>
                 <option value="Torso">Torso</option>
-                <option value="Espalda">Espalda</option>
-                <option value="Pecho">Pecho</option>
+                <option value="Jale">Jale</option>
+                <option value="Empuje">Empuje</option>
                 <option value="Brazos">Brazos</option>
                 <option value="Piernas">Piernas</option>
                 {/*<option value="Torso">Torso</option>*/}

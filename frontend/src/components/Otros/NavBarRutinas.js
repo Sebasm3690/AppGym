@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "./index.css";
+import Logo from "../../assets/logo.png";
 
 const NavScrollExample = ({ onSearchResults, onLogout }) => {
   const idEntrenador = localStorage.getItem("idEntrenador");
@@ -61,17 +62,15 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
     <>
       <Navbar
         expand="lg"
-        /*className="navbar-dark bg-dark"*/ style={{ background: "#000C17" }}
+        className="navbar-dark bg-dark" /*style={{ background: "#000C17" }}*/
         fixed="top"
       >
         <Container fluid>
           <Navbar.Brand href="#" className="d-flex align-items-center">
             <img
-              src={
-                "https://png.pngtree.com/png-clipart/20220620/original/pngtree-orange-gym-logo-design-templete-png-png-image_8128901.png"
-              }
-              width="40"
-              height="40"
+              src={Logo}
+              width="50"
+              height="50"
               className="d-inline-block align-top me-2"
               alt="Campos Fitness Logo"
             />

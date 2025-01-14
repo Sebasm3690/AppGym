@@ -47,10 +47,13 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_decode
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+import logging
 
 # Set the locale globally (to Spanish)
 locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")  # Use "es_ES.UTF-8" for Linux/Mac, "Spanish_Spain.1252" for Windows.
-
+logger = logging.getLogger(__name__)
 
 #logger = logging.getLogger(__name__)
 
@@ -275,21 +278,23 @@ class RoutineViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         id_entrenador = self.kwargs.get('id_entrenador')
-        queryset = queryset.filter(id_entrenador=id_entrenador, tipo="Creada")
-        
+        tipo = self.request.query_params.get("tipo")
+        queryset = queryset.filter(id_entrenador=id_entrenador, tipo=tipo)
+        print(id_entrenador)
+        print(tipo)
         nombre = self.request.query_params.get("nombre")
         enfoque = self.request.query_params.get("enfoque")
-        tipo = self.request.query_params.get("tipo")
-
+       
         if nombre:
-            queryset = queryset.filter(nombre__icontains=nombre)
-        if enfoque:
-            queryset = queryset.filter(enfoque__icontains=enfoque)
-        if tipo:
-            queryset = queryset.filter(tipo__icontains=tipo)
+            result = queryset.filter(nombre__icontains=nombre)
+        elif enfoque:
+            result = queryset.filter(enfoque__icontains=enfoque)
+        else:
+            result = queryset
 
+     
         # Devuelve el queryset filtrado
-        return queryset
+        return result
 
 
 
@@ -324,6 +329,8 @@ class CatalogViewSet(viewsets.ModelViewSet):
 #Login Admin
 @api_view(['POST'])
 def adminLogin(request):
+    print("Si entra")
+    logger.info(f"Request received: {request.body}")
     username = request.data.get('username')
     password = request.data.get('password')
 
@@ -505,70 +512,70 @@ class FoodAPIView(APIView):
 
 
 #Agregar comidas
-class NutritionAPIView(APIView):
-    def post(self, request, query_param, *args, **kwargs):
-        id_cliente = query_param
-        query = request.data.get('query', '') #Se otiene el valor del parámetro 'query' enviado en la solicitud POST
+#class NutritionAPIView(APIView):
+    #def post(self, request, query_param, *args, **kwargs):
+        #id_cliente = query_param
+        #query = request.data.get('query', '') #Se otiene el valor del parámetro 'query' enviado en la solicitud POST
 
-        if query:
-            nombre_alimento = query.split()[-1]
-            cantidad = query.split()[0]
+        #if query:
+            #nombre_alimento = query.split()[-1]
+            #cantidad = query.split()[0]
             # Eliminar el último carácter (que en este caso sería "g")
-            cantidad_sin_unidad = cantidad[:-1]
+            #cantidad_sin_unidad = cantidad[:-1]
 
-            alimento = Alimento.objects.filter(nombre=nombre_alimento, tamaño_porcion_g=cantidad_sin_unidad).first()  # Se utiliza filter para que devuelva la lista vacia, get devuelve Alimento.DoesnotExist
-            if not alimento: 
-                print("El alimento no existe")
-                api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
-                api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'
-                api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
-                try:
-                    api_response = api_request.json()
-                    for item in api_response:
-                        serializer = FoodSerializer(data={ #Crea una instancia del serializador AlimentoSerializer con los datos del elemento actual
-                            'nombre': item.get('name'),
-                            'calorias': item.get('calories'),
-                            'grasa_total_g': item.get('serving_size_g'),
-                            'proteina_g': item.get('fat_total_g'),
-                            'sodio_mg': item.get('sodium_mg'), 
-                            'potasio_mg': item.get('potassium_mg'), 
-                            'colesterol_mg': item.get('cholesterol_mg'),
-                            'total_carbohidratos_g': item.get('carbohydrates_total_g'),
-                            'total_fibra_g': item.get('fiber_g'),
-                            'grasa_total_saturada_g': item.get('fat_saturated_g'),
-                            'tamaño_porcion_g':	item.get('serving_size_g'),
-                            "azucar_total_g": item.get('sugar_g')
-                        })
-                        if serializer.is_valid():
-                            alimento = serializer.save()
-                            serializer2 = ConsumeSerializer(data={
-                                'id_alimento': alimento.id_alimento,
-                                'id_cliente': id_cliente,
-                                'fecha': now().date()
-                            })
-                            if serializer2.is_valid():
-                                serializer2.save()
-                        else:
-                            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                    return Response(api_response, status = status.HTTP_201_CREATED)
-                except Exception as e:
-                    return Response({"error": "Hubo un error procesando la solicitud", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            else:
-                print("El alimento si existe")
-                serializer = FoodSerializer(alimento)
-                print(serializer.data)
-                serializer2 = ConsumeSerializer(data={
-                    'id_alimento': alimento.id_alimento,
-                    'id_cliente': id_cliente,
-                    'fecha': now().date()
-                })
-                if serializer2.is_valid():	
-                    serializer2.save()
-                    return Response(serializer.data, status = status.HTTP_201_CREATED)
-                else:
-                    return Response(serializer2.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"error","Sin query"}, status = status.HTTP_404_BAD_REQUEST)
+            #alimento = Alimento.objects.filter(nombre=nombre_alimento, tamaño_porcion_g=cantidad_sin_unidad).first()  # Se utiliza filter para que devuelva la lista vacia, get devuelve Alimento.DoesnotExist
+            #if not alimento: 
+                #print("El alimento no existe")
+                #api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
+                #api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'
+                #api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
+                #try:
+                    #api_response = api_request.json()
+                    #for item in api_response:
+                        #serializer = FoodSerializer(data={ #Crea una instancia del serializador AlimentoSerializer con los datos del elemento actual
+                            #'nombre': item.get('name'),
+                            #'calorias': item.get('calories'),
+                            #'grasa_total_g': item.get('serving_size_g'),
+                            #'proteina_g': item.get('fat_total_g'),
+                            #'sodio_mg': item.get('sodium_mg'), 
+                            #'potasio_mg': item.get('potassium_mg'), 
+                            #'colesterol_mg': item.get('cholesterol_mg'),
+                            #'total_carbohidratos_g': item.get('carbohydrates_total_g'),
+                            #'total_fibra_g': item.get('fiber_g'),
+                            #'grasa_total_saturada_g': item.get('fat_saturated_g'),
+                            #'tamaño_porcion_g':	item.get('serving_size_g'),
+                            #"azucar_total_g": item.get('sugar_g')
+                        #})
+                        #if serializer.is_valid():
+                            #alimento = serializer.save()
+                            #serializer2 = ConsumeSerializer(data={
+                                #'id_alimento': alimento.id_alimento,
+                                #'id_cliente': id_cliente,
+                                #'fecha': now().date()
+                            #})
+                            #if serializer2.is_valid():
+                                #serializer2.save()
+                        #else:
+                            #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    #return Response(api_response, status = status.HTTP_201_CREATED)
+                #except Exception as e:
+                    #return Response({"error": "Hubo un error procesando la solicitud", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            #else:
+                #print("El alimento si existe")
+                #serializer = FoodSerializer(alimento)
+                #print(serializer.data)
+                #serializer2 = ConsumeSerializer(data={
+                    #'id_alimento': alimento.id_alimento,
+                    #'id_cliente': id_cliente,
+                    #'fecha': now().date()
+                #})
+                #if serializer2.is_valid():	
+                    #serializer2.save()
+                    #return Response(serializer.data, status = status.HTTP_201_CREATED)
+                #else:
+                    #return Response(serializer2.errors, status=status.HTTP_400_BAD_REQUEST)
+        #else:
+            #return Response({"error","Sin query"}, status = status.HTTP_404_BAD_REQUEST)
 
 
 
@@ -1559,6 +1566,11 @@ def updateRoutine(request,rutina_id):
         enfoque = datos.get('enfoque')
         ejercicios = datos.get('ejercicios',[])
         id_entren = datos.get('id_entrenador')
+        tiempo_descanso = datos.get('tiempo_descanso',180)
+        notas = datos.get('notas')
+
+        
+
 
         #Filtrar rutina y entrenador
         rutina = get_object_or_404(Rutina, id_rutina=rutina_id)
@@ -1569,6 +1581,8 @@ def updateRoutine(request,rutina_id):
         rutina.nombre = nombre
         rutina.descripcion = descripcion
         rutina.enfoque = enfoque 
+        rutina.tiempo_descanso = tiempo_descanso
+        rutina.notas = notas
         rutina.save()
 
         #Limpiar ejercicios antiguos 
@@ -2012,7 +2026,7 @@ def actualizar_rutinas(request):
             rutina_instance = Rutina.objects.get(pk=routine_data['id_rutina'])
             ejercicio_instance = Ejercicio.objects.get(pk=routine_data['id_ejercicio'])
             cliente_instance = Cliente.objects.get(pk=routine_data['id_cliente'])
-            tiempoDescanso = routine_data.get('tiempoDescanso')
+            tiempoDescanso = routine_data.get('tiempo_descanso')
             notas = routine_data.get('notas')
 
             asignado = routine_data.get('asignado')
@@ -2048,6 +2062,7 @@ def update_rutinas(request):
 
     # Print serialized JSON
     #print(json.dumps(routines_json, indent=4))
+    print(request.data)
   
     try:
         with transaction.atomic():
@@ -2056,6 +2071,8 @@ def update_rutinas(request):
                 cliente_instance = Cliente.objects.get(pk=routine_data['id_cliente'])
                 ejercicio_instance = Ejercicio.objects.get(pk=routine_data['id_ejercicio'])
                 dia = routine_data['dia']
+                tiempo_descanso = routine_data.get('tiempoDescanso',180)
+                notas = routine_data.get('notas')
 
                 lastest_asignas = SeAsigna.objects.filter(id_cliente=cliente_instance,dia=dia,id_rutina=rutina_instance,tipo="asignacion",id_ejercicio=ejercicio_instance,serie = routine_data['serie'],).order_by('-fecha').values('fecha')[:1]
                 asigna = SeAsigna.objects.filter(id_cliente=cliente_instance, dia=dia, id_rutina=rutina_instance, tipo="asignacion", id_ejercicio=ejercicio_instance,serie = routine_data['serie'], fecha=Subquery(lastest_asignas)).order_by("-fecha","serie").first()
@@ -2064,6 +2081,8 @@ def update_rutinas(request):
                     asigna.repeticiones = routine_data.get('repeticiones',asigna.repeticiones)
                     asigna.peso = routine_data.get('peso',asigna.peso)
                     asigna.fecha = datetime.now()
+                    asigna.tiempo_descanso = routine_data.get('tiempo_descanso',asigna.tiempo_descanso)
+                    asigna.notas = routine_data.get('notas',asigna.notas)
                     asigna.save()
                 else:
                     # Create a new set if it doesn't exist
@@ -2078,6 +2097,8 @@ def update_rutinas(request):
                         fecha=datetime.now(),
                         tipo="asignacion",  # Always set to "asignacion" type
                         asignado=f"{routine_data['peso']}kg x {routine_data['repeticiones']}",
+                        tiempo_descanso=tiempo_descanso,
+                        notas=notas
                     )
                     
         return Response({"message":"Rutina asignada actualizada exitosamente"}, status=status.HTTP_200_OK)
@@ -2119,14 +2140,35 @@ def allowUpdate(request):
 @api_view(['POST'])
 def agregar_alimento(request):
     if request.method == 'POST':
+        print(request.data)
         today = date.today()
 
         datos = request.data
         id_alimento = datos.get('id_alimento')
         id_cliente = datos.get('id_cliente')
         parte_dia = datos.get('parte_dia')
-        cantidad = datos.get('cantidad')
+        cantidad = Decimal(datos.get('cantidad',0))
         porcion = datos.get('porcion')
+        measurement_type = datos.get('measurementType')
+        metric =  Decimal(datos.get('metric',0))
+        metric_serving_unit = datos.get('metric_serving_unit',"")
+        gramsEnabled = datos.get('gramsEnabled',False)
+
+        
+        if measurement_type == 'grams': 
+            cantidad = cantidad/metric
+            gramos = cantidad * metric
+            if metric_serving_unit == 'oz':
+                print("Si entra")
+                cantidad = cantidad / Decimal(28.3495)
+            else:
+                print("No entra")
+        elif measurement_type == "portion":
+            if gramsEnabled == False:
+                gramos = 0
+            else:
+                gramos = cantidad * metric 
+
 
         print(parte_dia)
 
@@ -2150,7 +2192,9 @@ def agregar_alimento(request):
                     proteina_g = proteina,
                     carbohidratos_g = carbohidratos,
                     grasa_g = grasa,
-                    api_id_referencia = id_alimento
+                    metrica_g = metric,
+                    api_id_referencia = id_alimento,
+                    unidad_medida = metric_serving_unit
                 )
             else:
                 #--Consume
@@ -2166,19 +2210,19 @@ def agregar_alimento(request):
                 id_alimento = alimento,
             )
 
-        
+
             # Check if Dispone entry exists; create if not
             dispone, dispone_created = Dispone.objects.get_or_create(
                 id_cliente = cliente,
                 id_alimento = alimento,
                 id_parte_dia = parte_dia_obj,
                 fecha = today,
-                defaults={'cantidad':cantidad, 'tamaño_porcion_g':porcion},
+                defaults={'cantidad':cantidad, 'tamaño_porcion_g':porcion, 'gramos': gramos},
             )
 
             if not dispone_created:
                 dispone.cantidad += cantidad
-                dispone.tamaño_porcion_g += porcion
+                dispone.gramos += gramos
                 dispone.save()
 
     
@@ -2248,16 +2292,38 @@ def obtener_datos_dispone_actual(request):
 def update_food(request):
     if request.method == 'POST':
         datos = request.data 
+        print(datos)
         id_cliente = datos.get('id_cliente')
         id_alimento = datos.get('id_alimento')
         id_parte_dia = datos.get('id_parte_dia')
         fecha = datos.get('fecha')
-        cantidad = datos.get('cantidad')
+        cantidad = Decimal(datos.get('cantidad'))
+        gramos = Decimal(datos.get('gramos'))
+        measurement_type = datos.get('measurementType')
+        metric =  Decimal(datos.get('metric',0))
+        metric_serving_unit = datos.get('metric_serving_unit',"")
+        gramsEnabled = datos.get('gramsEnabled',False)
+
+        
+        if measurement_type == 'grams': 
+            cantidad = gramos/metric
+            if metric_serving_unit == 'oz':
+                print("Si entra")
+                cantidad = cantidad / Decimal(28.3495)
+            else:
+                print("No entra")
+        elif measurement_type == "portion":
+            if gramsEnabled == False:
+                gramos = 0
+            else:
+                gramos = cantidad * metric 
+
 
         print(f"Received data: id_cliente={id_cliente}, id_alimento={id_alimento}, id_parte_dia={id_parte_dia}, fecha={fecha}")
 
         dispone = Dispone.objects.get(id_cliente=id_cliente, id_alimento=id_alimento, id_parte_dia=id_parte_dia, fecha=fecha)
         dispone.cantidad = cantidad
+        dispone.gramos = gramos
         dispone.save()
         dispone_serializado = DisponeSerializer(dispone)
         return Response({"mensaje":"Alimento actualizado correctamente", "dispone":dispone_serializado.data}, status=status.HTTP_200_OK)
@@ -2557,29 +2623,62 @@ def getRestClient(request):
 #Link to allows the user recover their password
 @api_view(['POST'])
 def reset_password_request(request):
+
+
+    userType = request.data.get('userType')
+    print(userType)
     email = request.data.get('email')
+
     if not email:
         return Response({"error": "El email es requerido"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if userType not in ['Administrador','Entrenador','Cliente']:
+        return Response({"error": "Tipo de usuario inválido"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         user = User.objects.get(email=email)
+
+        if userType == 'Administrador':
+            Administrador.objects.get(user=user)
+        elif userType == 'Entrenador':
+            Entrenador.objects.get(user=user)
+        else:
+            Cliente.objects.get(user=user)
+
     except User.DoesNotExist:
         return Response({"error": "El usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)
+    except (Administrador.DoesNotExist, Entrenador.DoesNotExist, Cliente.DoesNotExist):
+        return Response({"error": f"El usuario no pertenece al tipo '{userType}'"}, status=status.HTTP_400_BAD_REQUEST)
     
     #Generate a resete token
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"
 
-    #Send email
-    send_mail(
-        subject="Reset Password",
-        message = f"Para resetear tu contraseña, haz click en el siguiente enlace: {reset_link}",
-        from_email="admin@fitness.com",
-        recipient_list=[email],
-    )
+    #Prepare email content
+    subject = "Restablece tu contraseña"
+    from_email = "admin@fitness.com"
+    recipient_list = [email]
 
-    return Response({"mensaje": "El email de reseteo de contraseña ha sido enviado a tu correo"}, status=status.HTTP_200_OK)
+    # Render HTML email template    
+    html_content = render_to_string('emails/reset_password.html', {'reset_link': reset_link})
+    text_content = f"Para restablecer tu contraseña, haz clic en el siguiente enlace: {reset_link}"
+    
+    # Create and send email
+    email_message = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
+    email_message.attach_alternative(html_content, "text/html")
+    email_message.send()
+
+
+    #Send email
+    #send_mail(
+        #subject="Reset Password",
+        #message = f"Para resetear tu contraseña, haz click en el siguiente enlace: {reset_link}",
+        #from_email="admin@fitness.com",
+        #recipient_list=[email],
+    #)
+
+    return Response({"mensaje": "El email de reseteo de contraseña ha sido enviado a tu correo"}, status=status.HTTP_200_OK) 
 
 
 #After the user clicks the link, this function will be called

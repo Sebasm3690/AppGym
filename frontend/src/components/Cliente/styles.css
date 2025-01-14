@@ -54,6 +54,7 @@ p {
   display: flex;
   justify-content: center;
   margin-bottom: 1.5rem;
+  margin-left: 6%;
 }
 
 /* Ensure all cards have the same height and width */
@@ -118,6 +119,13 @@ p {
   transform: translateY(-2px);
 }
 
+.food-list-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 20px;
+  max-height: 100%;
+}
+
 /******************************/
 
 @media (max-width: 576px) {
@@ -180,10 +188,13 @@ p {
 }
 
 .main-content-wrapper {
-  display: grid;
-  place-items: center; /* Centers content vertically and horizontally */
-  /*min-height: 100vh;*/
-  background-color: #f8f9fa;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the content horizontally */
+  justify-content: flex-start; /* Prevents unnecessary vertical alignment */
+  height: auto; /* Ensures it doesn't force unnecessary height */
+  padding-bottom: 0;
 }
 
 .main-content-food {
@@ -191,6 +202,7 @@ p {
   max-width: 100%;
   justify-self: start; /* Aligns it to the left of the grid */
   box-sizing: border-box;
+  /*margin-left: 15rem;*/
 }
 
 /*This is an animation that is applied after a click in an image*/
@@ -198,7 +210,47 @@ p {
   animation: bounce 0.3s ease;
 }
 
+.search-bar-wrapper {
+  margin-bottom: 20px; /* Adds spacing between search bar and results */
+}
+
+.food-list-wrapper {
+  max-height: calc(100vh - 250px); /* Adjust based on available space */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.loading-spinner p {
+  font-size: 1.25rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+
+.loading-spinner .fa-spinner {
+  color: #007bff; /* Matches the button color */
+  font-size: 3rem;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.modal-update-food .modal-dialog {
+  margin-left: 43%;
+}
+
 @media (max-width: 576px) {
+  .modal-update-food .modal-dialog {
+    margin-left: 0%;
+  }
+
   .image-container {
     gap: 5px;
   }
@@ -212,13 +264,27 @@ p {
     transform: none;
     filter: none;
   }
-  .modal-update-food .modal-dialog {
+  /*.modal-update-food .modal-dialog {
     width: 100%;
     margin-right: 300px !important;
-  }
+  }*/
   /***Food cards***/
   .food-list-row {
-    margin-left: auto; /* Spacing between cards */
+    gap: 15px; /* Spacing between cards */
+    margin-left: 0%; /* Default left alignment */
+  }
+  .search-bar-form {
+    margin-top: 0px;
+  }
+
+  .loading-spinner .fa-spinner {
+    font-size: 2.5rem;
+  }
+
+  .loading-spinner p {
+    margin-top: 10%;
+    font-size: 1.25rem;
+    color: #6c757d; /* Neutral text color */
   }
 }
 

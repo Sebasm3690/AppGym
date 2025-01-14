@@ -116,18 +116,18 @@
   z-index: 999; /* Below toggle button but above sidebar */
 }
 
-.accordion-button::after {
-  content: "▼"; /* FontAwesome down arrow */
-  font-size: 10px;
+/*.accordion-button::after {
+  /*content: "▼"; /* FontAwesome down arrow */
+/*font-size: 10px;
   font-family: "FontAwesome";
   color: #c2c7d0; /* Match sidebar text color */
-  margin-left: auto; /* Push to the right */
-  transition: transform 0.2s ease;
-}
+/*margin-left: auto; /* Push to the right */
+/*transition: transform 0.2s ease;
+}*/
 
-.accordion-button:not(.collapsed)::after {
+/*.accordion-button:not(.collapsed)::after {
   transform: rotate(180deg); /* Rotate when expanded */
-}
+/*}*/
 
 /* Main Title Container */
 .main-title-container {

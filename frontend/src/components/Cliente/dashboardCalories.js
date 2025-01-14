@@ -183,11 +183,11 @@ const CaloriesDashboard = () => {
         data:
           totalMacros > 0
             ? [
-                ((macrosHoy.total_proteina / totalMacros) * 100).toFixed(2),
-                ((macrosHoy.total_grasa / totalMacros) * 100).toFixed(2),
                 ((macrosHoy.total_carbohidratos / totalMacros) * 100).toFixed(
                   2
                 ),
+                ((macrosHoy.total_proteina / totalMacros) * 100).toFixed(2),
+                ((macrosHoy.total_grasa / totalMacros) * 100).toFixed(2),
               ]
             : [0, 0, 0],
         backgroundColor: ["#FFC107", "#FF6384", "#0DCAF0"], // Green and Yellow
@@ -336,9 +336,11 @@ const CaloriesDashboard = () => {
   return (
     <Container fluid className="pt-4 mt-4">
       {/*Header*/}
-      <Row className="mb-2">
-        <Col xs={12} md={{ span: 8, offset: 3 }} className="text-center">
-          <h1 className="h3 mb-0 mt-5 w-100 text-center">Resumen General</h1>
+      <Row className="mb-3">
+        <Col xs={12} md={{ span: 5, offset: 4 }} className="text-center">
+          <h1 className="h3 mb-0 mt-5 w-100 text-center ms-1">
+            <strong>Resumen General</strong>
+          </h1>
         </Col>
       </Row>
 

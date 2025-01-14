@@ -29,7 +29,7 @@ const HomeClient = () => {
       <Container className="d-flex flex-column justify-content-center flex-grow-1">
         {/* Title Section */}
         <Row className="text-center">
-          <Col className="mt-5">
+          <Col className={styles.containerTitle}>
             <h1 className={styles.mainTitle}>¡Bienvenido!</h1>
             <p className={styles.subtitle}>
               Seleccione una opción para continuar
@@ -38,7 +38,7 @@ const HomeClient = () => {
         </Row>
 
         {/* Content Cards */}
-        <Row className="text-center">
+        <Row className={styles.mainContent}>
           <Col xs={12} md={6} className="mt-2">
             <div
               className={styles.cardContainer}

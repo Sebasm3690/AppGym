@@ -38,7 +38,7 @@ urlpatterns = [
      # Incluye las rutas del router bajo un prefijo específico para evitar conflictos
     path( "api/v1/", include(router.urls)), #/api/v1/
     path("getFood/",FoodAPIView.as_view(),name='getFood'),
-    path("addFood/<query_param>/",NutritionAPIView.as_view(), name='addFood'),
+    #path("addFood/<query_param>/",NutritionAPIView.as_view(), name='addFood'),
     path("consumeFood/",ConsumeView.as_view({'get':'list'}), name='consumeFood'),
     path("calcularTMB/<query_param>/",CalcularTMBAPIView.as_view(), name='calcularTMB'),
     path("calcularMacros/<query_param>/",calcularMacroNutrientes.as_view(), name='calcularMacros'),

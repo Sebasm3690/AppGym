@@ -2,6 +2,7 @@
 import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import "./navBar.css";
+import Logo from "../../assets/logo.png";
 
 const NavScrollExample = () => {
   return (
@@ -11,6 +12,13 @@ const NavScrollExample = () => {
       expand="lg"
       className="px-3"
     >
+      <img
+        src={Logo}
+        width="50"
+        height="50"
+        className="d-inline-block align-top me-2"
+        alt="Campos Fitness Logo"
+      />
       <Navbar.Brand>CAMPOS FITNESS</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">

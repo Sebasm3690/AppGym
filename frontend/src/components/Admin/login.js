@@ -107,11 +107,11 @@ class LoginAdmin extends React.Component {
                   <Container>
                     <Row>
                       <Col lg={9} md={11} sm={12} className="mx-auto">
-                        <h3 className="display-4 mb-3 text-left">
+                        <h3 className="display-4 mb-3 text-center">
                           Iniciar Sesión
                         </h3>
-                        <p className="text-muted mb-4 text-left">
-                          Introduzca sus datos o credenciales
+                        <p className="text-muted mb-4 text-center">
+                          Introduzca sus datos de administrador
                         </p>
                         <Form
                           className="d-flex flex-column align-items-center"
@@ -159,7 +159,7 @@ class LoginAdmin extends React.Component {
                             ¿Iniciar sesión como entrenador?
                           </a>
                           <a
-                            href="/forgotPassword"
+                            href="/forgotPassword?userType=admin"
                             className="text-primary mt-3 d-block"
                           >
                             ¿Olvidaste tu contraseña?

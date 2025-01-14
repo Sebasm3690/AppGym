@@ -45,17 +45,17 @@ import {
   Table,
 } from "react-bootstrap";
 import { show_alerta } from "../../functions";
-import "../Admin/styles.css";
+//import "../Admin/styles.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Otros/sideBar";
-import styles from "../Otros/cards.module.css"; // Import CSS Module
+import styles from "../Otros/cards.module.css"; // Import CSS Module doesn't affect the tables
 import WeekdayCards from "./weekdays";
 import WeeklyRoutinePlan from "./tablePlan";
-import "./routines.css";
+import "./routines.css"; //Affects schedule and buttons of it
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "./searchBarAsignar";
-import "./routines.css";
 import Header from "../Otros/header";
+import "./setsTable.css"; //Affects table for assign routines, set,peso,reps,etc
 import {
   LineChart,
   Line,
@@ -71,6 +71,7 @@ import "./dashboardAsignarRutina.css";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { toZonedTime } from "date-fns-tz";
+import "./progressModal.css";
 
 const AssignRoutines = () => {
   const idEntrenador = localStorage.getItem("idEntrenador");
@@ -256,6 +257,10 @@ const AssignRoutines = () => {
     getEstadoRutinas();
   }, []);
 
+  //Get client
+
+  const [client, setClient] = useState({});
+
   useEffect(() => {
     //console.log(todasRutinasCliente);
   }, [todasRutinasCliente]);
@@ -440,7 +445,7 @@ const AssignRoutines = () => {
               /* [{ fecha: "2024-12-05", "Ejercicio Jalón en polea alta": 1530, "Ejercicio Remo sentado en máquina": 0 },
               { fecha: "2024-12-06", "Ejercicio Jalón en polea alta": 2640, "Ejercicio Remo sentado en máquina": 2640 }];
               */
-              const completedData = transformedData.map((entry) => {
+              const completedData = transformedData.map((entry, index) => {
                 allExercises.forEach((exercise) => {
                   if (!entry[`Ejercicio ${exercise}`]) {
                     entry[`Ejercicio ${exercise}`] = 0; // Default missing exercises to 0
@@ -554,6 +559,29 @@ const AssignRoutines = () => {
       );
       console.log("Response from backend:", response.data); // Logs the backend response
       setHistorial(response.data.historial || []);
+    } catch (error) {
+      show_alerta("Error al cargar el historial", "error");
+      setHistorial([]);
+    }
+  };
+
+  const handleSearchRoutine = async (searchParams) => {
+    //alert(JSON.stringify(searchParams));
+    //alert(selectDay);
+    try {
+      //alert(fecha);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/buscarRutinas/${idEntrenador}/`,
+        {
+          params: {
+            nombre: searchParams.nombre,
+            enfoque: searchParams.enfoque,
+            tipo: routineType,
+          },
+        }
+      );
+      console.log("Response from backend:", response.data); // Logs the backend response
+      setFilteredRoutines(response.data || []);
     } catch (error) {
       show_alerta("Error al cargar el historial", "error");
       setHistorial([]);
@@ -691,34 +719,60 @@ const AssignRoutines = () => {
 
   const handleAgregarProgreso = async () => {
     var allow = await allowActualizar(); // Wait for the result of allowActualizar
-    const allWithData = verificarSetsBlancosProgreso();
+    const hasInvalidSet = verificarSetsBlancosProgreso();
 
     //alert(allow);
     if (allow === false) {
-      if (!allWithData) {
+      //alert("Si entra");
+      if (hasInvalidSet) {
         show_alerta(
           "Todos los sets deben tener peso y repeticiones",
           "warning"
         );
         return;
       }
-      alert("Los datos son:" + JSON.stringify(rutinaCompletaCliente, null, 2));
+      //alert("Los datos son:" + JSON.stringify(rutinaCompletaCliente, null, 2));
       const urlUpdateRutinaAsignada =
         "http://127.0.0.1:8000/actualizarRutinaAsignada/";
 
-      const updateData = rutinaCompletaCliente.map((routine) => ({
-        id: routine.id,
+      const updateData = rutinaCompletaCliente.map((routine) => {
+        const exerciseId = routine.id_ejercicio;
+        const routineSets = sets[exerciseId] || [];
+        const matchingSet = routineSets.find(
+          (set) => set.serie === routine.serie
+        );
+
+        return {
+          ...routine,
+          peso:
+            routine.progresoPeso ??
+            parseInt(
+              matchingSet?.progresoPeso ?? matchingSet.peso ?? routine.peso ?? 0
+            ), //Only update
+          repeticiones:
+            routine.progresoReps ??
+            parseInt(
+              matchingSet?.progresoReps ??
+                matchingSet.repeticiones ??
+                routine.repeticiones ??
+                0
+            ), // Only update if progresoReps is missing
+        };
+
+        /*id: routine.id,
         serie: parseInt(routine.serie),
         repeticiones: parseInt(routine.progresoReps),
         peso: parseInt(routine.progresoPeso),
-        fecha: routine.fecha,
+        //fecha: routine.fecha,
         dia: routine.dia,
         id_rutina: routine.id_rutina,
         id_ejercicio: routine.id_ejercicio,
         id_cliente: routine.id_cliente,
         notas: routine.notas,
-        tiempoDescanso: routine.tiempoDescanso,
-      }));
+        tiempoDescanso: routine.tiempoDescanso,*/
+      });
+
+      alert(JSON.stringify(updateData, null, 2));
 
       // Send PUT request to the backend
       axios
@@ -751,6 +805,8 @@ const AssignRoutines = () => {
       );
       const urlUpdateRutina = "http://127.0.0.1:8000/updateRutina/";
 
+      //alert(JSON.stringify(rutinaCompletaCliente, null, 2));
+
       const updateData = rutinaCompletaCliente.map((routine) => ({
         id: routine.id,
         serie: parseInt(routine.serie),
@@ -761,6 +817,8 @@ const AssignRoutines = () => {
         id_rutina: routine.id_rutina,
         id_ejercicio: routine.id_ejercicio,
         id_cliente: routine.id_cliente,
+        tiempo_descanso: parseInt(routine.tiempo_descanso),
+        notas: routine.notas,
       }));
 
       // Send PUT request to the backend
@@ -862,8 +920,11 @@ const AssignRoutines = () => {
   };
 
   const verificarSetsBlancosProgreso = () => {
-    return !Object.keys(sets).some((exerciseId) => {
-      alert(JSON.stringify(sets[exerciseId], null, 2));
+    return Object.keys(sets).some((exerciseId) => {
+      alert(
+        "Verificando sets blancos:" + JSON.stringify(sets[exerciseId], null, 2)
+      );
+      console.log(JSON.stringify(sets[exerciseId], null, 2));
       return sets[exerciseId].some((set) => {
         return (
           !("progresoReps" in set) || // Check if "reps" key is missing
@@ -904,8 +965,14 @@ const AssignRoutines = () => {
   }; */
 
   const handleShowWeekDays = (id_cliente) => {
+    //alert(id_cliente);
     setIdCliente(id_cliente);
     setShowWeekDays(true);
+    axios
+      .get(`http://127.0.0.1:8000/api/v1/client/${id_cliente}/`)
+      .then((response) => {
+        setClient(response.data);
+      });
   };
 
   const handleShowTableRoutines = (id_cliente) => {
@@ -1118,51 +1185,51 @@ const AssignRoutines = () => {
 
   const handleDeleteProgressSet = async (opcion, exerciseId, setIndex) => {
     var allow = await allowActualizar(); // Wait for the result of allowActualizar
-    alert(opcion);
-    alert(allow);
-    if ((opcion === 1 && allow === false) || (opcion === 2 && allow === true)) {
-      console.log("Deleting set:", { opcion, exerciseId, setIndex });
+    //alert(opcion);
+    //alert(allow);
+    //if ((opcion === 1 && allow === false) || (opcion === 2 && allow === true)) {
+    console.log("Deleting set:", { opcion, exerciseId, setIndex });
 
-      const routine = sets[exerciseId];
-      if (!routine || !routine[setIndex]) {
-        console.warn("Set not found. Check exerciseId and setIndex.");
-        return;
-      }
-
-      const deletedSet = routine[setIndex];
-
-      // DELETE request to the backend
-      const url = `http://127.0.0.1:8000/eliminarSets/`;
-
-      axios
-        .delete(url, {
-          data: {
-            id: deletedSet.id, // Assuming the set has an "id" field
-            id_ejercicio: exerciseId,
-            serie: deletedSet.serie,
-          },
-        })
-        .then((response) => {
-          console.log("Set deleted successfully:", response.data);
-
-          // Update the frontend state after successful deletion
-          setSets((prevSets) => {
-            const updatedSets = { ...prevSets };
-            updatedSets[exerciseId] = routine.filter(
-              (_, index) => index !== setIndex
-            );
-            if (updatedSets[exerciseId].length === 0) {
-              delete updatedSets[exerciseId]; // Remove empty exercises
-            }
-            return updatedSets;
-          });
-        })
-        .catch((error) => {
-          console.error("Error deleting set:", error);
-        });
-    } else {
-      show_alerta("No se puede eliminar el set", "error");
+    const routine = sets[exerciseId];
+    if (!routine || !routine[setIndex]) {
+      console.warn("Set not found. Check exerciseId and setIndex.");
+      return;
     }
+
+    const deletedSet = routine[setIndex];
+
+    // DELETE request to the backend
+    const url = `http://127.0.0.1:8000/eliminarSets/`;
+
+    axios
+      .delete(url, {
+        data: {
+          id: deletedSet.id, // Assuming the set has an "id" field
+          id_ejercicio: exerciseId,
+          serie: deletedSet.serie,
+        },
+      })
+      .then((response) => {
+        console.log("Set deleted successfully:", response.data);
+
+        // Update the frontend state after successful deletion
+        setSets((prevSets) => {
+          const updatedSets = { ...prevSets };
+          updatedSets[exerciseId] = routine.filter(
+            (_, index) => index !== setIndex
+          );
+          if (updatedSets[exerciseId].length === 0) {
+            delete updatedSets[exerciseId]; // Remove empty exercises
+          }
+          return updatedSets;
+        });
+      })
+      .catch((error) => {
+        console.error("Error deleting set:", error);
+      });
+    /*} else {
+      show_alerta("No se puede eliminar el set", "error");
+    }*/
   };
 
   const handleMostrarInstruccionesEjercicio = (id_ejercicio) => {
@@ -1357,6 +1424,7 @@ const AssignRoutines = () => {
         setNombresEjercicios(response.data.nombresEjercicios);
         setShowModalFullProgreso(true);
         const setsData = response.data.sets || {};
+        alert("Si entra");
         setSets(setsData);
         //alert(JSON.stringify(setsData, null, 2));
         setInitialSets(setsData);
@@ -1439,7 +1507,7 @@ const AssignRoutines = () => {
     setRutinaCompletaCliente((prevRutinas) =>
       prevRutinas.map((rutina) => {
         if (rutina.id_ejercicio === id_ejercicio) {
-          return { ...rutina, tiempoDescanso: value };
+          return { ...rutina, tiempo_descanso: value };
         }
         return rutina;
       })
@@ -1572,10 +1640,23 @@ const AssignRoutines = () => {
               <Sidebar />
             </Col>
             <Col md={{ span: 12, offset: 1 }}>
-              <center>
-                <h3>Selecciona el día de la semana</h3>
-              </center>
               {/* Se envia la funcion como parametro */}
+              {/*alert("Si entra")*/}
+              <h2
+                md={{ span: 12, offset: 1 }}
+                className="w-100 text-center"
+                style={{
+                  fontSize: "1.1 rem", // Responsive font size
+                  fontWeight: "bold",
+                  color: "#333",
+                  background: "linear-gradient(to right, #007bff, #00c6ff)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  marginBottom: "1rem",
+                }}
+              >
+                Rutina de {client.nombre} {client.apellido}
+              </h2>
               <WeekdayCards onSelectDay={handleSelectDay} />{" "}
             </Col>
           </Row>
@@ -1592,8 +1673,8 @@ const AssignRoutines = () => {
             <Col md={10}>
               <center>
                 <h3 className="mt-4">
-                  <FontAwesomeIcon icon={faCalendarAlt} className="me-2" /> Plan
-                  de rutina semanal
+                  <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+                  Plan de rutina semanal
                 </h3>
               </center>
 
@@ -1648,9 +1729,9 @@ const AssignRoutines = () => {
           </div>
 
           {/* Search Bar */}
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar onSearch={handleSearchRoutine} />
           {/*Filter buttons*/}
-          <div className="d-flex justify-content-center gap-3 mb-4"></div>
+          {/*<div className="d-flex justify-content-center gap-3 mb-4"></div>*/}
 
           <div className="panel-body">
             <Row className="g-4">
@@ -1695,12 +1776,16 @@ const AssignRoutines = () => {
                         )}
                         {/* Card Body */}
                         <CardBody>
-                          <Card.Title>{routine.nombre}</Card.Title>
-                          <Card.Text>{routine.descripcion}</Card.Text>
+                          <Card.Title>
+                            <strong>{routine.nombre}</strong>
+                          </Card.Title>
+                          <Card.Text style={{ color: "#333" }}>
+                            {routine.descripcion}
+                          </Card.Text>
                           <Card.Text>
-                            <Card.Text>
+                            <Card.Text style={{ color: "#333" }}>
                               <strong>Enfoque: </strong>
-                              {routine.enfoque.toLowerCase()}
+                              {routine.enfoque}
                             </Card.Text>
                             <Button
                               variant="primary"
@@ -1754,8 +1839,16 @@ const AssignRoutines = () => {
                 <Col md={6} key={routine.id_rutina} className="mb-4">
                   <Card>
                     <CardBody>
-                      <Card.Title>{routine.nombre}</Card.Title>
-                      <Card.Text>{routine.descripcion}</Card.Text>
+                      <Card.Title>
+                        <strong>{routine.nombre}</strong>
+                      </Card.Title>
+                      <Card.Text>
+                        {routine.descripcion ? (
+                          routine.descripcion
+                        ) : (
+                          <span className="text-muted">Sin descripción</span>
+                        )}
+                      </Card.Text>
                       <Card.Text>
                         <Card.Text>
                           <strong>Enfoque: </strong>
@@ -1835,7 +1928,7 @@ const AssignRoutines = () => {
         <Modal.Body>
           <Form>
             <Row>
-              <p>{descripcionRutina}</p>
+              <p className="w-100 text-center">{descripcionRutina}</p>
               {selectedEjercicios.map((selectedEjercicio) => (
                 <Col
                   md={6}
@@ -1869,7 +1962,7 @@ const AssignRoutines = () => {
         show={showModalAssignRoutine}
         onHide={() => handleCloseModalAsignarRuitina()}
         centered
-        className="asignar-rutina-modal"
+        className="assign-routine-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">
@@ -1887,17 +1980,20 @@ const AssignRoutines = () => {
                 className="mb-4"
               >
                 {/* Workout Timer and Notes Section */}
-                <div
-                  className="d-flex justify-content-between align-items-center mb-3"
-                  style={{
-                    flexGrow: 1,
-                    marginRight: "15px", // Add space between the inputs
-                  }}
-                >
-                  <FontAwesomeIcon icon={faBook} className="me-2" />
+                <div className="input-with-icon  mb-3">
+                  {" "}
+                  <FontAwesomeIcon icon={faBook} />
                   <Form.Control
                     type="text"
                     placeholder="Notas"
+                    style={{
+                      width: "100%", // Keep the input narrow
+                      padding: "8px",
+                      border: "1px solid #ccc",
+                      borderRadius: "5px",
+                      //textAlign: "center", // Center-align text
+                      fontSize: "14px",
+                    }}
                     // value={notas[selectedEjercicio.id_ejercicio] || ""} // Controlled input
                     onChange={(e) =>
                       handleNotasChange(
@@ -1909,18 +2005,18 @@ const AssignRoutines = () => {
                   {/*<Button variant="primary">Finalizar</Button>*/}
                 </div>
                 {/* Exercise List */}
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <FontAwesomeIcon icon={faClock} className="me-2" />
+                <div className="input-with-icon  mb-3">
+                  <FontAwesomeIcon icon={faClock} />
                   <Form.Control
                     type="number"
                     id="restTime"
                     placeholder="Tiempo de descanso (segundos)"
                     style={{
-                      width: "80px", // Keep the input narrow
+                      width: "100%", // Keep the input narrow
                       padding: "8px",
                       border: "1px solid #ccc",
                       borderRadius: "5px",
-                      textAlign: "center", // Center-align text
+                      //textAlign: "center", // Center-align text
                       fontSize: "14px",
                     }}
                     onChange={(e) =>
@@ -1945,19 +2041,19 @@ const AssignRoutines = () => {
                     }} // To make the image rounded
                   ></Card.Img>
                   {/* Exercise Name */}
-                  <h5 className="text-primary m-0 w-100 text-center">
+                  <h5 className="text-primary m-0 w-100 text-center exercise-name">
                     {selectedEjercicio.nombre} ({index + 1})
                   </h5>
 
-                  <Card.Body>
+                  <Card.Body className="p-0">
                     <Card.Text>{selectedEjercicio.descripcion}</Card.Text>
                     {/*Set e index se recorren al mismo tiempo*/}
-                    <div className="table-responsive">
+                    <div className="table-responsive-assign">
                       <table className="table table-bordered">
                         <thead>
                           <tr>
                             <th>SET</th>
-                            <th>KG</th>
+                            <th>PESO</th>
                             <th>REPETICIONES</th>
                             <th>ACCION</th>
                           </tr>
@@ -1966,30 +2062,41 @@ const AssignRoutines = () => {
                           {sets[selectedEjercicio.id_ejercicio]?.map(
                             (set, index) => (
                               <tr key={index} className="mb-3">
-                                <td>{index + 1}</td>
+                                <td className="text-primary">{index + 1}</td>
 
                                 <td>
                                   {" "}
-                                  <Form.Control
-                                    type="number"
-                                    placeholder="PESO (KG)"
-                                    value={set.weight}
-                                    onChange={(e) =>
-                                      handleSetChange(
-                                        selectedEjercicio.id_ejercicio,
-                                        index,
-                                        "weight",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
+                                  <div className="input-container">
+                                    <Form.Control
+                                      className="input-kg"
+                                      type="number"
+                                      placeholder="KG"
+                                      value={set.weight}
+                                      onChange={(e) =>
+                                        handleSetChange(
+                                          selectedEjercicio.id_ejercicio,
+                                          index,
+                                          "weight",
+                                          e.target.value
+                                        )
+                                      }
+                                      /*style={{
+                                        width: "100px",
+                                        ...(window.innerWidth <= 768 && {
+                                          width: "40px",
+                                          fontSize: "14px",
+                                          padding: "6px",
+                                        }), // Responsive
+                                      }}*/
+                                    />
+                                  </div>
                                 </td>
 
                                 {/* REPETICIONES Input */}
                                 <td>
                                   <Form.Control
                                     type="number"
-                                    placeholder="REPETICIONES"
+                                    placeholder="0"
                                     value={set.reps}
                                     onChange={(e) =>
                                       handleSetChange(
@@ -2066,7 +2173,8 @@ const AssignRoutines = () => {
         show={showModalRutinaEditar}
         onHide={() => setShowModalRutinaEditar(false)}
         centered
-        className="asignar-rutina-modal h-100 custom-modal-size"
+        className="assign-routine-modal"
+        /*className="asignar-rutina-modal h-100 custom-modal-size"*/
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">Editar rutina</Modal.Title>
@@ -2081,10 +2189,10 @@ const AssignRoutines = () => {
             return (
               <Col key={imgIndex} md={12} className="mb-4">
                 {/* Trainer Notes */}
-                <div className="mb-4 p-3 border rounded shadow-sm">
+                <div className="trainer-notes-section mb-4 p-3 border rounded shadow-sm">
                   {" "}
                   <h5
-                    className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                     style={{ cursor: "pointer" }}
                     onClick={() => setShowTrainerSection(!showTrainerSection)}
                   >
@@ -2094,14 +2202,14 @@ const AssignRoutines = () => {
                     />
                   </h5>
                   {showTrainerSection && (
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="trainer-notes-container d-flex justify-content-between align-items-center">
                       {/* Trainer Notes */}
                       <div
-                        className="d-flex align-items-center"
-                        style={{
+                        className="notes-input-container"
+                        /*style={{
                           flexGrow: 1,
                           marginRight: "15px", // Add space between the inputs
-                        }}
+                        }}*/
                       >
                         <FontAwesomeIcon icon={faBook} className="me-2" />
                         <Form.Control
@@ -2113,55 +2221,58 @@ const AssignRoutines = () => {
                             handleNotasChangeUpdate(ejercicioId, e.target.value)
                           }
                           style={{ resize: "none" }}
+                          className="notes-input form-control"
                         />
                         {/*<Button variant="primary">Finalizar</Button>*/}
                       </div>
                       {/* Trainer Rest Time */}
-                      <div className="d-flex align-items-center">
+                      <div className="rest-time-input-container">
                         <FontAwesomeIcon icon={faClock} className="me-2" />
                         <Form.Control
                           type="number"
                           id="restTime"
                           placeholder="Tiempo de descanso (minutos)"
                           value={allDescansos[ejercicioId] || ""}
-                          style={{
+                          /*style={{
                             width: "80px", // Keep the input narrow
                             padding: "8px",
                             border: "1px solid #ccc",
                             borderRadius: "5px",
                             textAlign: "center", // Center-align text
                             fontSize: "14px",
-                          }}
+                          }}*/
                           onChange={(e) =>
                             handleDescansoChangeUpdate(
                               ejercicioId,
                               e.target.value
                             )
                           }
+                          className="rest-time-input form-control"
                         />
                       </div>
                     </div>
                   )}
                 </div>
-                <div className="mb-4 p-3 border rounded shadow-sm bg-light">
+                <div className="client-notes-section mb-4 p-3 border rounded shadow-sm bg-light">
                   <h5
-                    className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                     style={{ cursor: "pointer" }}
                     onClick={() => setShowClientSection(!showClientSection)}
                   >
                     Notas cliente y tiempo descanso
                     <FontAwesomeIcon
                       icon={showClientSection ? faChevronUp : faChevronDown}
+                      className="d-flex align-items-center me-2"
                     />
                   </h5>
                   {showClientSection && (
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="client-notes-container d-flex justify-content-between align-items-center">
                       <div
-                        className="d-flex align-items-center"
-                        style={{
+                        className="notes-input-container"
+                        /*style={{
                           flexGrow: 1,
                           marginRight: "15px", // Add space between the inputs
-                        }}
+                        }}*/
                       >
                         <FontAwesomeIcon icon={faBook} className="me-2" />
                         <Form.Control
@@ -2173,10 +2284,11 @@ const AssignRoutines = () => {
                           onChange={(e) =>
                             handleNotasChangeUpdate(ejercicioId, e.target.value)
                           }
+                          className="notes-input form-control"
                           style={{ resize: "none" }}
                         />
                       </div>
-                      <div className="d-flex align-items-center">
+                      <div className="rest-time-input-container">
                         <FontAwesomeIcon icon={faClock} className="me-2" />
                         <Form.Control
                           type="number"
@@ -2184,20 +2296,21 @@ const AssignRoutines = () => {
                           placeholder="Sin descanso que mostrar"
                           value={allDescansosProgreso[ejercicioId] || ""}
                           readOnly
-                          style={{
+                          /*style={{
                             width: "80px", // Keep the input narrow
                             padding: "8px",
                             border: "1px solid #ccc",
                             borderRadius: "5px",
                             textAlign: "center", // Center-align text
                             fontSize: "14px",
-                          }}
+                          }}*/
                           onChange={(e) =>
                             handleDescansoChangeUpdate(
                               ejercicioId,
                               e.target.value
                             )
                           }
+                          className="rest-time-input form-control"
                         />
                       </div>
                     </div>
@@ -2215,7 +2328,7 @@ const AssignRoutines = () => {
                     }}
                   />
                   <Card.Title
-                    className="text-primary m-0 w-100 text-center"
+                    className="text-primary m-0 w-100 text-center exercise-name"
                     onClick={() =>
                       handleMostrarInstruccionesEjercicio(ejercicioId)
                     }
@@ -2224,15 +2337,15 @@ const AssignRoutines = () => {
                   </Card.Title>
 
                   <Card.Body>
-                    <div className="table-responsive">
+                    <div className="table-responsive-progress">
                       <table className="table table-bordered">
                         <thead>
                           <tr>
                             <th>SET</th>
                             <th>ASIGNADO</th>
-                            <th>KG</th>
-                            <th>REPETICIONES</th>
-                            <th>ACCION</th>
+                            <th>PESO</th>
+                            <th>REPS</th>
+                            <th>ACCIÓN</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -2340,7 +2453,8 @@ const AssignRoutines = () => {
         show={showModalFullRoutine}
         onHide={() => handleCloseModalAsignarRuitina()}
         centered
-        className="asignar-rutina-modal h-100 custom-modal-size"
+        /*className="assign-routine-modal"*/
+        className="assign-routine-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">
@@ -2350,7 +2464,7 @@ const AssignRoutines = () => {
 
         <Modal.Body>
           {/* Workout Timer and Notes Section */}
-          <div className="d-flex justify-content-center gap-3 mb-4">
+          <div className="d-flex justify-content-center mb-4 filter-button-container">
             {/* Navigation */}
 
             {/* Button for "Creada" */}
@@ -2362,10 +2476,11 @@ const AssignRoutines = () => {
               }
               className={`filter-button ${
                 AssignRoutineType === "Asignacion" ? "active" : ""
-              } me-4 fw-bold btn-responsive`}
+              } me-4 fw-bold`}
               onClick={() => setAssignRoutineType("Asignacion")}
             >
-              Asignación
+              {/*<FontAwesomeIcon icon={faClipboardList} className="me-2" />*/}
+              Asignado
             </Button>
             {/* Button for "Creada" */}
             <Button
@@ -2376,7 +2491,7 @@ const AssignRoutines = () => {
               }
               className={`filter-button ${
                 AssignRoutineType === "Historial" ? "active" : ""
-              } me-4 fw-bold btn-responsive`}
+              } me-4 fw-bold`}
               onClick={() => setAssignRoutineType("Historial")}
             >
               Historial
@@ -2388,7 +2503,7 @@ const AssignRoutines = () => {
               }
               className={`filter-button ${
                 AssignRoutineType === "Progreso" ? "active" : ""
-              } me-4 fw-bold btn-responsive`}
+              } me-4 fw-bold`}
               onClick={() => setAssignRoutineType("Progreso")}
             >
               Progreso
@@ -2440,12 +2555,19 @@ const AssignRoutines = () => {
                             <strong>{rutina.nombre}</strong>
                           </Card.Title>
                           <Card.Text>
-                            {rutina.descripcion || "Sin descripción"}
+                            {rutina.descripcion || (
+                              <span className="text-muted text-descripcion">
+                                Sin descripción
+                              </span>
+                            )}
                           </Card.Text>
                           <Card.Text>
-                            <strong>Enfoque:</strong> {rutina.enfoque}
+                            <strong className="text-enfoque">Enfoque:</strong>{" "}
+                            <span className="text-enfoque">
+                              {rutina.enfoque}
+                            </span>
                           </Card.Text>
-                          <Table responsive bordered className="table">
+                          <Table responsive bordered className="table-summary">
                             <thead>
                               <tr>
                                 <th>Ejercicio</th>
@@ -2516,85 +2638,86 @@ const AssignRoutines = () => {
           {AssignRoutineType === "Progreso" && (
             <div className="chart-container">
               {/* Section Title */}
-              <h5 className="text-center mb-4">Progreso de Ejercicios</h5>
+              <h5 className="text-center mb-5">Progreso de Ejercicios</h5>
 
-              {/* Navigation Controls */}
+              {/* Weekly Navigation */}
               <div className="navigation-controls">
-                {/* Weekly Navigation */}
-                <div className="d-flex justify-content-center align-items-center gap-3 mb-3">
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => adjustWeek(-1)}
-                    style={{ minWidth: "160px" }}
-                  >
-                    <FontAwesomeIcon icon={faChevronLeft} /> Semana anterior
-                  </Button>
-                  <Dropdown>
-                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                      {getDropDownLabel()}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item
-                        onClick={() => handleDateRangeChange("esta semana")}
-                      >
-                        Esta semana
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() => handleDateRangeChange("semana pasada")}
-                      >
-                        Semana pasada
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => adjustWeek(1)}
-                    style={{ minWidth: "180px" }}
-                  >
-                    Semana siguiente <FontAwesomeIcon icon={faChevronRight} />
-                  </Button>
-                </div>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => adjustWeek(-1)}
+                  /*style={{ minWidth: "160px" }}*/
+                >
+                  Semana anterior
+                </Button>
+                <Dropdown>
+                  <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                    {getDropDownLabel()}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={() => handleDateRangeChange("esta semana")}
+                    >
+                      Esta semana
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => handleDateRangeChange("semana pasada")}
+                    >
+                      Semana pasada
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => adjustWeek(1)}
+                  /*style={{ minWidth: "180px" }}*/
+                >
+                  Semana siguiente
+                </Button>
+              </div>
 
-                {/* Monthly and Yearly Navigation */}
-                <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => adjustMonth(-1)}
-                    style={{ minWidth: "135px" }}
-                  >
-                    <FontAwesomeIcon icon={faChevronLeft} /> Mes anterior
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => adjustMonth(1)}
-                    style={{ minWidth: "143px" }}
-                  >
-                    Mes siguiente <FontAwesomeIcon icon={faChevronRight} />
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => adjustYear(-1)}
-                    style={{ minWidth: "143px" }}
-                  >
-                    <FontAwesomeIcon icon={faChevronLeft} /> Año anterior
-                  </Button>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => adjustYear(1)}
-                    style={{ minWidth: "143px" }}
-                  >
-                    Año siguiente <FontAwesomeIcon icon={faChevronRight} />
-                  </Button>
-                </div>
+              {/* Monthly and Yearly Navigation */}
+              <div className="navigation-controls-grid mt-3">
+                <Button
+                  variant="outline-primary"
+                  onClick={() => adjustMonth(-1)}
+                  /*style={{ minWidth: "135px" }}*/
+                >
+                  <FontAwesomeIcon icon={faChevronLeft} /> Mes anterior
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => adjustMonth(1)}
+                  /*style={{ minWidth: "143px" }}*/
+                >
+                  Mes siguiente <FontAwesomeIcon icon={faChevronRight} />
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => adjustYear(-1)}
+                  /*style={{ minWidth: "143px" }}*/
+                >
+                  <FontAwesomeIcon icon={faChevronLeft} /> Año anterior
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => adjustYear(1)}
+                  /*style={{ minWidth: "143px" }}*/
+                >
+                  Año siguiente <FontAwesomeIcon icon={faChevronRight} />
+                </Button>
               </div>
 
               {/* Chart */}
-              <ResponsiveContainer width="100%" height={500}>
+              <ResponsiveContainer width="100%" height={500} className="mt-4">
                 <LineChart data={charData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="fecha" tick={{ fontSize: 12 }} />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{ fontSize: "13px" }}
+                    labelStyle={{ fontSize: "15px" }}
+                    itemStyle={{ fontSize: "14px" }}
+                  />
                   <Legend />
                   {Object.keys(charData[0] || {})
                     .filter((key) => key.startsWith("Ejercicio"))
@@ -2624,66 +2747,62 @@ const AssignRoutines = () => {
                   md={12}
                   className="mb-4"
                 >
-                  <div className="mb-4 p-3 border rounded shadow-sm">
+                  <div className="trainer-notes-section mb-4 p-3 border rounded shadow-sm">
                     {" "}
                     <h5
-                      className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                      className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                       style={{ cursor: "pointer" }}
                       onClick={() => setShowTrainerSection(!showTrainerSection)}
                     >
                       Tus notas y tiempo de descanso
                       <FontAwesomeIcon
                         icon={showTrainerSection ? faChevronUp : faChevronDown}
+                        className="d-flex align-items-center me-2"
                       />
                     </h5>
                     {showTrainerSection && (
-                      <div className="d-flex justify-content-between align-items-center">
+                      <div className="trainer-notes-container d-flex flex-wrap gap-3">
                         {/* Trainer Notes */}
-                        <div
-                          className="d-flex align-items-center"
-                          style={{
-                            flexGrow: 1,
-                            marginRight: "15px", // Add space between the inputs
-                          }}
-                        >
+                        <div className="notes-input-container">
                           <FontAwesomeIcon icon={faBook} className="me-2" />
                           <Form.Control
                             as="textarea"
                             rows={2}
-                            placeholder="Tus notas"
-                            value={allNotas[ejercicioId] || ""} // Controlled input
+                            //placeholder="Tus notas"
+                            placeholder={allNotas[ejercicioId] || "Tus notas"} // Controlled input
                             onChange={(e) =>
                               handleNotasChangeUpdate(
                                 ejercicioId,
                                 e.target.value
                               )
                             }
-                            style={{ resize: "none" }}
+                            className="notes-input form-control"
                           />
                           {/*<Button variant="primary">Finalizar</Button>*/}
                         </div>
                         {/* Trainer Rest Time */}
-                        <div className="d-flex align-items-center">
+                        <div className="rest-time-input-container ">
                           <FontAwesomeIcon icon={faClock} className="me-2" />
                           <Form.Control
                             type="number"
                             id="restTime"
-                            placeholder="Tiempo de descanso (minutos)"
-                            value={allDescansos[ejercicioId] || ""}
-                            style={{
-                              width: "80px", // Keep the input narrow
-                              padding: "8px",
-                              border: "1px solid #ccc",
-                              borderRadius: "5px",
-                              textAlign: "center", // Center-align text
+                            //placeholder="Tiempo de descanso (minutos)"
+                            placeholder={
+                              allDescansos[ejercicioId] ||
+                              "Tiempo de descanso (minutos)"
+                            }
+                            /*style={{
+                              width: "80px",
+                              textAlign: "center",
                               fontSize: "14px",
-                            }}
+                            }}*/
                             onChange={(e) =>
                               handleDescansoChangeUpdate(
                                 ejercicioId,
                                 e.target.value
                               )
                             }
+                            className="rest-time-input form-control"
                           />
                         </div>
                       </div>
@@ -2692,9 +2811,9 @@ const AssignRoutines = () => {
 
                   {/* Client Notes and Rest Time Section */}
 
-                  <div className="mb-4 p-3 border rounded shadow-sm bg-light">
+                  <div className="client-notes-section mb-4 p-3 border rounded shadow-sm bg-light">
                     <h5
-                      className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                      className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                       style={{ cursor: "pointer" }}
                       onClick={() => setShowClientSection(!showClientSection)}
                     >
@@ -2704,13 +2823,13 @@ const AssignRoutines = () => {
                       />
                     </h5>
                     {showClientSection && (
-                      <div className="d-flex justify-content-between align-items-center">
+                      <div className="client-notes-container d-flex flex-wrap gap-3">
                         <div
-                          className="d-flex align-items-center"
-                          style={{
+                          className="notes-input-container"
+                          /*style={{
                             flexGrow: 1,
                             marginRight: "15px", // Add space between the inputs
-                          }}
+                          }}*/
                         >
                           <FontAwesomeIcon icon={faBook} className="me-2" />
                           <Form.Control
@@ -2725,10 +2844,11 @@ const AssignRoutines = () => {
                                 e.target.value
                               )
                             }
+                            className="notes-input form-control"
                             style={{ resize: "none" }}
                           />
                         </div>
-                        <div className="d-flex align-items-center">
+                        <div className="rest-time-input-container">
                           <FontAwesomeIcon icon={faClock} className="me-2" />
                           <Form.Control
                             type="number"
@@ -2736,20 +2856,18 @@ const AssignRoutines = () => {
                             placeholder="Sin descanso que mostrar"
                             value={allDescansosProgreso[ejercicioId] || ""}
                             readOnly
-                            style={{
-                              width: "80px", // Keep the input narrow
-                              padding: "8px",
-                              border: "1px solid #ccc",
-                              borderRadius: "5px",
-                              textAlign: "center", // Center-align text
+                            /*style={{
+                              width: "80px",
+                              textAlign: "center",
                               fontSize: "14px",
-                            }}
+                            }}*/
                             onChange={(e) =>
                               handleDescansoChangeUpdate(
                                 ejercicioId,
                                 e.target.value
                               )
                             }
+                            className="rest-time-input form-control"
                           />
                         </div>
                       </div>
@@ -2768,7 +2886,7 @@ const AssignRoutines = () => {
                       }}
                     />
                     <Card.Title
-                      className="text-primary m-0 w-100 text-center"
+                      className="text-primary m-0 w-100 text-center exercise-name"
                       onClick={() =>
                         handleMostrarInstruccionesEjercicio(ejercicioId)
                       }
@@ -2777,15 +2895,15 @@ const AssignRoutines = () => {
                     </Card.Title>
 
                     <Card.Body>
-                      <div className="table-responsive">
+                      <div className="table-responsive-progress">
                         <table className="table table-bordered">
                           <thead>
                             <tr>
                               <th>SET</th>
                               <th>ASIGNADO</th>
-                              <th>KG</th>
-                              <th>REPETICIONES</th>
-                              <th>ACCION</th>
+                              <th>PESO</th>
+                              <th>REPS</th>
+                              <th>ACCIÓN</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -2798,7 +2916,8 @@ const AssignRoutines = () => {
                                 <td>
                                   <Form.Control
                                     type="number"
-                                    value={set.progresoPeso ?? ""}
+                                    placeholder={set.progresoPeso ?? "KG"}
+                                    //value={set.progresoPeso ?? ""}
                                     onChange={(e) =>
                                       handleSetChangeUpdate(
                                         ejercicioId,
@@ -2814,7 +2933,8 @@ const AssignRoutines = () => {
                                 <td>
                                   <Form.Control
                                     type="number"
-                                    value={set.progresoReps ?? ""} // Preserve progresoReps; fallback to repeticiones
+                                    placeholder={set.progresoReps ?? 0}
+                                    //value={set.progresoReps ?? ""} // Preserve progresoReps; fallback to repeticiones
                                     onChange={(e) =>
                                       handleSetChangeUpdate(
                                         ejercicioId,
@@ -2837,14 +2957,18 @@ const AssignRoutines = () => {
                                         setIndex
                                       )
                                     }
-                                    style={{
-                                      width: "36px", // Ensures it's square
-                                      height: "36px",
-                                      display: "flex",
+                                    style={
+                                      {
+                                        /*width: "36px",*/
+                                        // Ensures it's square
+                                        /*height: "36px",*/
+                                        /*display: "flex",
                                       justifyContent: "center",
                                       alignItems: "center",
-                                      borderRadius: "50%", // Circular shape
-                                    }}
+                                      borderRadius: "50%",*/
+                                        // Circular shape
+                                      }
+                                    }
                                   >
                                     <FontAwesomeIcon icon={faTrash} />
                                   </Button>
@@ -2920,15 +3044,15 @@ const AssignRoutines = () => {
         show={showModalEjerciciosInstrucciones}
         onHide={() => handleCloseModalEjerciciosInstrucciones()}
         centered
-        className="asignar-rutina-modal h-100 custom-modal-size"
+        className="assign-routine-modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title className="w-100 text-center">
+          <Modal.Title className="w-100 text-center text-primary">
             {ejercicioInstrucciones?.nombre}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-100 text-center">
+          <div className="d-flex justify-content-center filter-button-container gap-3">
             {" "}
             <Button
               variant={
@@ -2999,78 +3123,69 @@ const AssignRoutines = () => {
           <div className="chart-container">
             {/* Section Title */}
 
-            <h5 className="text-center mb-4">Progreso de Ejercicios</h5>
+            <h5 className="text-center mb-5">Progreso de Ejercicios</h5>
 
             {/* Navigation Controls */}
-            <div className="navigation-controls">
-              <div className="d-flex justify-content-center align-items-center gap-3 mb-3">
-                <Button
-                  variant="outline-primary"
-                  onClick={() => adjustWeek(-1)}
-                  style={{ minWidth: "160px" }}
-                >
-                  <FontAwesomeIcon icon={faChevronLeft} /> Semana anterior
-                </Button>
-                <Dropdown>
-                  <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                    {getDropDownLabel()}
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      onClick={() => handleDateRangeChange("esta semana")}
-                    >
-                      Esta semana
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => handleDateRangeChange("semana pasada")}
-                    >
-                      Semana pasada
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => adjustWeek(1)}
-                  style={{ minWidth: "180px" }}
-                >
-                  Semana siguiente <FontAwesomeIcon icon={faChevronRight} />
-                </Button>
-              </div>
 
-              {/* Monthly and Yearly Navigation */}
-              <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
-                <Button
-                  variant="outline-primary"
-                  onClick={() => adjustMonth(-1)}
-                  style={{ minWidth: "135px" }}
-                >
-                  <FontAwesomeIcon icon={faChevronLeft} /> Mes anterior
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => adjustMonth(1)}
-                  style={{ minWidth: "143px" }}
-                >
-                  Mes siguiente <FontAwesomeIcon icon={faChevronRight} />
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => adjustYear(-1)}
-                  style={{ minWidth: "143px" }}
-                >
-                  <FontAwesomeIcon icon={faChevronLeft} /> Año anterior
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => adjustYear(1)}
-                  style={{ minWidth: "143px" }}
-                >
-                  Año siguiente <FontAwesomeIcon icon={faChevronRight} />
-                </Button>
-              </div>
+            <div className="navigation-controls">
+              <Button variant="outline-primary" onClick={() => adjustWeek(-1)}>
+                Semana anterior
+              </Button>
+              <Dropdown>
+                <Dropdown.Toggle variant="primary" id="dropdwon-basic">
+                  {getDropDownLabel()}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    onClick={() => handleDateRangeChange("esta semana")}
+                  >
+                    Esta semana
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => handleDateRangeChange("semana pasada")}
+                  >
+                    Semana pasada
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <Button variant="outline-primary" onClick={() => adjustWeek(1)}>
+                Semana siguiente
+              </Button>
             </div>
 
-            <ResponsiveContainer width="100%" height={600}>
+            {/* Monthly and Yearly Navigation */}
+            <div className="navigation-controls-grid">
+              <Button
+                variant="outline-primary"
+                onClick={() => adjustMonth(-1)}
+                /*style={{ minWidth: "135px" }}*/
+              >
+                <FontAwesomeIcon icon={faChevronLeft} /> Mes anterior
+              </Button>
+              <Button
+                variant="outline-primary"
+                onClick={() => adjustMonth(1)}
+                /*style={{ minWidth: "143px" }}*/
+              >
+                Mes siguiente <FontAwesomeIcon icon={faChevronRight} />
+              </Button>
+              <Button
+                variant="outline-primary"
+                onClick={() => adjustYear(-1)}
+                /*style={{ minWidth: "143px" }}*/
+              >
+                <FontAwesomeIcon icon={faChevronLeft} /> Año anterior
+              </Button>
+              <Button
+                variant="outline-primary"
+                onClick={() => adjustYear(1)}
+                /*style={{ minWidth: "143px" }}*/
+              >
+                Año siguiente <FontAwesomeIcon icon={faChevronRight} />
+              </Button>
+            </div>
+
+            <ResponsiveContainer width="100%" height={500} className="mt-4">
               <LineChart data={charData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="fecha" tick={{ fontSize: 12 }} />
@@ -3083,7 +3198,6 @@ const AssignRoutines = () => {
                   dataKey="Volumen"
                   name="Volumen Logrado"
                   stroke="#8884d8"
-                  activeDot={{ r: 8 }}
                 />
                 {/* Line for Asignado Volumen */}
                 <Line
@@ -3091,7 +3205,6 @@ const AssignRoutines = () => {
                   dataKey="Asignado Volumen"
                   name="Volumen Asignado"
                   stroke="#82ca9d"
-                  activeDot={{ r: 8 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -3121,10 +3234,10 @@ const AssignRoutines = () => {
 
             return (
               <Col key={imgIndex} md={12} className="mb-4">
-                <div className="mb-4 p-3 border rounded shadow-sm">
+                <div className="trainer-notes-section mb-4 p-3 border rounded shadow-sm">
                   {" "}
                   <h5
-                    className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                     style={{ cursor: "pointer" }}
                     onClick={() => setShowTrainerSection(!showTrainerSection)}
                   >
@@ -3135,15 +3248,9 @@ const AssignRoutines = () => {
                     />
                   </h5>
                   {showTrainerSection && (
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="trainer-notes-container d-flex justify-content-between align-items-center">
                       {/* Trainer Notes */}
-                      <div
-                        className="d-flex align-items-center me-2"
-                        style={{
-                          flexGrow: 1,
-                          marginRight: "15px", // Add space between the inputs
-                        }}
-                      >
+                      <div className="notes-input-container">
                         <FontAwesomeIcon icon={faBook} className="me-2" />
 
                         <Form.Control
@@ -3155,31 +3262,33 @@ const AssignRoutines = () => {
                             handleNotasChangeUpdate(ejercicioId, e.target.value)
                           }
                           style={{ resize: "none" }}
+                          className="notes-input form-control"
                         />
                         {/*<Button variant="primary">Finalizar</Button>*/}
                       </div>
 
-                      <div className="d-flex align-items-center">
+                      <div className="rest-time-input-container">
                         <FontAwesomeIcon icon={faClock} className="me-2" />
                         <Form.Control
                           type="number"
                           id="restTime"
                           placeholder="Tiempo de descanso (minutos)"
                           value={allDescansos[ejercicioId] || ""}
-                          style={{
+                          /*style={{
                             width: "80px", // Keep the input narrow
                             padding: "8px",
                             border: "1px solid #ccc",
                             borderRadius: "5px",
                             textAlign: "center", // Center-align text
                             fontSize: "14px",
-                          }}
+                          }}*/
                           onChange={(e) =>
                             handleDescansoChangeUpdate(
                               ejercicioId,
                               e.target.value
                             )
                           }
+                          className="rest-time-input form-control"
                         />
                       </div>
                     </div>
@@ -3187,27 +3296,26 @@ const AssignRoutines = () => {
                 </div>
 
                 {/* Workout Timer and Notes Section */}
-                <div className="mb-4 p-3 border rounded shadow-sm bg-light">
+                <div className="client-notes-section mb-4 p-3 border rounded shadow-sm bg-light">
                   <h5
-                    className="text-primary mb-3 text-center d-flex justify-content-between align-items-center"
+                    className="section-title text-primary mb-3 text-center d-flex justify-content-between align-items-center"
                     style={{ cursor: "pointer" }}
                     onClick={() => setShowClientSection(!showClientSection)}
                   >
                     Notas cliente y tiempo descanso
                     <FontAwesomeIcon
                       icon={showClientSection ? faChevronUp : faChevronDown}
-                      className="d-flex align-items-center me-2"
                     />
                   </h5>
 
                   {showClientSection && (
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="client-notes-container d-flex flex-wrap gap-3">
                       <div
-                        className="d-flex align-items-center me-2"
-                        style={{
+                        className="notes-input-container"
+                        /*style={{
                           flexGrow: 1,
                           marginRight: "15px", // Add space between the inputs
-                        }}
+                        }}*/
                       >
                         <FontAwesomeIcon icon={faBook} className="me-2" />
                         <Form.Control
@@ -3219,10 +3327,11 @@ const AssignRoutines = () => {
                           onChange={(e) =>
                             handleNotasChangeUpdate(ejercicioId, e.target.value)
                           }
+                          className="notes-input form-control"
                           style={{ resize: "none" }}
                         />
                       </div>
-                      <div className="d-flex align-items-center">
+                      <div className="rest-time-input-container">
                         <FontAwesomeIcon icon={faClock} className="me-2" />
                         <Form.Control
                           type="number"
@@ -3230,20 +3339,21 @@ const AssignRoutines = () => {
                           placeholder="Sin descanso que mostrar"
                           value={allDescansosProgreso[ejercicioId] || ""}
                           readOnly
-                          style={{
+                          /*style={{
                             width: "80px", // Keep the input narrow
                             padding: "8px",
                             border: "1px solid #ccc",
                             borderRadius: "5px",
                             textAlign: "center", // Center-align text
                             fontSize: "14px",
-                          }}
+                          }}*/
                           onChange={(e) =>
                             handleDescansoChangeUpdate(
                               ejercicioId,
                               e.target.value
                             )
                           }
+                          className="rest-time-input form-control"
                         />
                       </div>
                     </div>
@@ -3260,12 +3370,12 @@ const AssignRoutines = () => {
                       margin: "0 auto",
                     }}
                   />
-                  <Card.Title className="text-primary m-0 w-100 text-center">
+                  <Card.Title className="text-primary m-0 w-100 text-center exercise-name">
                     {nombresEjercicios[imgIndex]} ({imgIndex + 1})
                   </Card.Title>
 
                   <Card.Body>
-                    <div className="table-responsive">
+                    <div className="table-responsive-progress">
                       <table className="table table-bordered">
                         <thead>
                           <tr>

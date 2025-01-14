@@ -111,7 +111,7 @@ class LoginCliente extends React.Component {
                           Iniciar Sesión
                         </h3>
                         <p className="text-muted mb-4 text-center">
-                          Por favor, introduzca sus credenciales
+                          Introduzca sus datos de cliente
                         </p>
                         <Form
                           className="d-flex flex-column align-items-center"
@@ -153,7 +153,7 @@ class LoginCliente extends React.Component {
                           </Button>
                           {error && <p style={{ color: "red" }}>{error}</p>}
                           <a
-                            href="/forgot-password"
+                            href="/forgotPassword?userType=cliente"
                             className="text-primary mt-3 d-block"
                           >
                             ¿Olvidaste tu contraseña?

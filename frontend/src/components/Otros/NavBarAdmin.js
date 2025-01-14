@@ -15,6 +15,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import userAdmin from "../../assets/user-admin.png";
 import "./index.css";
+import Logo from "../../assets/logo.png";
 
 const NavScrollExample = ({ onSearchResults, onLogout }) => {
   const idAdmin = localStorage.getItem("idAdmin");
@@ -66,11 +67,9 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
         <Container fluid>
           <Navbar.Brand href="#" className="d-flex align-items-center">
             <img
-              src={
-                "https://png.pngtree.com/png-clipart/20220620/original/pngtree-orange-gym-logo-design-templete-png-png-image_8128901.png"
-              }
-              width="40"
-              height="40"
+              src={Logo}
+              width="50"
+              height="50"
               className="d-inline-block align-top me-2"
               alt="Campos Fitness Logo"
             />
@@ -116,7 +115,18 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
 
       {/*Searchbar*/}
       <Container className="mt-4">
-        <Row className="justify-content-center" style={{ marginTop: "25px" }}>
+        <Row
+          className="justify-content-center align-items-center"
+          style={{ marginTop: "45px" }}
+        >
+          <Col
+            xs={12}
+            md={{ span: 12, offset: 2 }}
+            className="text-center d-md-none"
+          >
+            <h3 className="mb-4">Lista de Entrenadores</h3>
+          </Col>
+
           <Col xs={12} md={10}>
             <Form onSubmit={handleSearch} className="d-flex search-bar">
               <Form.Control

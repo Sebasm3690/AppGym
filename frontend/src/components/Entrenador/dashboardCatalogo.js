@@ -359,8 +359,16 @@ const Catalogo = () => {
                           )}
                           <Card.Body>
                             {" "}
-                            <Card.Title>{routine.nombre}</Card.Title>
+                            <Card.Title>
+                              <strong>{routine.nombre}</strong>
+                            </Card.Title>
                             <Card.Text>{routine.descripcion}</Card.Text>
+                            <Card.Text>
+                              <strong>Enfoque:</strong>{" "}
+                              {routine.enfoque || (
+                                <span className="text-muted">Sin enfoque</span>
+                              )}
+                            </Card.Text>
                             <Card.Text>
                               {" "}
                               {/*Duración: {routine.duracion} mins*/}

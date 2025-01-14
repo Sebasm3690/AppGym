@@ -82,7 +82,7 @@ const CrudTrainers = () => {
 
   const handleAgregarEntrenador = () => {
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const regexSoloLetras = /^[A-Za-z\s]+$/; // Only letters and spaces
+    const regexSoloLetras = /^[A-Za-zñÑ\s]+$/; // Only letters and spaces
     const urlAgregar = `http://127.0.0.1:8000/trainerRegister/`;
     //var parametros;
 
@@ -195,7 +195,7 @@ const CrudTrainers = () => {
   const handleEditarEntrenador = () => {
     console.log("El id es: " + id);
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const regexSoloLetras = /^[A-Za-z\s]+$/; // Only letters and spaces
+    const regexSoloLetras = /^[A-Za-zñÑ\s]+$/; // Only letters and spaces
     const urlEditar = `http://127.0.0.1:8000/updateTrainer/${id}/`;
 
     if (nombre.trim() === "") {
@@ -347,13 +347,13 @@ const CrudTrainers = () => {
       {/*1.- Envia la función handleSearchResults al componente NavScrollExample como un prop*/}
       <Container className="mt-5">
         <Row>
-          <Col md={{ span: 10, offset: 1 }}>
+          <Col md={{ span: 10, offset: 1 }} className="mb-5">
             <div className="panel">
               <div className="panel-heading">
                 <Row className="d-flex align-items-center justify-content-between mb-3">
                   <Col xs={6}>
                     <h3 className="mb-0 lista-entrenadores">
-                      Lista de entrenadores
+                      Lista de Entrenadores
                     </h3>
                   </Col>
                   {/*Buttons*/}

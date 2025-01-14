@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import styles from "../Otros/cards.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Container } from "react-bootstrap";
 import {
   faPencilAlt,
   faTrashAlt,
@@ -14,23 +15,34 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const WeekdayCards = ({ onSelectDay }) => {
-  const days = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
+  const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
   const dayImages = {
     Lunes:
       "https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2017/06/1109-dumbbell-press-barbell.jpg?quality=86&strip=all",
     Martes:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgM3M8ReN_NtIHiKqj8F6I5XywdQnhFsDX-Ak7aLoPjAXaq2S9g75A-vsby_m5Pi4YzBc&usqp=CAU",
-    Miercoles:
+    Miércoles:
       "https://entrenadorpersonal.pro/wp-content/uploads/2023/03/piernas.png",
     Jueves:
       "https://static.tuasaude.com/media/article/lh/xe/back-workout_40109_l.jpg",
     Viernes:
       "https://qph.cf2.quoracdn.net/main-qimg-e9ac6615d57a43fe7f8714f05d93aa1d",
-    Sabado:
+    Sábado:
       "https://steelsupplements.com/cdn/shop/articles/shutterstock_312591206_1000x.jpg?v=1617749471",
   };
   return (
     <Row className={styles.weekdaysContent}>
+      <Container>
+        <Row>
+          <Col md={{ span: 6, offset: 3 }}>
+            <center>
+              <h3 className={styles.title}>Selecciona el día de la semana</h3>
+            </center>
+            {/* Se envia la funcion como parametro */}
+          </Col>
+        </Row>
+      </Container>
+
       {days.slice(0, 3).map((day) => (
         <Col xd={12} sm={6} md={4} className="mb-4" key={day}>
           <Card className={styles.card}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Accordion, Nav } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -25,6 +25,17 @@ const Sidebar = (/*{ isOpen, toggleSidebar }*/) => {
     setActiveLink(activeLink);
   };
 
+  useEffect(() => {
+    const path = window.location.pathname; // Get the current path
+    if (path.startsWith("/homeCliente/")) {
+      setActiveLink("inicio");
+    } else if (path.startsWith("/dashboardControlCalorico/")) {
+      setActiveLink("control-calorico");
+    } else if (path.startsWith("/dashboardCalorias/")) {
+      setActiveLink("progreso"); // Fixed typo here
+    }
+  }, []);
+
   return (
     <>
       {/* Sidebar Toggle Button */}
@@ -38,9 +49,9 @@ const Sidebar = (/*{ isOpen, toggleSidebar }*/) => {
         <div className="main-title-container">
           <h2 className="main-title">Dashboard</h2>
         </div>
-        <Accordion defaultActiveKey="0" flush>
+        <Accordion activeKey={activeLink} flush>
           {/* Navigation One - Home */}
-          <Accordion.Item eventKey="0">
+          <Accordion.Item eventKey="inicio">
             <Nav.Link href="/homeCliente/">
               <Accordion.Header>
                 {" "}
@@ -51,7 +62,7 @@ const Sidebar = (/*{ isOpen, toggleSidebar }*/) => {
           </Accordion.Item>
 
           {/* Navigation Two - Asignar Rutinas */}
-          <Accordion.Item eventKey="0">
+          <Accordion.Item eventKey="control-calorico">
             <Nav.Link href="/dashboardControlCalorico/">
               <Accordion.Header>
                 {" "}
@@ -61,27 +72,9 @@ const Sidebar = (/*{ isOpen, toggleSidebar }*/) => {
             </Nav.Link>
           </Accordion.Item>
 
-          {/* Navigation Three */}
-          {/* <Accordion.Item eventKey="2">
-            <Accordion.Header>
-              <FontAwesomeIcon icon={faClipboard} className="icon" />
-              Asignar rutinas
-            </Accordion.Header>
-            <Accordion.Body>
-              <Nav className="flex-column">
-                <Nav.Link href="#" className="sidebar-link">
-                  Option 7
-                </Nav.Link>
-                <Nav.Link href="#" className="sidebar-link">
-                  Option 8
-                </Nav.Link>
-              </Nav>
-            </Accordion.Body>
-          </Accordion.Item> */}
-
           {/* Group */}
-          <Accordion.Item eventKey="3">
-            <Accordion.Header>
+          <Accordion.Item eventKey="progreso">
+            <Accordion.Header onClick={() => handleLinkClick("progreso")}>
               <FontAwesomeIcon icon={faBarChart} className="icon" />
               Progreso
             </Accordion.Header>
@@ -89,9 +82,6 @@ const Sidebar = (/*{ isOpen, toggleSidebar }*/) => {
               <Nav className="flex-column">
                 <Nav.Link href="/dashboardCalorias/" className="sidebar-link">
                   Calorías
-                </Nav.Link>
-                <Nav.Link href="#" className="sidebar-link">
-                  Macronutrientes
                 </Nav.Link>
               </Nav>
             </Accordion.Body>
