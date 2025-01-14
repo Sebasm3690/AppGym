@@ -52,7 +52,8 @@ from django.template.loader import render_to_string
 import logging
 
 # Set the locale globally (to Spanish)
-locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")  # Use "es_ES.UTF-8" for Linux/Mac, "Spanish_Spain.1252" for Windows.
+locale.setlocale(locale.LC_TIME, "") 
+#locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")  # Use "es_ES.UTF-8" for Linux/Mac, "Spanish_Spain.1252" for Windows.
 logger = logging.getLogger(__name__)
 
 #logger = logging.getLogger(__name__)
