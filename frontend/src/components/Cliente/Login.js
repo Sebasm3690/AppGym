@@ -36,6 +36,7 @@ class LoginCliente extends React.Component {
   };
 
   handleSubmit = async (event) => {
+    const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
     event.preventDefault();
     const { username, password } = this.state;
 
@@ -50,7 +51,7 @@ class LoginCliente extends React.Component {
     });
 
     try {
-      const response = await axios.post("http://localhost:8000/clientLogin/", {
+      const response = await axios.post(`${apiUrl}/clientLogin/`, {
         username,
         password,
       });

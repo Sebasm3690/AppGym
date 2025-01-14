@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import NavScrollExample from "../Otros/Navbar";
 
 const ResetPassword = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000"; // Use environment variable or fallback to localhost
   const { uid, token } = useParams();
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -23,12 +24,9 @@ const ResetPassword = () => {
       return;
     }
     try {
-      const response = await axios.post(
-        `http://localhost:8000/reset-password/${uid}/${token}/`,
-        {
-          password,
-        }
-      );
+      const response = await axios.post(`${apiUrl}/${uid}/${token}/`, {
+        password,
+      });
       show_alerta(response.data.mensaje, "success");
       navigate("/");
       setError("");

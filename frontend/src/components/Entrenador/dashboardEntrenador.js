@@ -36,14 +36,14 @@ import "./ModalDesign.css";
 
 const CrudClients = () => {
   const idEntrenador = localStorage.getItem("idEntrenador");
-  const url = "http://127.0.0.1:8000/api/v1/client/";
-  const urlGenero = "http://127.0.0.1:8000/api/v1/genero/";
-  const urlNivelGym = "http://127.0.0.1:8000/api/v1/nivelGym/";
-  const urlNivelActividad = "http://127.0.0.1:8000/api/v1/nivelActividad/";
-  const urlObjetivo = "http://127.0.0.1:8000/api/v1/objetivo/";
-  const urlMembresia = "http://127.0.0.1:8000/api/v1/membresia/";
-  const urlControlClienteMembresia =
-    "http://127.0.0.1:8000/controlClienteMembresia/";
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000"; // Use environment variable or fallback to localhost
+  const url = `${apiUrl}/api/v1/client/`;
+  const urlGenero = `${apiUrl}/api/v1/genero/`;
+  const urlNivelGym = `${apiUrl}/api/v1/nivelGym/`;
+  const urlNivelActividad = `${apiUrl}/api/v1/nivelActividad/`;
+  const urlObjetivo = `${apiUrl}/api/v1/objetivo/`;
+  const urlMembresia = `${apiUrl}/api/v1/membresia/`;
+  const urlControlClienteMembresia = `${apiUrl}/controlClienteMembresia/`;
   const [id, setId] = useState(0);
   const [clients, setClients] = useState([]);
   const [generos, setGeneros] = useState([]);
@@ -157,7 +157,7 @@ const CrudClients = () => {
     const dob = new Date(fechaNacimiento);
     const age = today.getFullYear() - dob.getFullYear();
     //const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const urlAgregar = `http://127.0.0.1:8000/clientRegister/`;
+    const urlAgregar = `${apiUrl}/clientRegister/`;
 
     var parametros;
 
@@ -264,7 +264,7 @@ const CrudClients = () => {
           const id_cliente = parseInt(response.data.cliente.id_cliente);
 
           // Now that id_cliente is available, make subsequent requests using this value
-          const urlCalcularTMB = `http://127.0.0.1:8000/calcularTMB/${id_cliente}/`;
+          const urlCalcularTMB = `${apiUrl}/calcularTMB/${id_cliente}/`;
 
           //alert("El id del cliente es:" + id_cliente);
           // Calculate TMB
@@ -281,7 +281,7 @@ const CrudClients = () => {
             });
 
           // Delay the calculation of macronutrients to ensure TMB is calculated first
-          const urlCalcularMN = `http://127.0.0.1:8000/calcularMacros/${id_cliente}/`;
+          const urlCalcularMN = `${apiUrl}/calcularMacros/${id_cliente}/`;
           setTimeout(() => {
             axios
               .post(urlCalcularMN)
@@ -359,7 +359,7 @@ const CrudClients = () => {
     const age = today.getFullYear() - dob.getFullYear();
 
     console.log("El id es: " + id);
-    const urlEditar = `http://127.0.0.1:8000/updateClient/${id}/`;
+    const urlEditar = `${apiUrl}/updateClient/${id}/`;
     var parametros;
 
     if (selectedGenero === "") {
@@ -471,7 +471,7 @@ const CrudClients = () => {
           //alert(id);
 
           // Now that id_cliente is available, make subsequent requests using this value
-          const urlCalcularTMB = `http://127.0.0.1:8000/calcularTMB/${id}/`;
+          const urlCalcularTMB = `${apiUrl}/calcularTMB/${id}/`;
 
           // Calculate TMB
           axios
@@ -487,7 +487,7 @@ const CrudClients = () => {
             });
 
           // Delay the calculation of macronutrients to ensure TMB is calculated first
-          const urlCalcularMN = `http://127.0.0.1:8000/calcularMacros/${id}/`;
+          const urlCalcularMN = `${apiUrl}/calcularMacros/${id}/`;
           setTimeout(() => {
             axios
               .post(urlCalcularMN)
@@ -539,7 +539,7 @@ const CrudClients = () => {
   };
 
   const handleBorradoLogico = () => {
-    const urlBorrado = `http://127.0.0.1:8000/borradoLogicoCliente/${id}/`;
+    const urlBorrado = `${apiUrl}/borradoLogicoCliente/${id}/`;
     axios
       .post(urlBorrado)
       .then((response) => {
@@ -553,7 +553,7 @@ const CrudClients = () => {
   };
 
   const handleRecuperarCliente = (id_cliente) => {
-    const urlRecuperar = `http://127.0.0.1:8000/recuperarCliente/${id_cliente}/`;
+    const urlRecuperar = `${apiUrl}/recuperarCliente/${id_cliente}/`;
     axios
       .post(urlRecuperar)
       .then((response) => {

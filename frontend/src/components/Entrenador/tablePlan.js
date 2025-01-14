@@ -33,8 +33,9 @@ const WeeklyRoutinePlan = ({
   idCliente,
 }) => {
   //alert(JSON.stringify(assignedRoutines, null, 2));
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
   const [estadoRutinas, setEstadoRutinas] = useState([]);
-  const urlEstadoRutina = "http://127.0.0.1:8000/mostrarEstadoRutina/";
+  const urlEstadoRutina = `${apiUrl}/mostrarEstadoRutina/`;
   useEffect(() => {
     getEstadoRutinas();
   }, []);

@@ -58,11 +58,12 @@ const ClientControl = () => {
     .join("-"); // Rearranges to "YYYY-MM-DD"
 
   const idCliente = localStorage.getItem("idCliente");
-  const url = `http://127.0.0.1:8000/api/v1/client/${idCliente}`;
-  const urlDispone = `http://127.0.0.1:8000/obtenerDisponeCliente/${idCliente}/`;
-  const urlMacros = `http://127.0.0.1:8000/calcularTotalMacrosAlimentos/${idCliente}`;
-  const urlMeals = "http://127.0.0.1:8000/api/v1/parteDia/";
-  const urlConsumos = "http://127.0.0.1:8000/api/v1/consume/";
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
+  const url = `${apiUrl}/${idCliente}`;
+  const urlDispone = `${apiUrl}/obtenerDisponeCliente/${idCliente}/`;
+  const urlMacros = `${apiUrl}/calcularTotalMacrosAlimentos/${idCliente}`;
+  const urlMeals = `${apiUrl}/api/v1/parteDia/`;
+  const urlConsumos = `${apiUrl}/api/v1/consume/`;
   const [showDetails, setShowDetails] = useState(true);
   const [showNavbar, setShowNavbar] = useState(true);
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -409,7 +410,7 @@ const ClientControl = () => {
   };
 
   const handleAddFood = () => {
-    const urlAddFood = "http://127.0.0.1:8000/addFood/";
+    const urlAddFood = `${apiUrl}/addFood/`;
     console.log("Selected food:", JSON.stringify(selectedFood, null, 2));
     alert(JSON.stringify(selectedFood, null, 2));
     const datos = {
@@ -442,7 +443,7 @@ const ClientControl = () => {
   };
 
   const handleShowModalUpdate = (idAlimento, idParteDia, fecha) => {
-    const urlGetFoodUpdate = `http://127.0.0.1:8000/obtenerDatosDisponeActual/`;
+    const urlGetFoodUpdate = `${apiUrl}/obtenerDatosDisponeActual/`;
     const datos = {
       id_cliente: idCliente,
       id_alimento: idAlimento,
@@ -484,7 +485,7 @@ const ClientControl = () => {
   };
 
   const handleUpdateFood = () => {
-    const urlUpdateFood = `http://127.0.0.1:8000/updateFood/`;
+    const urlUpdateFood = `${apiUrl}/updateFood/`;
     //alert(quantity);
     //alert(gramos);
     //alert(measurementType);
@@ -523,7 +524,7 @@ const ClientControl = () => {
   };
 
   const handleDeleteFood = () => {
-    const urlDeleteFood = `http://127.0.0.1:8000/deleteFood/`;
+    const urlDeleteFood = `${apiUrl}/deleteFood/`;
     const datos = {
       id_alimento: foodToUpdate.id_alimento,
       id_cliente: parseInt(idCliente),

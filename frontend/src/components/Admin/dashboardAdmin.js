@@ -30,7 +30,8 @@ import { useNavigate } from "react-router-dom";
 
 const CrudTrainers = () => {
   const idAdmin = localStorage.getItem("idAdmin");
-  const url = "http://127.0.0.1:8000/api/v1/trainer/";
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
+  const url = `${apiUrl}/api/v1/trainer/`;
   const [id, setId] = useState(0);
   const [trainers, setTrainers] = useState([]);
   const [showModalAgregar, setShowModalAgregar] = useState(false);
@@ -83,7 +84,7 @@ const CrudTrainers = () => {
   const handleAgregarEntrenador = () => {
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const regexSoloLetras = /^[A-Za-zñÑ\s]+$/; // Only letters and spaces
-    const urlAgregar = `http://127.0.0.1:8000/trainerRegister/`;
+    const urlAgregar = `${apiUrl}/trainerRegister/`;
     //var parametros;
 
     if (nombre.trim() === "") {
@@ -196,7 +197,7 @@ const CrudTrainers = () => {
     console.log("El id es: " + id);
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const regexSoloLetras = /^[A-Za-zñÑ\s]+$/; // Only letters and spaces
-    const urlEditar = `http://127.0.0.1:8000/updateTrainer/${id}/`;
+    const urlEditar = `${apiUrl}/updateTrainer/${id}/`;
 
     if (nombre.trim() === "") {
       show_alerta("El nombre es requerido", "warning");
@@ -284,7 +285,7 @@ const CrudTrainers = () => {
   };
 
   const handleBorradoLogico = () => {
-    const urlBorrado = `http://127.0.0.1:8000/borradoLogicoEntrenador/${id}/`;
+    const urlBorrado = `${apiUrl}/borradoLogicoEntrenador/${id}/`;
     axios
       .post(urlBorrado)
       .then((response) => {
@@ -298,7 +299,7 @@ const CrudTrainers = () => {
   };
 
   const handleRecuperarEntrenador = (id_entrenador) => {
-    const urlRecuperar = `http://127.0.0.1:8000/recuperarEntrenador/${id_entrenador}/`;
+    const urlRecuperar = `${apiUrl}/recuperarEntrenador/${id_entrenador}/`;
     axios
       .post(urlRecuperar)
       .then((response) => {

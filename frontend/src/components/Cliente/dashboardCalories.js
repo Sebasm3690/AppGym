@@ -39,6 +39,7 @@ import { useNavigate } from "react-router-dom";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const CaloriesDashboard = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000"; // Use environment variable or fallback to localhost
   const [caloriesData, setCaloriesData] = useState({
     remaining: 0,
     consumed: 0,
@@ -60,9 +61,9 @@ const CaloriesDashboard = () => {
     macrosHoy.total_carbohidratos +
     macrosHoy.total_grasa;
 
-  const urlMacros = `http://127.0.0.1:8000/calcularTotalMacrosAlimentos/${idCliente}/?range=${dateRange}`;
-  const urlMacrosParteDia = `http://127.0.0.1:8000/calcularTotalMacroAlimentosParteDia/${idCliente}/?range=${dateRange}`;
-  const urlTmb = `http://127.0.0.1:8000/obtenerTMB/${idCliente}/`;
+  const urlMacros = `${apiUrl}/calcularTotalMacrosAlimentos/${idCliente}/?range=${dateRange}`;
+  const urlMacrosParteDia = `${apiUrl}/calcularTotalMacroAlimentosParteDia/${idCliente}/?range=${dateRange}`;
+  const urlTmb = `${apiUrl}/obtenerTMB/${idCliente}/`;
 
   useEffect(() => {
     getMacros();

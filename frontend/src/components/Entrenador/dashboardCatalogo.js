@@ -40,10 +40,11 @@ import "./catalog.css";
 //import "./ModalDesign.css";
 
 const Catalogo = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
   const idEntrenador = localStorage.getItem("idEntrenador");
   const navigate = useNavigate();
-  const url = "http://127.0.0.1:8000/api/v1/rutina/";
-  const urlEjercicios = "http://127.0.0.1:8000/api/v1/ejercicio/";
+  const url = `${apiUrl}/api/v1/rutina/`;
+  const urlEjercicios = `${apiUrl}/api/v1/ejercicio/`;
   const [routines, setRoutines] = useState([]);
   const [showModalAgregar, setShowModalAgregar] = useState(false);
   const [showModalEliminar, setShowModalEliminar] = useState(false);
@@ -184,7 +185,7 @@ const Catalogo = () => {
   };
 
   const handleAgregarRutina = () => {
-    const urlAgregarRutina = "http://127.0.0.1:8000/addRoutine/";
+    const urlAgregarRutina = `${apiUrl}/addRoutine/`;
 
     if (nombreRutina.trim() === "") {
       show_alerta("El nombre de la rutina es requerido", "warning");
@@ -223,7 +224,7 @@ const Catalogo = () => {
   };
 
   const handleEditarRutina = () => {
-    const urlEditarRutina = `http://127.0.0.1:8000/updateRoutine/${idRutina}`;
+    const urlEditarRutina = `${apiUrl}/updateRoutine/${idRutina}`;
 
     if (nombreRutina.trim() === "") {
       show_alerta("El nombre de la rutina es requerido", "warning");
@@ -262,7 +263,7 @@ const Catalogo = () => {
   };
 
   const handleDeleteRutina = () => {
-    const urlEliminarRutina = `http://127.0.0.1:8000/api/v1/rutina/${idRutina}/`;
+    const urlEliminarRutina = `${apiUrl}/api/v1/rutina/${idRutina}/`;
     axios
       .delete(urlEliminarRutina)
       .then((response) => {
@@ -276,7 +277,7 @@ const Catalogo = () => {
   };
 
   const handleLlenarCamposRutina = (id_rutina) => {
-    const urlObtenerEjercicios = `http://127.0.0.1:8000/ejerciciosRutina/${id_rutina}/`;
+    const urlObtenerEjercicios = `${apiUrl}/ejerciciosRutina/${id_rutina}/`;
     axios.get(urlObtenerEjercicios).then((response) => {
       console.log(response.data.ejercicios);
       setSelectedEjercicios(response.data.ejercicios);

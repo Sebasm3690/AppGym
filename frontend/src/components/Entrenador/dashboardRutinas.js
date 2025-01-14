@@ -40,10 +40,11 @@ import "./routines.css";
 //import "./ModalDesign.css";
 
 const CrudRoutines = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
   const idEntrenador = localStorage.getItem("idEntrenador");
   const navigate = useNavigate();
-  const url = "http://127.0.0.1:8000/api/v1/rutina/";
-  const urlEjercicios = "http://127.0.0.1:8000/api/v1/ejercicio/";
+  const url = `${apiUrl}/api/v1/rutina/`;
+  const urlEjercicios = `${apiUrl}/api/v1/ejercicio/`;
   const [routines, setRoutines] = useState([]);
   const [showModalAgregar, setShowModalAgregar] = useState(false);
   const [showModalEliminar, setShowModalEliminar] = useState(false);
@@ -229,7 +230,7 @@ const CrudRoutines = () => {
   };
 
   const handleAgregarRutina = () => {
-    const urlAgregarRutina = "http://127.0.0.1:8000/addRoutine/";
+    const urlAgregarRutina = `${apiUrl}/addRoutine/`;
     console.log(JSON.stringify(selectedEjercicios, null, 2));
 
     if (nombreRutina.trim() === "") {
@@ -306,7 +307,7 @@ const CrudRoutines = () => {
   };
 
   const handleEditarRutina = () => {
-    const urlEditarRutina = `http://127.0.0.1:8000/updateRoutine/${idRutina}`;
+    const urlEditarRutina = `${apiUrl}/updateRoutine/${idRutina}`;
 
     if (nombreRutina.trim() === "") {
       show_alerta("El nombre de la rutina es requerido", "warning");
@@ -387,7 +388,7 @@ const CrudRoutines = () => {
   };
 
   const handleDeleteRutina = () => {
-    const urlEliminarRutina = `http://127.0.0.1:8000/api/v1/rutina/${idRutina}/`;
+    const urlEliminarRutina = `${apiUrl}/api/v1/rutina/${idRutina}/`;
     axios
       .delete(urlEliminarRutina)
       .then((response) => {
@@ -401,7 +402,7 @@ const CrudRoutines = () => {
   };
 
   const handleLlenarCamposRutina = async (id_rutina) => {
-    const urlObtenerEjercicios = `http://127.0.0.1:8000/ejerciciosRutina/${id_rutina}/`;
+    const urlObtenerEjercicios = `${apiUrl}/ejerciciosRutina/${id_rutina}/`;
     const response = await axios.get(urlObtenerEjercicios);
 
     setSelectedEjercicios(response.data.ejercicios);

@@ -74,10 +74,11 @@ import { toZonedTime } from "date-fns-tz";
 import "./progressModal.css";
 
 const AssignRoutines = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
   const idEntrenador = localStorage.getItem("idEntrenador");
-  const url = "http://127.0.0.1:8000/api/v1/client/";
-  const urlAllowEliminar = "http://127.0.0.1:8000/allowDelete/";
-  const urlAllowUpdate = "http://127.0.0.1:8000/allowUpdate/";
+  const url = `${apiUrl}/api/v1/client/`;
+  const urlAllowEliminar = `${apiUrl}/allowDelete/`;
+  const urlAllowUpdate = `${apiUrl}/allowUpdate/`;
   const [idCliente, setIdCliente] = useState(0);
   const [clients, setClients] = useState([]);
   const [showModalEditar, setShowModalEditar] = useState(false);
@@ -90,8 +91,8 @@ const AssignRoutines = () => {
   const [idEjercicio, setIdEjercicio] = useState(0);
 
   //Rutina
-  const urlRoutine = "http://127.0.0.1:8000/api/v1/rutina/";
-  const urlEjercicios = "http://127.0.0.1:8000/api/v1/ejercicio/";
+  const urlRoutine = `${apiUrl}/api/v1/rutina/`;
+  const urlEjercicios = `${apiUrl}/api/v1/ejercicio/`;
   const [showModalRutinas, setShowModalRutinas] = useState(false);
   const [showModalInfoRutina, setShowModalInfoRutina] = useState(false);
   const [showModalRutinaEliminar, setShowModalRutinaEliminar] = useState(false);
@@ -102,10 +103,10 @@ const AssignRoutines = () => {
   const [descripcionRutina, setDescripcionRutina] = useState("");
   const [showModalRutinaEditar, setShowModalRutinaEditar] = useState(false);
   const [estadoRutinas, setEstadoRutinas] = useState([]);
-  const urlEstadoRutina = "http://127.0.0.1:8000/mostrarEstadoRutina/";
+  const urlEstadoRutina = `${apiUrl}/mostrarEstadoRutina/`;
 
   //seAsigna
-  const urlSeAsigna = "http://127.0.0.1:8000/api/v1/seAsigna/";
+  const urlSeAsigna = `${apiUrl}/api/v1/seAsigna/`;
   const [sets, setSets] = useState([
     { reps: "", weight: "", completado: "false", asignado: "0 kg x 0" },
   ]); // Initial set
@@ -151,11 +152,10 @@ const AssignRoutines = () => {
 
   //Dashboard
 
-  const urlDashboard = "http://127.0.0.1:8000/getFuerzaRutina/";
-  const urlDashboardFecha = `http://127.0.0.1:8000/getFuerzaRutinaFecha/`;
-  const urlDashboardExercise = "http://127.0.0.1:8000/getFuerzaEjercicio/";
-  const urlDashboardExerciseAssigned =
-    "http://127.0.0.1:8000/getFuerzaEjercicioAsignado/";
+  const urlDashboard = `${apiUrl}/getFuerzaRutina/`;
+  const urlDashboardFecha = `${apiUrl}/getFuerzaRutinaFecha/`;
+  const urlDashboardExercise = `${apiUrl}/getFuerzaEjercicio/`;
+  const urlDashboardExerciseAssigned = `${apiUrl}/getFuerzaEjercicioAsignado/`;
 
   const [charData, setCharData] = useState([]);
 
@@ -464,7 +464,7 @@ const AssignRoutines = () => {
   };
 
   const handleVerHistorial = () => {
-    const urlHistorial = "http://127.0.0.1:8000/historialCliente/";
+    const urlHistorial = `${apiUrl}/historialCliente/`;
     axios
       .get(urlHistorial, {
         params: {
@@ -622,7 +622,7 @@ const AssignRoutines = () => {
     }
 
     console.log("El id de la rutina es: " + id_rutina);
-    const urlRutinaEditar = `http://127.0.0.1:8000/ejerciciosRutina/${id_rutina}/`;
+    const urlRutinaEditar = `${apiUrl}/ejerciciosRutina/${id_rutina}/`;
 
     const rutina = routines.find((routine) => routine.id_rutina === id_rutina);
 
@@ -732,8 +732,7 @@ const AssignRoutines = () => {
         return;
       }
       //alert("Los datos son:" + JSON.stringify(rutinaCompletaCliente, null, 2));
-      const urlUpdateRutinaAsignada =
-        "http://127.0.0.1:8000/actualizarRutinaAsignada/";
+      const urlUpdateRutinaAsignada = `${apiUrl}/actualizarRutinaAsignada/`;
 
       const updateData = rutinaCompletaCliente.map((routine) => {
         const exerciseId = routine.id_ejercicio;
@@ -803,7 +802,7 @@ const AssignRoutines = () => {
       console.log(
         "Los datos son:" + JSON.stringify(rutinaCompletaCliente, null, 2)
       );
-      const urlUpdateRutina = "http://127.0.0.1:8000/updateRutina/";
+      const urlUpdateRutina = `${apiUrl}/updateRutina/`;
 
       //alert(JSON.stringify(rutinaCompletaCliente, null, 2));
 
@@ -950,7 +949,7 @@ const AssignRoutines = () => {
     /*console.log(
       "Los datos asignados a la rutina son:" + JSON.stringify(datos, null, 2)
     );*/
-    const urlAsignarRutina = "http://127.0.0.1:8000/asignarRutina/";
+    const urlAsignarRutina = `${apiUrl}/asignarRutina/`;
     //console.log(JSON.stringify(datos, null, 2));
 
     axios.post(urlAsignarRutina, datos).then((response) => {
@@ -968,17 +967,14 @@ const AssignRoutines = () => {
     //alert(id_cliente);
     setIdCliente(id_cliente);
     setShowWeekDays(true);
-    axios
-      .get(`http://127.0.0.1:8000/api/v1/client/${id_cliente}/`)
-      .then((response) => {
-        setClient(response.data);
-      });
+    axios.get(`${apiUrl}/api/v1/client/${id_cliente}/`).then((response) => {
+      setClient(response.data);
+    });
   };
 
   const handleShowTableRoutines = (id_cliente) => {
     setIdCliente(id_cliente);
-    const urlTodasRutinasCliente =
-      "http://127.0.0.1:8000/obtenerTodasRutinasCliente/";
+    const urlTodasRutinasCliente = `${apiUrl}/obtenerTodasRutinasCliente/`;
     axios
       .get(urlTodasRutinasCliente, {
         params: {
@@ -1045,7 +1041,7 @@ const AssignRoutines = () => {
     console.log("El id de la rutina es: " + id_rutina);
     console.log("Pertenece al dia: " + selectDay);
 
-    const url = "http://127.0.0.1:8000/obtenerRutinaAsignadaDetalleCompleto/";
+    const url = `${apiUrl}/obtenerRutinaAsignadaDetalleCompleto/`;
     axios
       .get(url, {
         params: {
@@ -1133,7 +1129,7 @@ const AssignRoutines = () => {
     //if (allowDelete === true) {
     console.log(idRutina);
     console.log(idCliente);
-    const urlEliminarRutinaAsignada = `http://127.0.0.1:8000/eliminarRutinaAsignada/${idRutina}/${idCliente}/`;
+    const urlEliminarRutinaAsignada = `${apiUrl}/eliminarRutinaAsignada/${idRutina}/${idCliente}/`;
     axios
       .delete(urlEliminarRutinaAsignada)
       .then((response) => {
@@ -1199,7 +1195,7 @@ const AssignRoutines = () => {
     const deletedSet = routine[setIndex];
 
     // DELETE request to the backend
-    const url = `http://127.0.0.1:8000/eliminarSets/`;
+    const url = `${apiUrl}/eliminarSets/`;
 
     axios
       .delete(url, {
@@ -1406,7 +1402,7 @@ const AssignRoutines = () => {
     console.log("El id de la rutina es: " + id_rutina);
     console.log("Pertenece al dia: " + selectDay);
 
-    const url = "http://127.0.0.1:8000/obtenerRutinaProgresoDetalleCompleto/";
+    const url = `${apiUrl}/obtenerRutinaProgresoDetalleCompleto/`;
     axios
       .get(url, {
         params: {

@@ -50,7 +50,8 @@ class LoginAdmin extends React.Component {
     });
 
     try {
-      const response = await axios.post("http://localhost:8000/adminLogin/", {
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000"; // Use environment variable or fallback to localhost
+      const response = await axios.post(`${apiUrl}/adminLogin/`, {
         username,
         password,
       });

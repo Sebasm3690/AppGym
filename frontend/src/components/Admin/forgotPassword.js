@@ -7,6 +7,8 @@ import { show_alerta } from "../../functions";
 import { useLocation } from "react-router-dom";
 import NavScrollExample from "../Otros/Navbar";
 const ForgotPassword = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
+  const url = `${apiUrl}/api/v1/trainer/`;
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -34,13 +36,10 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8000/reset-password-request/",
-        {
-          email,
-          userType: userTypeText,
-        }
-      );
+      const response = await axios.post(`${apiUrl}/reset-password-request/`, {
+        email,
+        userType: userTypeText,
+      });
       setMessage(response.data.mensaje);
       setError("");
     } catch (error) {

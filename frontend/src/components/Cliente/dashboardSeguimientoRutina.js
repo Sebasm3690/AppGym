@@ -64,12 +64,13 @@ import "./dashboardSeguimientoRutina.css";
 import "../Entrenador/setsTable.css";
 
 const FollowRoutines = () => {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
   const navigate = useNavigate();
-  const url = "http://127.0.0.1:8000/api/v1/rutina/";
-  const urlEjercicios = "http://127.0.0.1:8000/api/v1/ejercicio/";
-  const urlRutinaCliente = "http://localhost:8000/clienteRutinas/";
-  const urlAllowInsert = "http://127.0.0.1:8000/allowUpdate/";
-  const urlGetRest = "http://localhost:8000/getRestClient/";
+  const url = `${apiUrl}/api/v1/rutina/`;
+  const urlEjercicios = `${apiUrl}/api/v1/ejercicio/`;
+  const urlRutinaCliente = `${apiUrl}/clienteRutinas/`;
+  const urlAllowInsert = `${apiUrl}/allowUpdate/`;
+  const urlGetRest = `${apiUrl}/getRestClient/`;
   const [routines, setRoutines] = useState([]);
   const [showModalAgregar, setShowModalAgregar] = useState(false);
   const [showModalEliminar, setShowModalEliminar] = useState(false);
@@ -77,7 +78,7 @@ const FollowRoutines = () => {
   const [showModalDescanso, setShowModalDescanso] = useState(false);
   const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 7));
   const [allowInsert, setAllowInsert] = useState(false);
-  const urlEstadoRutina = "http://127.0.0.1:8000/mostrarEstadoRutina/";
+  const urlEstadoRutina = `${apiUrl}/mostrarEstadoRutina/`;
 
   //Rutina
   const [idRutina, setIdRutina] = useState(0);
@@ -327,7 +328,7 @@ const FollowRoutines = () => {
   };
 
   const handleAgregarRutina = () => {
-    const urlAgregarRutina = "http://127.0.0.1:8000/addRoutine/";
+    const urlAgregarRutina = `${apiUrl}/addRoutine/`;
     console.log(JSON.stringify(selectedEjercicios, null, 2));
 
     if (nombreRutina.trim() === "") {
@@ -414,7 +415,7 @@ const FollowRoutines = () => {
   };
 
   const handleDeleteRutina = () => {
-    const urlEliminarRutina = `http://127.0.0.1:8000/api/v1/rutina/${idRutina}/`;
+    const urlEliminarRutina = `${apiUrl}/api/v1/rutina/${idRutina}/`;
     axios
       .delete(urlEliminarRutina)
       .then((response) => {
@@ -428,7 +429,7 @@ const FollowRoutines = () => {
   };
 
   const handleLlenarCamposRutina = async (id_rutina) => {
-    const urlObtenerEjercicios = `http://127.0.0.1:8000/ejerciciosRutina/${id_rutina}/`;
+    const urlObtenerEjercicios = `${apiUrl}/ejerciciosRutina/${id_rutina}/`;
     const response = await axios.get(urlObtenerEjercicios);
 
     setSelectedEjercicios(response.data.ejercicios);
@@ -478,7 +479,7 @@ const FollowRoutines = () => {
     console.log("El id de la rutina es: " + id_rutina);
     console.log("Pertenece al dia: " + selectDay);
 
-    const url = "http://127.0.0.1:8000/obtenerRutinaAsignadaDetalleCompleto/";
+    const url = `${apiUrl}/obtenerRutinaAsignadaDetalleCompleto/`;
     axios
       .get(url, {
         params: {
@@ -545,7 +546,7 @@ const FollowRoutines = () => {
     console.log("El id de la rutina es: " + id_rutina);
     console.log("Pertenece al dia: " + selectDay);
 
-    const url = "http://127.0.0.1:8000/obtenerRutinaProgresoDetalleCompleto/";
+    const url = `${apiUrl}/obtenerRutinaProgresoDetalleCompleto/`;
     axios
       .get(url, {
         params: {
@@ -858,7 +859,7 @@ const FollowRoutines = () => {
       }
       const datos = prepararDatos();
       //alert(JSON.stringify(datos, null, 2));
-      const urlAsignarProgreso = "http://127.0.0.1:8000/agregarProgreso/";
+      const urlAsignarProgreso = `${apiUrl}/agregarProgreso/`;
       axios.post(urlAsignarProgreso, datos).then((response) => {
         show_alerta("Rutina finalizada exitosamente", "success");
         setShowModalFullRoutine(false);
@@ -889,7 +890,7 @@ const FollowRoutines = () => {
 
   const handleVerHistorial = (id_rutina) => {
     setIdRutina(id_rutina);
-    const urlHistorial = "http://127.0.0.1:8000/historialCliente/";
+    const urlHistorial = `${apiUrl}/historialCliente/`;
     axios
       .get(urlHistorial, {
         params: {
