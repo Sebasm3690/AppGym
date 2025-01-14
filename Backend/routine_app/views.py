@@ -49,6 +49,7 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_decode
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.http import HttpResponse
 import logging
 
 # Set the locale globally (to Spanish)
@@ -2702,4 +2703,7 @@ def reset_password_confirm(request, uidb64, token):
     user.save()
 
     return Response({"mensaje": "Contraseña reseteada exitosamente"}, status=status.HTTP_200_OK)
+
+def home(request):
+    return HttpResponse("Hola, estás en la página de inicio")
         

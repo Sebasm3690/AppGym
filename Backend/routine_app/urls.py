@@ -93,6 +93,7 @@ urlpatterns = [
     path("getRestClient/",getRestClient,name="getRestClient"),
     path("reset-password-request/", reset_password_request, name="reset_password_request"),
     path("reset-password/<uidb64>/<token>/", reset_password_confirm, name="reset_password_confirm"),
+    path("",home,name="home"),
 ]
 
 if settings.DEBUG:
