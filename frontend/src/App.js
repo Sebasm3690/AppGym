@@ -3,9 +3,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
-import LoginAdmin from "./components/admin/login";
+import LoginAdmin from "./components/Admin/login";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CrudTrainers from "./components/admin/dashboardAdmin";
+import CrudTrainers from "./components/Admin/dashboardAdmin";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // Optional if you want to use the styles directly
 import LoginEntrenador from "./components/Entrenador/Login";
 import LoginCliente from "./components/Cliente/Login";
@@ -20,8 +20,8 @@ import CaloriesDashboard from "./components/Cliente/dashboardCalories";
 import FollowRoutines from "./components/Cliente/dashboardSeguimientoRutina";
 import WeekdayCards from "./components/Entrenador/weekdays";
 import HistorialClienteCompleto from "./components/Cliente/dashboardHistorial";
-import ForgotPassword from "./components/admin/forgotPassword";
-import ResetPassword from "./components/admin/resetPassword";
+import ForgotPassword from "./components/Admin/forgotPassword";
+import ResetPassword from "./components/Admin/resetPassword";
 library.add(fas);
 
 function App() {

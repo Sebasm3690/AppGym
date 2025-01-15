@@ -32,7 +32,7 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import { show_alerta } from "../../functions";
-import "../admin/styles.css";
+import "../Admin/styles.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Otros/sideBar";
 import "./catalog.css";
