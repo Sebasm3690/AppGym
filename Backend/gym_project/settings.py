@@ -63,7 +63,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -169,10 +168,12 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORSALLOWEDORIGINS = []
 CORS_ALLOWED_ORIGINS = [
+    "https://app-45ljvpnqe-sebasm3690s-projects.vercel.app",   # Replace with your Vercel domain
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
     "http://192.168.100.11:3000",  # Add this line
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 CACHES = {
     'default': {
