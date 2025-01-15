@@ -24,7 +24,8 @@ const NavScrollExample = ({
 }) => {
   const idClient = localStorage.getItem("idCliente");
   const [client, setClient] = useState({});
-  const url = `http://127.0.0.1:8000/api/v1/client/${idClient}/`;
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000"; // Use environment variable or fallback to localhost
+  const url = `${apiUrl}/api/v1/client/${idClient}/`;
   const [searchParams, setSearchParams] = useState({
     nombre: "",
     apellido: "",

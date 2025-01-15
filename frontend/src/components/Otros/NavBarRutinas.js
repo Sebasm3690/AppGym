@@ -19,7 +19,8 @@ import Logo from "../../assets/logo.png";
 const NavScrollExample = ({ onSearchResults, onLogout }) => {
   const idEntrenador = localStorage.getItem("idEntrenador");
   const [trainer, setTrainer] = useState({});
-  const url = `http://127.0.0.1:8000/api/v1/trainer/${idEntrenador}`;
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000"; // Use environment variable or fallback to localhost
+  const url = `${apiUrl}/api/v1/trainer/${idEntrenador}`;
   const [searchParams, setSearchParams] = useState({
     nombre: "",
     enfoque: "",
@@ -47,7 +48,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
     event.preventDefault();
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/buscarRutinas/${idEntrenador}/`,
+        `${apiUrl}/buscarRutinas/${idEntrenador}/`,
         {
           params: searchParams,
         }

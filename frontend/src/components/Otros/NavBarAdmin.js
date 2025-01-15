@@ -20,7 +20,8 @@ import Logo from "../../assets/logo.png";
 const NavScrollExample = ({ onSearchResults, onLogout }) => {
   const idAdmin = localStorage.getItem("idAdmin");
   const [admin, setAdmin] = useState({});
-  const url = `http://127.0.0.1:8000/api/v1/admin/${idAdmin}`;
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000"; // Use environment variable or fallback to localhost
+  const url = `${apiUrl}/api/v1/admin/${idAdmin}`;
 
   useEffect(() => {
     getAdmin();
@@ -49,7 +50,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
     event.preventDefault();
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/buscarEntrenadores/${idAdmin}/`,
+        `${apiUrl}/buscarEntrenadores/${idAdmin}/`,
         {
           params: searchParams,
         }
