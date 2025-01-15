@@ -1195,7 +1195,7 @@ def populate_ejercicios(apps, schema_editor):
         ejercicios = group["ejercicios"]
 
         for ejercicio_data in ejercicios:
-            imagen_url = f"{base_url}{ejercicio_data['imagen']}"
+            imagen_url = f"{base_url}{ejercicio_data.get('imagen', 'placeholder.gif')}"  # Use placeholder if missing
             Ejercicio.objects.update_or_create(
                 nombre=ejercicio_data["nombre"],
                 defaults={
