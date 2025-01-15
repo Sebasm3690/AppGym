@@ -1189,21 +1189,25 @@ def populate_ejercicios(apps, schema_editor):
 
     ]
 
-    # Loop through the data and populate exercises
     for group in data:
         base_url = group["base_url"]
         ejercicios = group["ejercicios"]
 
         for ejercicio_data in ejercicios:
-            imagen_url = f"{base_url}{ejercicio_data.get('imagen', 'placeholder.gif')}"  # Use placeholder if missing
+            if "nombre" not in ejercicio_data:
+                print(f"Skipping exercise due to missing 'nombre': {ejercicio_data}")
+                continue  # Skip this exercise if 'nombre' is missing
+
+            imagen_url = f"{base_url}{ejercicio_data.get('imagen', 'placeholder.gif')}"
+
             Ejercicio.objects.update_or_create(
                 nombre=ejercicio_data["nombre"],
                 defaults={
-                    "musculo": ejercicio_data["musculo"],
-                    "equipamento": ejercicio_data["equipamento"],
-                    "instrucciones": json.dumps(ejercicio_data["instrucciones"], ensure_ascii=False),
+                    "musculo": ejercicio_data.get("musculo", "Desconocido"),  # Default values for safety
+                    "equipamento": ejercicio_data.get("equipamento", "No especificado"),
+                    "instrucciones": json.dumps(ejercicio_data.get("instrucciones", []), ensure_ascii=False),
                     "imagen": imagen_url,
-                    "objetivo": ejercicio_data["objetivo"],
+                    "objetivo": ejercicio_data.get("objetivo", "N/A"),
                 }
             )
 
