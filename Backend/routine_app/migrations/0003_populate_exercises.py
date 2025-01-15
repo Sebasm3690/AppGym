@@ -930,8 +930,8 @@ def populate_ejercicios(apps, schema_editor):
     ]
 
         } , {
-            base_url: "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/",
-            ejercicios: [
+            "base_url": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/",
+            "ejercicios": [
                  {
             "nombre": "Press Arnold",
             "musculo": "Hombros",
