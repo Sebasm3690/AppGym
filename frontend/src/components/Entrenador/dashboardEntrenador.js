@@ -25,7 +25,7 @@ import {
   ModalFooter,
 } from "react-bootstrap";
 import { show_alerta } from "../../functions";
-import "../Admin/styles.css";
+import "../admin/styles.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Otros/sideBar";
 import "./ModalDesign.css";

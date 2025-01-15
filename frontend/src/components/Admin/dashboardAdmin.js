@@ -25,7 +25,7 @@ import {
   ModalFooter,
 } from "react-bootstrap";
 import { show_alerta } from "../../functions";
-import "../Admin/styles.css";
+import "./styles.css";
 import { useNavigate } from "react-router-dom";
 
 const CrudTrainers = () => {
