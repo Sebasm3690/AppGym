@@ -1210,7 +1210,7 @@ def populate_ejercicios(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('routine_app', '0001_initial'),  # Adjust to your latest migration
+        ('routine_app', '0002_populate_data'),  # Adjust to your latest migration
     ]
 
     operations = [
