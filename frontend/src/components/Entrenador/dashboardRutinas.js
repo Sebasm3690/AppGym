@@ -323,7 +323,7 @@ const CrudRoutines = () => {
     }
 
     // Define valid muscles for each focus area
-    const validMuscles = {
+    /*const validMuscles = {
       Pecho: ["Pecho", "Tríceps", "Hombros", "Core"],
       Espalda: ["Espalda", "Bíceps", "Hombros", "Antebrazos", "Core"],
       Brazos: ["Bíceps", "Tríceps", "Antebrazos", "Core"],
@@ -357,7 +357,7 @@ const CrudRoutines = () => {
         "warning"
       );
       return;
-    }
+    }*/
 
     const rutinaEditada = {
       nombre: nombreRutina,

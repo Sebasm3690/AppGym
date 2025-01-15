@@ -994,7 +994,7 @@ const AssignRoutines = () => {
   };
 
   const handleShowRutinasAsignadas = (day) => {
-    const urlRutinasAsignadas = "http://127.0.0.1:8000/obtenerRutinasCliente/";
+    const urlRutinasAsignadas = `${apiUrl}/obtenerRutinasCliente/`;
     setSelectedDay(day);
     axios
       .get(urlRutinasAsignadas, {
