@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
-import LoginAdmin from "./components/Admin/Login";
+import LoginAdmin from "./components/Admin/Login.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CrudTrainers from "./components/Admin/dashboardAdmin";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // Optional if you want to use the styles directly
