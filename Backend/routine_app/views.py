@@ -52,6 +52,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 import logging
 from rest_framework_simplejwt.tokens import RefreshToken
+import os
 
 # Set the locale globally (to Spanish)
 locale.setlocale(locale.LC_TIME, "") 
@@ -2661,7 +2662,8 @@ def reset_password_request(request):
     #Generate a resete token
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"
+    frontend_url = os.getenv("FRONTEND_URL","http://localhost")
+    reset_link = f"{frontend_url}/reset-password/{uid}/{token}/"
 
     print("Generated Reset Link:", reset_link)
 

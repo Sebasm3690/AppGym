@@ -230,6 +230,9 @@ FATSECRET_API_KEY = env('FATSECRET_API_KEY')
 FATSECRET_CLIENT_ID = env('FATSECRET_CLIENT_ID')
 FATSECRET_CLIENT_SECRET = env('FATSECRET_CLIENT_SECRET')
 
+#Frontend deploy url
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://app-gym-wheat.vercel.app/")
+
 # Media files configuration
 MEDIA_URL = '/media/'  # URL path to access media files
 MEDIA_ROOT = BASE_DIR / "media"
