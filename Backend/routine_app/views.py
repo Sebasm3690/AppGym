@@ -2662,8 +2662,7 @@ def reset_password_request(request):
     #Generate a resete token
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    frontend_url = os.getenv("FRONTEND_URL","http://localhost")
-    reset_link = f"{frontend_url}/reset-password/{uid}/{token}/"
+    reset_link = f"{settings.FRONTED_URL}/reset-password/{uid}/{token}/"
 
     print("Generated Reset Link:", reset_link)
 
