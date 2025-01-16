@@ -279,7 +279,7 @@ const ClientControl = () => {
     console.log("El id de la comida es: " + food_id);
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/food/${food_id}/?search=${query}`
+        `${apiUrl}/food/${food_id}/?search=${query}`
       );
 
       const parsedNutrients = response.data.food.servings?.serving;
@@ -364,7 +364,7 @@ const ClientControl = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/nutrition/?search=${searchQuery}`
+        `${apiUrl}/nutrition/?search=${searchQuery}`
       );
 
       console.log("Foods v3:", JSON.stringify(response.data, null, 2));
