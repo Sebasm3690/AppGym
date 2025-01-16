@@ -24,9 +24,12 @@ const ResetPassword = () => {
       return;
     }
     try {
-      const response = await axios.post(`${apiUrl}/${uid}/${token}/`, {
-        password,
-      });
+      const response = await axios.post(
+        `${apiUrl}/reset-password/${uid}/${token}/`,
+        {
+          password,
+        }
+      );
       show_alerta(response.data.mensaje, "success");
       navigate("/");
       setError("");

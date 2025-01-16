@@ -394,7 +394,7 @@ const CrudClients = () => {
       formData.append("email", correo.trim());
       formData.append("cedula", cedula.trim());
       formData.append("username", username.trim());
-      formData.append("password", contrasenia.trim());
+      //formData.append("password", contrasenia.trim());
       formData.append("id_genero", parseInt(selectedGenero));
       formData.append("id_nivel_gym", parseInt(selectedNivelGym));
       formData.append("id_nivel_actividad", parseInt(selectedNivelActividad));
@@ -443,10 +443,7 @@ const CrudClients = () => {
         })
         .then((response) => {
           console.log("Respuesta del servidor", response.data);
-          show_alerta(
-            "El entrenador ha sido actualizado exitosamente",
-            "success"
-          );
+          show_alerta("El cliente ha sido actualizado exitosamente", "success");
           setShowSecondModalEditar(false);
           getClients();
           setNombre("");

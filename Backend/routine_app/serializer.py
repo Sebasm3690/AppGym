@@ -52,8 +52,8 @@ class TrainerSerializer(serializers.ModelSerializer):
 			user.username = user_data.get('username', user.username)
 			user.email = user_data.get('email', user.email)
 			password = user_data.get('password', None)
-			if password:
-				user.set_password(password)
+			#if password:
+				#user.set_password(password)
 			user.save()
 
 		# Actualizar los datos del entrenador
@@ -175,8 +175,8 @@ class ClientSerializer(serializers.ModelSerializer):
 			user = instance.user
 			user.username = user_data.get('username', user.username)
 			user.email = user_data.get('email',user.email)
-			if 'password' in user_data:
-				user.set_password(user_data['password']) # Hash the password
+			#if 'password' in user_data:
+				#user.set_password(user_data['password']) # Hash the password
 			user.save()
 
 		 # Actualizamos los campos de la instancia del cliente con los datos validados

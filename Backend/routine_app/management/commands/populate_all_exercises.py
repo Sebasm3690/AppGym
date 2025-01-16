@@ -7,8 +7,8 @@ class Command(BaseCommand):
     def handle(self,*args, **kwargs):
         try:
             scripts = [
-                #'populate_abductors',
-                #'populate_back',
+                'populate_abductors',
+                'populate_back',
                 'populate_biceps',
                 'populate_calves',
                 'populate_chest',

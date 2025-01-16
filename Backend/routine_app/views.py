@@ -51,6 +51,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 import logging
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Set the locale globally (to Spanish)
 locale.setlocale(locale.LC_TIME, "") 
@@ -122,9 +123,9 @@ def update_trainer(request,id):
         return Response({"details:":"Entrenador no encontrado"},status=status.HTTP_400_BAD_REQUEST)
 
     #Extract data
-    correo = request.data.get('email')
-    username = request.data.get('username')
-    cedula = request.data.get('cedula')
+    correo = request.data.get('email','')
+    username = request.data.get('username','')
+    cedula = request.data.get('cedula','')
 
     print(request.data)
 
@@ -213,6 +214,42 @@ def trainerLogin(request):
     else:
         return Response({"error":"username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"error":"Error inesperado en el servidor"},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['POST'])
+def clientLogin(request):
+    username = request.data.get("username")
+    password = request.data.get("password")    
+
+    logger.debug(f"Attempting login for username: {username}")
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        logger.debug(f"User authenticated: {user.username}")
+        try:
+            cliente = Cliente.objects.get(user=user)
+            if cliente.borrado == True:
+                return Response({"error": "Cliente dado de baja por el entrenador"}, status=status.HTTP_404_NOT_FOUND)
+            
+            #token, created = Token.objects.get_or_create(user=user)
+            refresh = RefreshToken.for_user(user)
+            serializer = ClientSerializer(instance=cliente)
+            return Response({"refresh": str(refresh), "access": str(refresh.access_token),"cliente": serializer.data}, status=status.HTTP_200_OK)
+        except Cliente.DoesNotExist:
+            return Response({"error": "username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Add a response for failed authentication
+    return Response({"error": "username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
+
+    #entrenador = get_object_or_404(Entrenador, user__email = request.data['email'])
+    #if entrenador.password != request.data['password']: #Si el entrenador me retorna False o se falló en el intento de login 
+        #return Response({"error":"Contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    #token, created = Token.objects.get_or_create(user=entrenador) #El created es un booleano que nos especifíca si se creó o no	
+    #serializer = TrainerSerializer(instance=entrenador) #Me sirve para luego retornar un objeto entrenador en este caso
+    #return Response({"token":token.key, "entrenador":serializer.data}, status=status.HTTP_200_OK) 
+
 
 
 #Buscar entrenadores
@@ -352,35 +389,6 @@ def adminLogin(request):
     return Response({"error":"Error inesperado en el servidor"},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['POST'])
-def clientLogin(request):
-    username = request.data.get("username")
-    password = request.data.get("password")    
-
-    user = authenticate(username=username, password=password)
-
-    if user is not None:
-        try:
-            cliente = Cliente.objects.get(user=user)
-            if cliente.borrado == True:
-                return Response({"error": "Cliente dado de baja por el entrenador"}, status=status.HTTP_404_NOT_FOUND)
-            else:
-                token, created = Token.objects.get_or_create(user=user)
-                serializer = ClientSerializer(instance=cliente)
-                return Response({"token": token.key, "cliente": serializer.data}, status=status.HTTP_200_OK)
-        except Cliente.DoesNotExist:
-            return Response({"error": "username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Add a response for failed authentication
-    return Response({"error": "username o contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
-
-    #entrenador = get_object_or_404(Entrenador, user__email = request.data['email'])
-    #if entrenador.password != request.data['password']: #Si el entrenador me retorna False o se falló en el intento de login 
-        #return Response({"error":"Contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
-    
-    #token, created = Token.objects.get_or_create(user=entrenador) #El created es un booleano que nos especifíca si se creó o no	
-    #serializer = TrainerSerializer(instance=entrenador) #Me sirve para luego retornar un objeto entrenador en este caso
-    #return Response({"token":token.key, "entrenador":serializer.data}, status=status.HTTP_200_OK) 
 
 
 @api_view(['POST'])
@@ -2625,12 +2633,10 @@ def getRestClient(request):
 #Link to allows the user recover their password
 @api_view(['POST'])
 def reset_password_request(request):
-
-
     userType = request.data.get('userType')
     print(userType)
     email = request.data.get('email')
-
+ 
     if not email:
         return Response({"error": "El email es requerido"}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -2656,6 +2662,9 @@ def reset_password_request(request):
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"
+
+    print("Generated Reset Link:", reset_link)
+
 
     #Prepare email content
     subject = "Restablece tu contraseña"

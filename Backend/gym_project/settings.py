@@ -44,6 +44,11 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 #ALLOWED_HOSTS = ['192.168.100.11', 'localhost', '127.0.0.1']
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 
 # Application definition
@@ -104,13 +109,15 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://postgres:awayouname11@localhost:5432/AppGym6',  # Local fallback
-        conn_max_age=600,
-        ssl_require=True if 'RENDER' in os.environ else False  # Enable SSL only in production
+#DATABASES = {
+    #'default': dj_database_url.config(
+        #default='postgres://postgres:awayouname11@localhost:5432/AppGym6',  # Local fallback
+        #conn_max_age=600,
+        #ssl_require=True if 'RENDER' in os.environ else False  # Enable SSL only in production
         #ssl_require=False  # Set this to True if using SSL in production
-    ) 
+    #) 
+
+    
     #{
         #'ENGINE': 'django.db.backends.postgresql_psycopg2',
         #'NAME': 'AppGym6',
@@ -119,6 +126,18 @@ DATABASES = {
         #'HOST': 'localhost',  
         #'PORT': '5432',
     #}      
+#}
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'app_gym_b8j8',  # Database Name
+        'USER': 'app_gym_b8j8_user',  # Username
+        'PASSWORD': '3f75p1gG3Gr8WUbaQtaxEzwaDzzO3Xnu',  # Password
+        'HOST': 'dpg-cu2u36popnds73fvnpag-a.oregon-postgres.render.com',  # Host
+        'PORT': '5432',  # Port
+    }
 }
 
 # Password validation
@@ -172,6 +191,12 @@ CORS_ALLOWED_ORIGINS = [
     "https://app-45ljvpnqe-sebasm3690s-projects.vercel.app",   # Replace with your Vercel domain
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
     "http://192.168.100.11:3000",  # Add this line
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://app-45ljvpnqe-sebasm3690s-projects.vercel.app",
+    "http://localhost:3000",
+    "http://192.168.100.11:3000",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True

@@ -64,7 +64,7 @@ class Cliente(models.Model):
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     imagen = models.ImageField(upload_to='trainer_images/', default='client_images/default.png')
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
 

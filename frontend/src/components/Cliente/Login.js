@@ -55,9 +55,17 @@ class LoginCliente extends React.Component {
         username,
         password,
       });
-      const { token, cliente } = response.data;
-      console.log("Token:", token);
+      const { access, refresh, cliente } = response.data;
+
+      console.log("Access Token:", access);
+      console.log("Refresh Token:", refresh);
       console.log("Datos del cliente:", cliente);
+
+      // Save tokens and user data in localStorage
+      localStorage.setItem("accessToken", access);
+      localStorage.setItem("refreshToken", refresh);
+      localStorage.setItem("idCliente", cliente.id_cliente); // For client-specific logic
+      localStorage.setItem("userRole", "cliente");
 
       // Close loading and show success SweetAlert
       Swal.fire({
@@ -69,9 +77,8 @@ class LoginCliente extends React.Component {
         showConfirmButton: false, // Hide the "Confirm" button
       }).then(() => {
         // Guardar el id del admin en el estado y en localStorage
-        this.setState({ idCliente: cliente.id_cliente }); //Actualiza el estado del id administrador
-        localStorage.setItem("idCliente", cliente.id_cliente); //Persiste aunque la página se recargue
-        localStorage.setItem("userRole", "cliente");
+        //this.setState({ idCliente: cliente.id_cliente }); //Actualiza el estado del id administrador
+
         // Redirigir al usuario a la página de CrudTrainers después de iniciar sesión correctamente
         this.navigate("/homeCliente/"); // Cambia '/crudTrainers' por la ruta correcta
       });

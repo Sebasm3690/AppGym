@@ -771,7 +771,7 @@ const AssignRoutines = () => {
         tiempoDescanso: routine.tiempoDescanso,*/
       });
 
-      alert(JSON.stringify(updateData, null, 2));
+      //alert(JSON.stringify(updateData, null, 2));
 
       // Send PUT request to the backend
       axios
@@ -920,9 +920,9 @@ const AssignRoutines = () => {
 
   const verificarSetsBlancosProgreso = () => {
     return Object.keys(sets).some((exerciseId) => {
-      alert(
+      /*alert(
         "Verificando sets blancos:" + JSON.stringify(sets[exerciseId], null, 2)
-      );
+      );*/
       console.log(JSON.stringify(sets[exerciseId], null, 2));
       return sets[exerciseId].some((set) => {
         return (
@@ -1420,7 +1420,7 @@ const AssignRoutines = () => {
         setNombresEjercicios(response.data.nombresEjercicios);
         setShowModalFullProgreso(true);
         const setsData = response.data.sets || {};
-        alert("Si entra");
+        //alert("Si entra");
         setSets(setsData);
         //alert(JSON.stringify(setsData, null, 2));
         setInitialSets(setsData);
