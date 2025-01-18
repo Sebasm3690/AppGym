@@ -45,6 +45,7 @@ const CrudRoutines = () => {
   const navigate = useNavigate();
   const url = `${apiUrl}/api/v1/rutina/`;
   const urlEjercicios = `${apiUrl}/api/v1/ejercicio/`;
+  const urlAllowEliminarRutina = `${apiUrl}/allow_delete_routine/`;
   const [routines, setRoutines] = useState([]);
   const [showModalAgregar, setShowModalAgregar] = useState(false);
   const [showModalEliminar, setShowModalEliminar] = useState(false);
@@ -387,18 +388,38 @@ const CrudRoutines = () => {
     setShowModalEliminar(true);
   };
 
-  const handleDeleteRutina = () => {
-    const urlEliminarRutina = `${apiUrl}/api/v1/rutina/${idRutina}/`;
-    axios
-      .delete(urlEliminarRutina)
-      .then((response) => {
-        show_alerta("Rutina eliminada correctamente", "success");
-        getRoutines();
-        setShowModalEliminar(false);
-      })
-      .catch((error) => {
-        show_alerta("Error al eliminar la rutina", "error");
+  const validarEliminarRutina = async () => {
+    try {
+      const response = await axios.get(urlAllowEliminarRutina, {
+        params: {
+          id_rutina: idRutina,
+        },
       });
+      alert(response.data.allow);
+      return response.data.allow;
+    } catch (error) {
+      console.error("Error al obtener la información", error);
+      show_alerta("Error al verificar permisos de actualización", "error");
+    }
+  };
+
+  const handleDeleteRutina = async () => {
+    const urlEliminarRutina = `${apiUrl}/api/v1/rutina/${idRutina}/`;
+    const allowEliminar = await validarEliminarRutina();
+    if (allowEliminar === true) {
+      axios
+        .delete(urlEliminarRutina)
+        .then((response) => {
+          show_alerta("Rutina eliminada correctamente", "success");
+          getRoutines();
+          setShowModalEliminar(false);
+        })
+        .catch((error) => {
+          show_alerta("Error al eliminar la rutina", "error");
+        });
+    } else {
+      show_alerta("La rutina no se puede eliminar", "warning");
+    }
   };
 
   const handleLlenarCamposRutina = async (id_rutina) => {

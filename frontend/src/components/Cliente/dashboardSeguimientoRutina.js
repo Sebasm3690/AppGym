@@ -1873,29 +1873,43 @@ const FollowRoutines = () => {
                                 {" "}
                                 <Form.Control
                                   type="number"
+                                  min="0"
                                   //value={parseInt(set.peso) || 0}
-                                  onChange={(e) =>
-                                    handleSetChange(
-                                      ejercicioId,
-                                      setIndex,
-                                      "weight",
-                                      e.target.value
-                                    )
-                                  }
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (
+                                      value === "" ||
+                                      parseFloat(value) >= 0
+                                    ) {
+                                      handleSetChange(
+                                        ejercicioId,
+                                        setIndex,
+                                        "weight",
+                                        e.target.value
+                                      );
+                                    }
+                                  }}
                                   className="text-center"
                                 />
                               </td>
                               <td>
                                 <Form.Control
+                                  min="0"
                                   type="number"
-                                  onChange={(e) =>
-                                    handleSetChange(
-                                      ejercicioId,
-                                      setIndex,
-                                      "reps",
-                                      e.target.value
-                                    )
-                                  }
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (
+                                      value === "" ||
+                                      parseFloat(value) >= 0
+                                    ) {
+                                      handleSetChange(
+                                        ejercicioId,
+                                        setIndex,
+                                        "reps",
+                                        e.target.value
+                                      );
+                                    }
+                                  }}
                                 />
                               </td>
 

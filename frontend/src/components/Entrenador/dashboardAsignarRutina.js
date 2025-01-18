@@ -791,7 +791,7 @@ const AssignRoutines = () => {
     } else {
       show_alerta(
         "No tiene permiso para agregar el progreso en este momento",
-        "error"
+        "warning"
       );
     }
   };
@@ -838,7 +838,7 @@ const AssignRoutines = () => {
     } else {
       show_alerta(
         "No tienes permisos para editar la rutina en este momento",
-        "error"
+        "warning"
       );
     }
   };
@@ -1737,10 +1737,8 @@ const AssignRoutines = () => {
                     (parseInt(routine.id_entrenador) ===
                       parseInt(idEntrenador) &&
                       routineType === "Creada" &&
-                      routine.tipo === "Creada") ||
-                    (parseInt(routine.id_entrenador) === 1 &&
-                      routineType === "Catalogo" &&
-                      routine.tipo === "Catalogo")
+                      routine.tipo === "Creada") || //parseInt(routine.id_entrenador) === 1 &&
+                    (routineType === "Catalogo" && routine.tipo === "Catalogo")
                 )
                 .filter((routine) => !foundRoutineIds.has(routine.id_rutina))
                 .map((routine) => {
@@ -2067,15 +2065,22 @@ const AssignRoutines = () => {
                                       className="input-kg"
                                       type="number"
                                       placeholder="KG"
+                                      min="0"
                                       value={set.weight}
-                                      onChange={(e) =>
-                                        handleSetChange(
-                                          selectedEjercicio.id_ejercicio,
-                                          index,
-                                          "weight",
-                                          e.target.value
-                                        )
-                                      }
+                                      onChange={(e) => {
+                                        const value = e.target.value;
+                                        if (
+                                          value === "" ||
+                                          parseFloat(value) >= 0
+                                        ) {
+                                          handleSetChange(
+                                            selectedEjercicio.id_ejercicio,
+                                            index,
+                                            "weight",
+                                            e.target.value
+                                          );
+                                        }
+                                      }}
                                       /*style={{
                                         width: "100px",
                                         ...(window.innerWidth <= 768 && {
@@ -2093,15 +2098,22 @@ const AssignRoutines = () => {
                                   <Form.Control
                                     type="number"
                                     placeholder="0"
+                                    min="0"
                                     value={set.reps}
-                                    onChange={(e) =>
-                                      handleSetChange(
-                                        selectedEjercicio.id_ejercicio,
-                                        index,
-                                        "reps",
-                                        e.target.value
-                                      )
-                                    }
+                                    onChange={(e) => {
+                                      const value = e.target.value;
+                                      if (
+                                        value === "" ||
+                                        parseFloat(value) > 0
+                                      ) {
+                                        handleSetChange(
+                                          selectedEjercicio.id_ejercicio,
+                                          index,
+                                          "reps",
+                                          e.target.value
+                                        );
+                                      }
+                                    }}
                                   />
                                 </td>
                                 {/* Delete Button */}
@@ -2766,6 +2778,7 @@ const AssignRoutines = () => {
                             rows={2}
                             //placeholder="Tus notas"
                             placeholder={allNotas[ejercicioId] || "Tus notas"} // Controlled input
+                            value={allNotas[ejercicioId]} // Controlled input
                             onChange={(e) =>
                               handleNotasChangeUpdate(
                                 ejercicioId,
@@ -2787,17 +2800,21 @@ const AssignRoutines = () => {
                               allDescansos[ejercicioId] ||
                               "Tiempo de descanso (minutos)"
                             }
+                            value={allDescansos[ejercicioId]}
                             /*style={{
                               width: "80px",
                               textAlign: "center",
                               fontSize: "14px",
                             }}*/
-                            onChange={(e) =>
-                              handleDescansoChangeUpdate(
-                                ejercicioId,
-                                e.target.value
-                              )
-                            }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === "" || parseFloat(value) >= 0) {
+                                handleDescansoChangeUpdate(
+                                  ejercicioId,
+                                  e.target.value
+                                );
+                              }
+                            }}
                             className="rest-time-input form-control"
                           />
                         </div>
@@ -2849,6 +2866,7 @@ const AssignRoutines = () => {
                           <Form.Control
                             type="number"
                             id="restTime"
+                            min="0"
                             placeholder="Sin descanso que mostrar"
                             value={allDescansosProgreso[ejercicioId] || ""}
                             readOnly
@@ -2857,12 +2875,15 @@ const AssignRoutines = () => {
                               textAlign: "center",
                               fontSize: "14px",
                             }}*/
-                            onChange={(e) =>
-                              handleDescansoChangeUpdate(
-                                ejercicioId,
-                                e.target.value
-                              )
-                            }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === "" || parseFloat(value) >= 0) {
+                                handleDescansoChangeUpdate(
+                                  ejercicioId,
+                                  e.target.value
+                                );
+                              }
+                            }}
                             className="rest-time-input form-control"
                           />
                         </div>
@@ -2912,16 +2933,23 @@ const AssignRoutines = () => {
                                 <td>
                                   <Form.Control
                                     type="number"
+                                    min="0"
                                     placeholder={set.progresoPeso ?? "KG"}
-                                    //value={set.progresoPeso ?? ""}
-                                    onChange={(e) =>
-                                      handleSetChangeUpdate(
-                                        ejercicioId,
-                                        setIndex,
-                                        "progresoPeso",
-                                        e.target.value
-                                      )
-                                    }
+                                    value={set.progresoPeso ?? ""}
+                                    onChange={(e) => {
+                                      const value = e.target.value;
+                                      if (
+                                        value === "" ||
+                                        parseFloat(value) >= 0
+                                      ) {
+                                        handleSetChangeUpdate(
+                                          ejercicioId,
+                                          setIndex,
+                                          "progresoPeso",
+                                          value
+                                        );
+                                      }
+                                    }}
                                     className="text-center"
                                   />
                                 </td>
@@ -2929,16 +2957,23 @@ const AssignRoutines = () => {
                                 <td>
                                   <Form.Control
                                     type="number"
+                                    min="0"
                                     placeholder={set.progresoReps ?? 0}
-                                    //value={set.progresoReps ?? ""} // Preserve progresoReps; fallback to repeticiones
-                                    onChange={(e) =>
-                                      handleSetChangeUpdate(
-                                        ejercicioId,
-                                        setIndex,
-                                        "progresoReps",
-                                        e.target.value
-                                      )
-                                    }
+                                    value={set.progresoReps ?? ""} // Preserve progresoReps; fallback to repeticiones
+                                    onChange={(e) => {
+                                      const value = e.target.value;
+                                      if (
+                                        value === "" ||
+                                        parseFloat(value) > 0
+                                      ) {
+                                        handleSetChangeUpdate(
+                                          ejercicioId,
+                                          setIndex,
+                                          "progresoReps",
+                                          e.target.value
+                                        );
+                                      }
+                                    }}
                                   />
                                 </td>
 

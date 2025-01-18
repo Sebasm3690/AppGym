@@ -218,7 +218,7 @@ const ClientControl = () => {
     const numericValue = parseFloat(value); // Extract the numeric part
     const perGram = numericValue / metricServingAmount; // Calculate value per gram
     if (measurementType === "grams") {
-      return ((perGram * quantity) / equivalencia).toFixed(2); // Multiply by grams
+      return ((perGram * gramos) / equivalencia).toFixed(2); // Multiply by grams
     } else {
       return (numericValue * quantity).toFixed(2); // Multiply by portions
     }
@@ -411,6 +411,10 @@ const ClientControl = () => {
 
   const handleAddFood = () => {
     const urlAddFood = `${apiUrl}/addFood/`;
+    let medida = 0;
+    measurementType === "grams"
+      ? (medida = parseFloat(gramos))
+      : (medida = parseFloat(quantity));
     console.log("Selected food:", JSON.stringify(selectedFood, null, 2));
     //alert(JSON.stringify(selectedFood, null, 2));
     const datos = {
@@ -420,7 +424,7 @@ const ClientControl = () => {
       grasa: parseFloat(nutrients[0].fat),
       carbohidratos: parseFloat(nutrients[0].carbohydrate),
       proteina: parseFloat(nutrients[0].protein),
-      cantidad: parseFloat(quantity),
+      cantidad: medida,
       porcion: nutrients[0].serving_description,
       parte_dia: parteDia,
       id_cliente: parseInt(idCliente),
@@ -1067,37 +1071,45 @@ const ClientControl = () => {
                     </Button>{" "}
                   </div>
 
-                  {/* Quantity Input with +/- Buttons */}
-                  <div className="d-flex flex-row justify-content-center align-items-center mb-3">
-                    {/*d-flex help us to put everything in the same line*/}
-                    <Button
-                      variant="outline-secondary"
-                      onClick={decreaseQuantity}
-                      disabled={quantity <= 1}
-                    >
-                      <BiMinus />
-                    </Button>
-                    <FormControl
-                      type="number"
-                      value={quantity}
-                      className="text-center mx-2"
-                      style={{ maxWidth: "80px" }}
-                      onChange={(e) => e.target.value}
-                    ></FormControl>
-                    <Button
-                      variant="outline-secondary"
-                      onClick={increaseQuantity}
-                    >
-                      <BiPlus />
-                    </Button>
-                  </div>
-
                   {measurementType === "grams" ? (
                     <div>
+                      {/* Quantity Input with +/- Buttons */}
+                      <div className="d-flex flex-row justify-content-center align-items-center mb-3">
+                        {/*d-flex help us to put everything in the same line*/}
+                        <Button
+                          variant="outline-secondary"
+                          onClick={decreaseGrams}
+                          disabled={gramos < 1}
+                        >
+                          <BiMinus />
+                        </Button>
+                        <FormControl
+                          type="number"
+                          value={gramos}
+                          className="text-center mx-2"
+                          style={{ maxWidth: "80px" }}
+                          min="1"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "" || parseFloat(value) <= 0) {
+                              setGramos(""); // Allow temporary empty state
+                            } else {
+                              setGramos(Math.max(0, parseFloat(value))); // Ensure only positive numbers
+                            }
+                          }}
+                        ></FormControl>
+                        <Button
+                          variant="outline-secondary"
+                          onClick={increaseGrams}
+                          disabled={gramos < 1}
+                        >
+                          <BiPlus />
+                        </Button>
+                      </div>
                       <p>
                         <strong>Porción: </strong>
                         {measurementType === "grams"
-                          ? `${quantity} g`
+                          ? `${gramos} g`
                           : nutrients[0].serving_description || "N/A"}{" "}
                       </p>
                       <p>
@@ -1131,6 +1143,45 @@ const ClientControl = () => {
                     </div>
                   ) : (
                     <div>
+                      <div className="d-flex flex-row justify-content-center align-items-center mb-3">
+                        {/*d-flex help us to put everything in the same line*/}
+                        <Button
+                          variant="outline-secondary"
+                          onClick={decreaseQuantity}
+                          disabled={quantity <= 1}
+                        >
+                          <BiMinus />
+                        </Button>
+                        <FormControl
+                          type="number"
+                          value={quantity}
+                          className="text-center mx-2"
+                          style={{ maxWidth: "80px" }}
+                          min="1"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "" || parseFloat(value) <= 0) {
+                              setQuantity(""); // Allow temporary empty state
+                            } else {
+                              setQuantity(Math.max(0, parseFloat(value))); // Ensure only positive numbers
+                            }
+                          }}
+                          onInvalid={(e) => {
+                            e.preventDefault();
+                            show_alerta(
+                              "La cantidad debe ser un número positivo",
+                              "warning"
+                            );
+                          }}
+                        ></FormControl>
+                        <Button
+                          variant="outline-secondary"
+                          onClick={increaseQuantity}
+                          disabled={quantity < 1}
+                        >
+                          <BiPlus />
+                        </Button>
+                      </div>
                       <p>
                         <strong>Porción: </strong>
                         {getNutrientValue(nutrients[0].serving_description) ||
@@ -1236,6 +1287,7 @@ const ClientControl = () => {
                         <Button
                           variant="outline-secondary"
                           onClick={decreaseGrams}
+                          disabled={gramos < 1}
                         >
                           <BiMinus />
                         </Button>
@@ -1244,9 +1296,10 @@ const ClientControl = () => {
                           value={gramos}
                           className="text-center mx-2"
                           style={{ maxWidth: "80px" }}
+                          min="1"
                           onChange={(e) => {
                             const value = e.target.value;
-                            if (value === "") {
+                            if (value === "" || parseFloat(value) <= 0) {
                               setGramos(""); // Allow temporary empty state
                             } else {
                               setGramos(Math.max(0, parseFloat(value))); // Ensure only positive numbers
@@ -1256,6 +1309,7 @@ const ClientControl = () => {
                         <Button
                           variant="outline-secondary"
                           onClick={increaseGrams}
+                          disabled={gramos < 1}
                         >
                           <BiPlus />
                         </Button>
@@ -1291,6 +1345,7 @@ const ClientControl = () => {
                         <Button
                           variant="outline-secondary"
                           onClick={decreaseQuantity}
+                          disabled={quantity <= 0}
                         >
                           <BiMinus />
                         </Button>
@@ -1307,10 +1362,18 @@ const ClientControl = () => {
                               setQuantity(Math.max(0, parseFloat(value))); // Ensure only positive numbers
                             }
                           }}
+                          onInvalid={(e) => {
+                            e.preventDefault();
+                            show_alerta(
+                              "La cantidad debe ser un número positivo",
+                              "warning"
+                            );
+                          }}
                         ></FormControl>
                         <Button
                           variant="outline-secondary"
                           onClick={increaseQuantity}
+                          disabled={quantity <= 0}
                         >
                           <BiPlus />
                         </Button>

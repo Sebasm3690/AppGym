@@ -108,9 +108,43 @@ const CaloriesDashboard = () => {
     });
   };
 
-  const barChartData = {
-    labels: macrosParteDia.map((meal) => meal.date), // e.g., ['Lunes 20', 'Martes 21']
+  const spanishFormatter = new Intl.DateTimeFormat("es-ES", {
+    weekday: "long",
+  });
 
+  // Generate dynamic labels (e.g., next 7 days in Spanish)
+  const labels = [...Array(7)].map((_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+    const dayName = spanishFormatter.format(date); // Get day name in Spanish
+    /*
+    1. dayName.charAt(0).toUpperCase()
+    dayName is a string, for example, "sábado".
+    dayName.charAt(0) retrieves the first character of the string ("s" in this case).
+    .toUpperCase() converts this first character to uppercase ("S").
+    Result: "S"
+    
+    2. dayName.slice(1)
+    .slice(1) takes a portion of the string starting from the second character (index 1) to the end.
+    For "sábado", this will return "ábado".
+    Result: "ábado".
+
+    3. Combining the Two Parts
+    The first character is capitalized: "S".
+    The rest of the string remains lowercase: "ábado".
+    Combine these: "S" + "ábado" = "Sábado".
+
+    4. ${date.getDate()}
+    date.getDate() retrieves the day of the month as a number (e.g., 18 for January 18).
+    This is added to the string to display both the day name and the numeric day of the month.
+    .*/
+    return `${
+      dayName.charAt(0).toUpperCase() + dayName.slice(1)
+    } ${date.getDate()}`; // Capitalize first letter
+  });
+
+  const barChartData = {
+    labels /*macrosParteDia.map((meal) => meal.date),*/, // e.g., ['Lunes 20', 'Martes 21']
     datasets: [
       {
         label: "Desayuno",

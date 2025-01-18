@@ -94,6 +94,7 @@ urlpatterns = [
     path("reset-password-request/", reset_password_request, name="reset_password_request"),
     path("reset-password/<uidb64>/<token>/", reset_password_confirm, name="reset_password_confirm"),
     path("",home,name="home"),
+    path("allow_delete_routine/",allow_delete_routine,name="allow_delete_routine"),
 ]
 
 if settings.DEBUG:

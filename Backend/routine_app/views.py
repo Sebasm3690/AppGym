@@ -2716,4 +2716,19 @@ def reset_password_confirm(request, uidb64, token):
 
 def home(request):
     return HttpResponse("Hola, estás en la página de inicio")
+
+@api_view(['GET'])
+def allow_delete_routine(request):
+    id_routine = request.query_params.get('id_rutina')
+    print(id_routine)
+
+    seAsigna = SeAsigna.objects.filter(id_rutina = id_routine)
+
+    if seAsigna.exists(): 
+         allow = False
+    else:
+       allow = True 
+
+    return JsonResponse({'allow': allow})
+
         
