@@ -395,7 +395,7 @@ const CrudRoutines = () => {
           id_rutina: idRutina,
         },
       });
-      alert(response.data.allow);
+      //alert(response.data.allow);
       return response.data.allow;
     } catch (error) {
       console.error("Error al obtener la información", error);

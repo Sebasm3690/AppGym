@@ -423,7 +423,7 @@ const HistorialClienteCompleto = () => {
   };
 
   const handleLlenarCamposRutinaProgreso = (id_rutina, fecha, dia) => {
-    alert("Si entra");
+    //alert("Si entra");
     setIdRutina(id_rutina);
     setSelectedDay(dia);
     console.log("El id del cliente es: " + idCliente);

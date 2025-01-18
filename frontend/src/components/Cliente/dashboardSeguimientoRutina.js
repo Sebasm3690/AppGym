@@ -836,7 +836,7 @@ const FollowRoutines = () => {
   };
 
   const handleAgregarProgreso = async () => {
-    alert(JSON.stringify(allNotas));
+    //alert(JSON.stringify(allNotas));
     const allCompleted = verificarTodosCompletados();
     const allWithData = verificarSetsBlancos();
 
