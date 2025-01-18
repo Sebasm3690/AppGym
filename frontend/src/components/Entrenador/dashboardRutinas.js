@@ -495,67 +495,73 @@ const CrudRoutines = () => {
 
             <div className={`main-content ${isOpen ? "shrinked" : ""}`}>
               <Row>
-                {routines
-                  .filter(
-                    (routine) =>
-                      parseInt(routine.id_entrenador) ===
-                        parseInt(idEntrenador) && routine.tipo === "Creada"
-                  )
-                  .map((routine) => (
-                    <Col md={4} key={routine.id_rutina} className="mb-4">
-                      <Card>
-                        <Card.Body>
-                          {" "}
-                          <Card.Title className="w-100 text-start">
-                            <strong>{routine.nombre}</strong>
-                          </Card.Title>
-                          <Card.Text>
-                            {routine.descripcion ? (
-                              routine.descripcion
-                            ) : (
-                              <span className="text-muted">
-                                Sin descripción
-                              </span>
-                            )}
-                          </Card.Text>
-                          <Card.Text>
+                {routines && routines.length > 9 ? (
+                  routines
+                    .filter(
+                      (routine) =>
+                        parseInt(routine.id_entrenador) ===
+                          parseInt(idEntrenador) && routine.tipo === "Creada"
+                    )
+                    .map((routine) => (
+                      <Col md={4} key={routine.id_rutina} className="mb-4">
+                        <Card>
+                          <Card.Body>
                             {" "}
-                            {/*Duración: {routine.duracion} mins*/}
+                            <Card.Title className="w-100 text-start">
+                              <strong>{routine.nombre}</strong>
+                            </Card.Title>
                             <Card.Text>
-                              <strong>Enfoque:</strong> {routine.enfoque}
+                              {routine.descripcion ? (
+                                routine.descripcion
+                              ) : (
+                                <span className="text-muted">
+                                  Sin descripción
+                                </span>
+                              )}
                             </Card.Text>
-                            <div className="w-100 text-center">
-                              <Button
-                                variant="primary"
-                                className="me-2"
-                                onClick={() =>
-                                  handleLlenarCamposRutina(routine.id_rutina)
-                                }
-                              >
-                                <FontAwesomeIcon
-                                  icon={faPencilAlt}
-                                  className="icon"
-                                />{" "}
-                                {/*Editar*/}
-                              </Button>
-                              <Button
-                                variant="danger"
-                                onClick={() =>
-                                  handleShowModalEliminar(routine.id_rutina)
-                                }
-                              >
-                                <FontAwesomeIcon
-                                  icon={faTrashAlt}
-                                  className="icon"
-                                />{" "}
-                                {/*Eliminar*/}
-                              </Button>
-                            </div>
-                          </Card.Text>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
+                            <Card.Text>
+                              {" "}
+                              {/*Duración: {routine.duracion} mins*/}
+                              <Card.Text>
+                                <strong>Enfoque:</strong> {routine.enfoque}
+                              </Card.Text>
+                              <div className="w-100 text-center">
+                                <Button
+                                  variant="primary"
+                                  className="me-2"
+                                  onClick={() =>
+                                    handleLlenarCamposRutina(routine.id_rutina)
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faPencilAlt}
+                                    className="icon"
+                                  />{" "}
+                                  {/*Editar*/}
+                                </Button>
+                                <Button
+                                  variant="danger"
+                                  onClick={() =>
+                                    handleShowModalEliminar(routine.id_rutina)
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faTrashAlt}
+                                    className="icon"
+                                  />{" "}
+                                  {/*Eliminar*/}
+                                </Button>
+                              </div>
+                            </Card.Text>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    ))
+                ) : (
+                  <p className="w-100 text-center">
+                    No hay rutinas para mostrar
+                  </p>
+                )}
               </Row>
             </div>
           </Col>

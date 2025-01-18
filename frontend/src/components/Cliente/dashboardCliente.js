@@ -59,7 +59,7 @@ const ClientControl = () => {
 
   const idCliente = localStorage.getItem("idCliente");
   const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
-  const url = `${apiUrl}/${idCliente}`;
+  const url = `${apiUrl}/api/v1/client/${idCliente}`;
   const urlDispone = `${apiUrl}/obtenerDisponeCliente/${idCliente}/`;
   const urlMacros = `${apiUrl}/calcularTotalMacrosAlimentos/${idCliente}`;
   const urlMeals = `${apiUrl}/api/v1/parteDia/`;
@@ -285,7 +285,7 @@ const ClientControl = () => {
       const parsedNutrients = response.data.food.servings?.serving;
 
       if (!parsedNutrients) {
-        alert("No nutrient data found for this food item.");
+        //alert("No nutrient data found for this food item.");
         return;
       }
 
@@ -335,7 +335,7 @@ const ClientControl = () => {
       setShowModalNutrients(true);
     } catch (error) {
       console.error("Error obteniendo el alimento", error);
-      alert("An error occurred while fetching the food details.");
+      //alert("An error occurred while fetching the food details.");
     }
   };
 
@@ -412,7 +412,7 @@ const ClientControl = () => {
   const handleAddFood = () => {
     const urlAddFood = `${apiUrl}/addFood/`;
     console.log("Selected food:", JSON.stringify(selectedFood, null, 2));
-    alert(JSON.stringify(selectedFood, null, 2));
+    //alert(JSON.stringify(selectedFood, null, 2));
     const datos = {
       id_alimento: selectedFood.food_id,
       nombre: selectedFood.food_name,
@@ -429,7 +429,7 @@ const ClientControl = () => {
       metric_serving_unit: nutrients[0].metric_serving_unit,
       gramsEnabled: gramsEnabled,
     };
-    alert(JSON.stringify(datos, null, 2));
+    //alert(JSON.stringify(datos, null, 2));
     console.log("Si entra 2");
     try {
       axios.post(urlAddFood, datos).then((response) => {

@@ -1911,6 +1911,7 @@ const FollowRoutines = () => {
                                       e.target.checked
                                     )
                                   }
+                                  className="custom-checkbox"
                                 />
                               </td>
                             </tr>
