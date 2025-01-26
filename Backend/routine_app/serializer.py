@@ -10,7 +10,7 @@ class AdminSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Administrador
-		fields = ['id_administrador','nombre','apellido','email', 'cedula', 'username', 'password','borrado']
+		fields = ['id_administrador','nombre','apellido','email', 'cedula', 'username', 'password']
 	
 	def create(self, validated_data): #validated_data contiene los datos que se han enviado a través de una solicitud HTTP
 		user_data = validated_data.pop('user') #se elimina la clave 'user' de validated_data
