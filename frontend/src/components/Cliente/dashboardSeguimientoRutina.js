@@ -473,71 +473,79 @@ const FollowRoutines = () => {
     setShowModalEjerciciosInstrucciones(true);
   };
 
-  const handleLlenarCamposRutinaEjercicio = (id_rutina, value) => {
-    setIdRutina(id_rutina);
-    console.log("El id del cliente es: " + idCliente);
-    console.log("El id de la rutina es: " + id_rutina);
-    console.log("Pertenece al dia: " + selectDay);
+  const handleLlenarCamposRutinaEjercicio = async (id_rutina, value) => {
+    var allow = await allowInsertar(); // Wait for the result of allowActualizar
+    if (allow === true) {
+      setIdRutina(id_rutina);
+      console.log("El id del cliente es: " + idCliente);
+      console.log("El id de la rutina es: " + id_rutina);
+      console.log("Pertenece al dia: " + selectDay);
 
-    const url = `${apiUrl}/obtenerRutinaAsignadaDetalleCompleto/`;
-    axios
-      .get(url, {
-        params: {
-          id_cliente: idCliente,
-          dia: selectDay,
-          id_rutina: id_rutina,
-        },
-      })
-      .then((response) => {
-        console.log("Los sets son:" + JSON.stringify(response.data, null, 2));
-        setRutinaCompletaCliente(response.data.asignas);
-        setImagenes(response.data.imagenes);
-        setEjerciciosIds(response.data.ejerciciosIds);
-        setAllNotasEntrenador(
-          response.data.ejerciciosIds.reduce((acc, id, index) => {
-            acc[id] = response.data.notas_asigna[index] || "";
-            return acc;
-          }, {})
-        );
-        setAllNotasProgreso(
-          response.data.ejerciciosIds.reduce((acc, id, index) => {
-            acc[id] = response.data.notas_progreso[index] || "";
-            return acc;
-          }, {})
-        );
-        setAllDescansos(
-          response.data.ejerciciosIds.reduce((acc, id, index) => {
-            acc[id] = response.data.descansos_asigna[index] || "";
-            return acc;
-          }, {})
-        );
-        setAllDescansosProgreso(
-          response.data.ejerciciosIds.reduce((acc, id, index) => {
-            if (!acc[id]) {
-              acc[id] = { total: 0, count: 0 };
-            }
-            // Sum the rest times for this exercise
-            if (response.data.descansos_progreso[index]) {
-              acc[id].total += response.data.descansos_progreso[index];
-              acc[id].count += 1;
-            }
-            return acc;
-          }, {})
-        );
-        setNombresEjercicios(response.data.nombresEjercicios);
-        if (value === 1) {
-          setShowModalFullRoutine(true);
-        }
-        //alert(JSON.stringify(response.data.sets, null, 2));
-        const setsData = response.data.sets || {};
-        //alert("Entra aqui");
-        setSets(setsData);
-        //alert(JSON.stringify(setsData, null, 2));
-        setInitialSets(setsData);
-        console.log(
-          JSON.stringify("Los sets son:" + response.data.sets, null, 2)
-        );
-      });
+      const url = `${apiUrl}/obtenerRutinaAsignadaDetalleCompleto/`;
+      axios
+        .get(url, {
+          params: {
+            id_cliente: idCliente,
+            dia: selectDay,
+            id_rutina: id_rutina,
+          },
+        })
+        .then((response) => {
+          console.log("Los sets son:" + JSON.stringify(response.data, null, 2));
+          setRutinaCompletaCliente(response.data.asignas);
+          setImagenes(response.data.imagenes);
+          setEjerciciosIds(response.data.ejerciciosIds);
+          setAllNotasEntrenador(
+            response.data.ejerciciosIds.reduce((acc, id, index) => {
+              acc[id] = response.data.notas_asigna[index] || "";
+              return acc;
+            }, {})
+          );
+          setAllNotasProgreso(
+            response.data.ejerciciosIds.reduce((acc, id, index) => {
+              acc[id] = response.data.notas_progreso[index] || "";
+              return acc;
+            }, {})
+          );
+          setAllDescansos(
+            response.data.ejerciciosIds.reduce((acc, id, index) => {
+              acc[id] = response.data.descansos_asigna[index] || "";
+              return acc;
+            }, {})
+          );
+          setAllDescansosProgreso(
+            response.data.ejerciciosIds.reduce((acc, id, index) => {
+              if (!acc[id]) {
+                acc[id] = { total: 0, count: 0 };
+              }
+              // Sum the rest times for this exercise
+              if (response.data.descansos_progreso[index]) {
+                acc[id].total += response.data.descansos_progreso[index];
+                acc[id].count += 1;
+              }
+              return acc;
+            }, {})
+          );
+          setNombresEjercicios(response.data.nombresEjercicios);
+          if (value === 1) {
+            setShowModalFullRoutine(true);
+          }
+          //alert(JSON.stringify(response.data.sets, null, 2));
+          const setsData = response.data.sets || {};
+          //alert("Entra aqui");
+          setSets(setsData);
+          //alert(JSON.stringify(setsData, null, 2));
+          setInitialSets(setsData);
+          console.log(
+            JSON.stringify("Los sets son:" + response.data.sets, null, 2)
+          );
+        });
+    } else {
+      show_alerta(
+        "Se debe esperar a que el entrenador actualice la rutina",
+        "warning"
+      );
+    }
   };
 
   const handleLlenarCamposRutinaProgreso = (id_rutina, fecha) => {
@@ -870,7 +878,7 @@ const FollowRoutines = () => {
       });
     } else {
       show_alerta(
-        "Se debe esperar hasta que el entrenador asigne nuevos registros",
+        "Se debe esperar hasta que el entrenador actualice la rutina",
         "warning"
       );
     }
@@ -1829,6 +1837,7 @@ const FollowRoutines = () => {
                     onClick={() =>
                       handleMostrarInstruccionesEjercicio(ejercicioId)
                     }
+                    style={{ cursor: "pointer" }}
                   >
                     {nombresEjercicios[imgIndex]} ({imgIndex + 1})
                   </Card.Title>
@@ -2183,7 +2192,7 @@ const FollowRoutines = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">
-            Rutina asignada1
+            Rutina asignada
           </Modal.Title>
         </Modal.Header>
 

@@ -207,7 +207,7 @@ const WeeklyRoutinePlan = ({
                                   <FontAwesomeIcon
                                     icon={faHourglassHalf}
                                     className="text-success w-100 icon"
-                                    title="Completado"
+                                    title="En espera"
                                   />
                                 )}
                               </div>

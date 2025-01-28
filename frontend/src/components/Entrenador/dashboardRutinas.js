@@ -897,7 +897,7 @@ const CrudRoutines = () => {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Eliminar Entrenador</Modal.Title>
+          <Modal.Title>Eliminar Rutina</Modal.Title>
         </Modal.Header>
         <Modal.Body>¿Está seguro que desea eliminar la rutina?</Modal.Body>
         <Modal.Footer>

@@ -16,6 +16,7 @@ import aboutUs from "../../assets/about-us-image.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import NavScrollExample from "../Otros/Navbar";
+import { Curve } from "recharts";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -60,7 +61,12 @@ const Home = () => {
         <h2>Iniciar sesión como:</h2>
         <Row className="justify-content-center">
           <Col xs={12} md={4} lg={3} className="text-center">
-            <Image src={adminImage} className={styles.loginImage} />
+            <Image
+              src={adminImage}
+              className={styles.loginImage}
+              style={{ cursor: "pointer" }}
+              onClick={() => handleLogin("/loginAdmin")}
+            />
             <h5>ADMINISTRADOR</h5>
             <Button
               variant="warning"
@@ -71,7 +77,12 @@ const Home = () => {
             </Button>
           </Col>
           <Col xs={12} md={4} lg={3} className="text-center">
-            <Image src={trainerImage} className={styles.loginImage} />
+            <Image
+              src={trainerImage}
+              className={styles.loginImage}
+              style={{ cursor: "pointer" }}
+              onClick={() => handleLogin("/loginEntrenador")}
+            />
             <h5>ENTRENADOR</h5>
             <Button
               variant="warning"
@@ -82,7 +93,12 @@ const Home = () => {
             </Button>
           </Col>
           <Col xs={12} md={4} lg={3} className="text-center">
-            <Image src={clientImage} className={styles.loginImage} />
+            <Image
+              src={clientImage}
+              className={styles.loginImage}
+              style={{ cursor: "pointer" }}
+              onClick={() => handleLogin("/loginCliente")}
+            />
             <h5>CLIENTE</h5>
             <Button
               variant="warning"
@@ -128,6 +144,15 @@ const Home = () => {
             <Button
               variant="warning"
               className={`mt-3 ${styles.contactButton}`}
+              onClick={() => {
+                const phoneNumer = "+593995868730";
+                const message =
+                  "¡Hola! Quiero más información sobre Campos Fitness.";
+                const whatsappLink = `https://wa.me/${phoneNumer}?text=${encodeURIComponent(
+                  message
+                )}`;
+                window.open(whatsappLink, "_blank");
+              }}
             >
               Contáctanos
             </Button>

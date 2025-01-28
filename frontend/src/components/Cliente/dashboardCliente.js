@@ -272,21 +272,38 @@ const ClientControl = () => {
   };
 
   const handleViewDetails = async (food_id, nombre) => {
-    const query = nombre !== "" ? nombre : searchQuery || "";
-    if (nombre !== "") {
-      setSearchQuery(nombre);
-    }
+    const query = nombre || searchQuery || "";
+    if (nombre) setSearchQuery(nombre);
     console.log("El id de la comida es: " + food_id);
     try {
       const response = await axios.get(
         `${apiUrl}/food/${food_id}/?search=${query}`
       );
 
-      const parsedNutrients = response.data.food.servings?.serving;
+      const parsedNutrients = response.data.food.servings?.serving || [];
 
-      if (!parsedNutrients) {
-        //alert("No nutrient data found for this food item.");
+      if (parsedNutrients.length === 0) {
+        show_alerta(
+          "No se encontraron datos de nutrientes para este alimento",
+          "warning"
+        );
         return;
+      }
+
+      //Translate 'food_name' from the selected food
+      const selectedFoodTranslated = response.data.food;
+      console.log(
+        "Selected food:",
+        JSON.stringify(selectedFoodTranslated, null, 2)
+      );
+      try {
+        const translatedFoodName = await translateToSpanish(
+          selectedFoodTranslated.food_name
+        );
+        selectedFoodTranslated.food_name = translatedFoodName;
+        //alert(translatedFoodName);
+      } catch (error) {
+        console.error(error);
       }
 
       // Translate serving descriptions
@@ -296,9 +313,13 @@ const ClientControl = () => {
             const translatedDescription = await translateToSpanish(
               serving.serving_description
             );
+
+            const decodedDescription = decodeHtmlEntities(
+              translatedDescription
+            );
             return {
               ...serving,
-              serving_description: translatedDescription,
+              serving_description: decodedDescription,
             };
           } catch (error) {
             console.error(
@@ -311,8 +332,7 @@ const ClientControl = () => {
       );
 
       setNutrients(translatedServings); // Set the translated nutrients
-
-      const firstNutrient = translatedServings[0]; // Use translated data
+      const [firstNutrient] = translatedServings; // Use translated data
 
       const metricServingAmount = firstNutrient?.metric_serving_amount || null;
       const metricServingUnit = firstNutrient?.metric_serving_unit || null;
@@ -331,7 +351,7 @@ const ClientControl = () => {
         setEquivalencia(metricServingUnit === "oz" ? 28.3495 : 1); // Set equivalence
       }
 
-      setSelectedFood(response.data.food);
+      setSelectedFood(selectedFoodTranslated);
       setShowModalNutrients(true);
     } catch (error) {
       console.error("Error obteniendo el alimento", error);
@@ -352,10 +372,32 @@ const ClientControl = () => {
           },
         }
       );
-      return response.data.data.translations[0].translatedText;
+      return response.data.data.translations[0]?.translatedText || text;
     } catch (error) {
       console.error("Translation error", error);
       return text; // Fallback to original text if translation fails
+    }
+  };
+
+  const translateToEnglish = async (text) => {
+    try {
+      const response = await axios.post(
+        "https://translation.googleapis.com/language/translate/v2",
+        {},
+        {
+          params: {
+            q: text,
+            target: "en",
+            source: "es", // Explicitly set the source language to Spanish
+            key: "AIzaSyA9MJWfPY16RCRZL9Z91r4n1e05f1HkgYM",
+          },
+        }
+      );
+      console.log("Translation response:", response.data); // Log the response
+      return response.data.data.translations[0]?.translatedText || text;
+    } catch (error) {
+      console.error("Translation error", error);
+      return text;
     }
   };
 
@@ -363,8 +405,10 @@ const ClientControl = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      const englishSearchQuery = await translateToEnglish(searchQuery); // Await the resolved value
+      //alert(englishSearchQuery); // Now this will show the translated query
       const response = await axios.get(
-        `${apiUrl}/nutrition/?search=${searchQuery}`
+        `${apiUrl}/nutrition/?search=${englishSearchQuery}`
       );
 
       console.log("Foods v3:", JSON.stringify(response.data, null, 2));
@@ -606,6 +650,13 @@ const ClientControl = () => {
     setGramos(100);
   };
 
+  // Decoder function
+  const decodeHtmlEntities = (str) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = str;
+    return txt.value;
+  };
+
   /*const meals = [
     { icon: faCoffee, name: "Desayuno", calories: 200 },
     { icon: faUtensils, name: "Almuerzo", calories: 300 },
@@ -708,7 +759,9 @@ const ClientControl = () => {
                         {food.food_name}
                       </Card.Title>
                       <p className="food-card-serving">
-                        {food.servings.serving[0].serving_description}
+                        {decodeHtmlEntities(
+                          food.servings.serving[0].serving_description
+                        )}
                       </p>
                       <p className="food-card-calories">
                         {food.servings.serving[0].calories + "kcal"}

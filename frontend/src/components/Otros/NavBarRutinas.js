@@ -89,7 +89,7 @@ const NavScrollExample = ({ onSearchResults, onLogout }) => {
                       {trainer.nombre + " " + trainer.apellido}
                     </span>
                     <Image
-                      src="https://previews.123rf.com/images/metelsky/metelsky1809/metelsky180900233/109815470-man-avatar-profile-male-face-icon-vector-illustration.jpg"
+                      src={trainer.imagen}
                       roundedCircle
                       width="45"
                       height="45"

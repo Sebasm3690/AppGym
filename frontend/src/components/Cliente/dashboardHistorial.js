@@ -1675,7 +1675,7 @@ const HistorialClienteCompleto = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title className="w-100 text-center">
-            Rutina asignada1
+            Rutina asignada
           </Modal.Title>
         </Modal.Header>
 

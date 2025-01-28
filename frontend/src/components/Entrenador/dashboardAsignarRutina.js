@@ -1126,33 +1126,36 @@ const AssignRoutines = () => {
   //Eliminar rutina -> Falta enviar el id del cliente como parámetro para eliminar la rutina asignada
   const handleEliminarRutinaAsignada = () => {
     allowEliminar();
-    //if (allowDelete === true) {
-    console.log(idRutina);
-    console.log(idCliente);
-    const urlEliminarRutinaAsignada = `${apiUrl}/eliminarRutinaAsignada/${idRutina}/${idCliente}/`;
-    axios
-      .delete(urlEliminarRutinaAsignada)
-      .then((response) => {
-        show_alerta("Rutina asignada eliminada con éxito", "success");
+    if (allowDelete === true) {
+      console.log(idRutina);
+      console.log(idCliente);
+      const urlEliminarRutinaAsignada = `${apiUrl}/eliminarRutinaAsignada/${idRutina}/${idCliente}/`;
+      axios
+        .delete(urlEliminarRutinaAsignada)
+        .then((response) => {
+          show_alerta("Rutina asignada eliminada con éxito", "success");
 
-        setFindedRoutines((prevRoutines) =>
-          prevRoutines.filter((routine) => routine.id_rutina !== idRutina)
-        );
+          setFindedRoutines((prevRoutines) =>
+            prevRoutines.filter((routine) => routine.id_rutina !== idRutina)
+          );
 
-        setShowModalRutinaEliminar(false);
-        setShowModalRutinasDisponibles(false);
+          setShowModalRutinaEliminar(false);
+          setShowModalRutinasDisponibles(false);
 
-        //Refresh the page after 1 second
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      })
-      .catch((error) => {
-        console.error("Error al eliminar la rutina asignada", error);
-      });
-    /*} else {
-      show_alerta("No tiene permiso para eliminar la rutina", "error");
-    }*/
+          //Refresh the page after 1 second
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        })
+        .catch((error) => {
+          console.error("Error al eliminar la rutina asignada", error);
+        });
+    } else {
+      show_alerta(
+        "No se puede eliminar una rutina con seguimiento del cliente",
+        "warning"
+      );
+    }
   };
 
   const handleDeleteSet = (exerciseId, setIndex) => {
@@ -2650,18 +2653,11 @@ const AssignRoutines = () => {
 
               {/* Weekly Navigation */}
               <div className="navigation-controls">
-                <Button
-                  variant="outline-primary"
-                  onClick={() => adjustWeek(-1)}
-                  /*style={{ minWidth: "160px" }}*/
-                >
-                  Semana anterior
-                </Button>
                 <Dropdown>
                   <Dropdown.Toggle variant="primary" id="dropdown-basic">
                     {getDropDownLabel()}
                   </Dropdown.Toggle>
-                  <Dropdown.Menu>
+                  <Dropdown.Menu className="w-100 text-center">
                     <Dropdown.Item
                       onClick={() => handleDateRangeChange("esta semana")}
                     >
@@ -2674,17 +2670,24 @@ const AssignRoutines = () => {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
+              </div>
+
+              {/* Monthly and Yearly Navigation */}
+              <div className="navigation-controls-grid mt-3">
+                <Button
+                  variant="outline-primary"
+                  onClick={() => adjustWeek(-1)}
+                  /*style={{ minWidth: "160px" }}*/
+                >
+                  <FontAwesomeIcon icon={faChevronLeft} /> Semana anterior
+                </Button>
                 <Button
                   variant="outline-primary"
                   onClick={() => adjustWeek(1)}
                   /*style={{ minWidth: "180px" }}*/
                 >
-                  Semana siguiente
+                  Semana siguiente <FontAwesomeIcon icon={faChevronRight} />
                 </Button>
-              </div>
-
-              {/* Monthly and Yearly Navigation */}
-              <div className="navigation-controls-grid mt-3">
                 <Button
                   variant="outline-primary"
                   onClick={() => adjustMonth(-1)}
@@ -2907,6 +2910,7 @@ const AssignRoutines = () => {
                       onClick={() =>
                         handleMostrarInstruccionesEjercicio(ejercicioId)
                       }
+                      style={{ cursor: "pointer" }}
                     >
                       {nombresEjercicios[imgIndex]} ({imgIndex + 1})
                     </Card.Title>
@@ -3159,14 +3163,11 @@ const AssignRoutines = () => {
             {/* Navigation Controls */}
 
             <div className="navigation-controls">
-              <Button variant="outline-primary" onClick={() => adjustWeek(-1)}>
-                Semana anterior
-              </Button>
               <Dropdown>
                 <Dropdown.Toggle variant="primary" id="dropdwon-basic">
                   {getDropDownLabel()}
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
+                <Dropdown.Menu className="w-100 text-center">
                   <Dropdown.Item
                     onClick={() => handleDateRangeChange("esta semana")}
                   >
@@ -3179,13 +3180,16 @@ const AssignRoutines = () => {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              <Button variant="outline-primary" onClick={() => adjustWeek(1)}>
-                Semana siguiente
-              </Button>
             </div>
 
             {/* Monthly and Yearly Navigation */}
             <div className="navigation-controls-grid">
+              <Button variant="outline-primary" onClick={() => adjustWeek(-1)}>
+                <FontAwesomeIcon icon={faChevronLeft} /> Semana anterior
+              </Button>
+              <Button variant="outline-primary" onClick={() => adjustWeek(1)}>
+                Semana siguiente <FontAwesomeIcon icon={faChevronRight} />
+              </Button>
               <Button
                 variant="outline-primary"
                 onClick={() => adjustMonth(-1)}

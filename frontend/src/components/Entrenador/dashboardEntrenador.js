@@ -185,7 +185,7 @@ const CrudClients = () => {
       show_alerta("La membresia es requerida", "warning");
     } else if (fechaInicio > fechaFin) {
       show_alerta(
-        "La fecha de inicio de la membresia debe ser menor a la fecha de fin",
+        "La fecha de inscripción de la membresia debe ser menor a la fecha de fin",
         "warning"
       );
     } else {
@@ -673,6 +673,11 @@ const CrudClients = () => {
     } else if (contrasenia.trim() === "") {
       show_alerta("La contraseña es requerida", "warning");
       return;
+    } else if (fechaInicio > fechaFin) {
+      show_alerta(
+        "La fecha de inscripción de la membresia debe ser menor a la fecha de fin",
+        "warning"
+      );
     } else {
       setShowModalEditar(false);
       setStep(2);
