@@ -137,6 +137,9 @@ DATABASES = {
         'PASSWORD': '3f75p1gG3Gr8WUbaQtaxEzwaDzzO3Xnu',  # Password
         'HOST': 'dpg-cu2u36popnds73fvnpag-a.oregon-postgres.render.com',  # Host
         'PORT': '5432',  # Port
+        'OPTIONS': {
+            'sslmode': 'require'  # Ensure SSL is enabled
+        }
     }
 }
 
