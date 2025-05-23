@@ -56,6 +56,13 @@ const CaloriesDashboard = () => {
   const [totalCalorias, setTotalCalorias] = useState(0);
   const [promedioCalorias, setPromedioCalorias] = useState(0);
   const navigate = useNavigate();
+  //const [currentReport, setCurrentReport] = useState("progress");
+  /*const reports = {
+    progress:
+      "https://app.powerbi.com/view?r=eyJrIjoiMjIyMThkYzQtMmY5ZC00Y2RlLTgwMjAtMmU0ZTRhOWY1ZjhlIiwidCI6ImQ3Zjg2NzEwLTAxZTEtNDYxZC04NTk5LTc1OGRlNDU0MmUyYiIsImMiOjR9",
+    calories:
+      "https://app.powerbi.com/view?r=eyJrIjoiMjIyMThkYzQtMmY5ZC00Y2RlLTgwMjAtMmU0ZTRhOWY1ZjhlIiwidCI6ImQ3Zjg2NzEwLTAxZTEtNDYxZC04NTk5LTc1OGRlNDU0MmUyYiIsImMiOjR9&pageName=e3a5dcf00e60ba148156", // Add another report
+  };*/
   const totalMacros =
     macrosHoy.total_proteina +
     macrosHoy.total_carbohidratos +
@@ -431,6 +438,34 @@ const CaloriesDashboard = () => {
             </div>
           </Col>
         </Row>
+
+        {/*<div>
+          <h2>Power BI Reports</h2>
+          <button onClick={() => setCurrentReport("progress")}>Progress</button>
+          <button onClick={() => setCurrentReport("calories")}>Calories</button>
+
+          <div
+            style={{
+              width: "100%",
+              height: "80vh",
+              overflow: "hidden",
+              marginTop: "20px",
+            }}
+          >
+            <iframe
+              title="Power BI Report"
+              width="100%"
+              height="100%"
+              src={reports[currentReport]}
+              frameBorder="0"
+              allowFullScreen={true}
+              style={{
+                borderRadius: "10px",
+                boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
+              }}
+            ></iframe>
+          </div>
+        </div>*/}
 
         <Row>
           {/* Calories */}

@@ -36,7 +36,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 DEBUG = 'RENDER' not in os.environ
 
 # https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [    
+    '127.0.0.1',
+    'localhost',
+    '1acf-2800-bf0-2420-13c-75ad-f115-289b-df2a.ngrok-free.app', ] # Add your ngrok URL
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -49,7 +52,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
+ 
 
 # Application definition
 
@@ -132,16 +135,26 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'app_gym_b8j8',  # Database Name
-        'USER': 'app_gym_b8j8_user',  # Username
-        'PASSWORD': '3f75p1gG3Gr8WUbaQtaxEzwaDzzO3Xnu',  # Password
-        'HOST': 'dpg-cu2u36popnds73fvnpag-a.oregon-postgres.render.com',  # Host
+        'NAME': 'app_gym_db',  # Database Name
+        'USER': 'gym_admin',  # Username
+        'PASSWORD': '2CJrFsSJqVM46AnX4wkheEFXOEqWvryr',  # Password
+        'HOST': 'dpg-d0n9fvuuk2gs73bnh840-a.render.com',  # Host
         'PORT': '5432',  # Port
-        'OPTIONS': {
-            'sslmode': 'require'  # Ensure SSL is enabled
-        }
     }
 }
+
+
+
+#DATABASES = {
+    #'default': {
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'NAME': 'AppGym6',
+        #'USER': 'postgres',
+        #'PASSWORD': 'awayouname11',
+        #'HOST': 'localhost',  
+        #'PORT': '5432',
+    #}
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
