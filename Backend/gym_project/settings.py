@@ -29,7 +29,7 @@ environ.Env.read_env()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-pqpluknjk)4bux^w)@1wyiznic#9^xmr#v+aye6)#+h004uad('
-SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+SECRET_KEY = env('SECRET_KEY', default='unsafe-default-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
@@ -112,36 +112,39 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
-    #'default': dj_database_url.config(
-        #default='postgres://postgres:awayouname11@localhost:5432/AppGym6',  # Local fallback
-        #conn_max_age=600,
-        #ssl_require=True if 'RENDER' in os.environ else False  # Enable SSL only in production
-        #ssl_require=False  # Set this to True if using SSL in production
-    #) 
+if os.getenv("RENDER"):
+    # 🔒 Producción (Render)
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # 🧪 Local
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'AppGym6',
+            'USER': 'postgres',
+            'PASSWORD': 'awayouname11',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 
-    
-    #{
-        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        #'NAME': 'AppGym6',
-        #'USER': 'postgres',
-        #'PASSWORD': 'awayouname11',
-        #'HOST': 'localhost',  
+
+#DATABASES = {
+    #'default': {
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': 'app_gym_db',
+        #'USER': 'admin_gym',
+        #'PASSWORD': '2CJrFsSJqVM46AnX4wkheEFXOEqWvryr',
+        #'HOST': 'dpg-d0n9fvuuk2gs73bnh840-a.oregon-postgres.render.com',
         #'PORT': '5432',
-    #}      
+    #}
 #}
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'app_gym_db',  # Database Name
-        'USER': 'gym_admin',  # Username
-        'PASSWORD': '2CJrFsSJqVM46AnX4wkheEFXOEqWvryr',  # Password
-        'HOST': 'dpg-d0n9fvuuk2gs73bnh840-a.render.com',  # Host
-        'PORT': '5432',  # Port
-    }
-}
 
 
 
