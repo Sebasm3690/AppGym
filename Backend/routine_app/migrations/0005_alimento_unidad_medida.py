@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='alimento',
             name='unidad_medida',
             field=models.CharField(default='g', max_length=20),
