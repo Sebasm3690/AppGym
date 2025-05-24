@@ -516,7 +516,7 @@ const CrudRoutines = () => {
 
             <div className={`main-content ${isOpen ? "shrinked" : ""}`}>
               <Row>
-                {routines && routines.length > 9 ? (
+                {routines /*&& routines.length > 9*/ ? (
                   routines
                     .filter(
                       (routine) =>

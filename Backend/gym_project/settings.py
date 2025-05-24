@@ -112,26 +112,26 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if os.getenv("RENDER"):
+#if os.getenv("RENDER"):
     # 🔒 Producción (Render)
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
+DATABASES = {
+    'default': dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
+#else:
     # 🧪 Local
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'AppGym6',
-            'USER': 'postgres',
-            'PASSWORD': 'awayouname11',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
-    }
+    #DATABASES = {
+        #'default': {
+            #'ENGINE': 'django.db.backends.postgresql',
+            #'NAME': 'AppGym6',
+            #'USER': 'postgres',
+            #'PASSWORD': 'awayouname11',
+            #'HOST': 'localhost',
+            #'PORT': '5432',
+        #}
+    #}
 
 
 #DATABASES = {
