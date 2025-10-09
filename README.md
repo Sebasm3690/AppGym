@@ -17,4 +17,4 @@ A full-stack web application that allows admins to manage trainers, trainers can
 ## ⚙️ Installation & Setup
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/exercise-app.git
+https://github.com/Sebasm3690/AppGym.git
