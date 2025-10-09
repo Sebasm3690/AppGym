@@ -1,6 +1,6 @@
 # 🏋️ Exercise Routine App
 
-A full-stack web application that allows admins to manage trainers, trainers can manage clients and routines and clients can follow routines and track their calories
+A full-stack web application that allows admins to manage trainers, trainers can manage clients and routines, and clients can follow routines and track their calories.
 
 ## 🚀 Features
 - User authentication (register/login)
@@ -16,4 +16,6 @@ A full-stack web application that allows admins to manage trainers, trainers can
 
 ## ⚙️ Installation & Setup
 1. Clone this repository:
-   ```bash https://github.com/Sebasm3690/AppGym.git
+   ```bash
+   git clone https://github.com/Sebasm3690/AppGym.git
+   cd AppGym
