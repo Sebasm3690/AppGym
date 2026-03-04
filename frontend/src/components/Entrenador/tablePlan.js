@@ -139,10 +139,11 @@ const WeeklyRoutinePlan = ({
               <td>
                 <Button
                   variant="primary"
-                  className="btn-primary w-md-auto px-4 py-2 me-2 fw-bold gradient-secondary"
+                  className="btn-primary px-4 py-2 me-2 fw-bold d-flex align-items-center gap-2 gradient-secondary white-space-nowrap"
                   onClick={() => onSelectAssignedRoutines(day)}
                 >
-                  <FontAwesomeIcon icon={faEye} /> Rutinas asignadas
+                  <FontAwesomeIcon icon={faEye} />
+                  <span className="text-nowrap">Rutinas asignadas</span>
                 </Button>
                 {/*<Button
                   variant="success"

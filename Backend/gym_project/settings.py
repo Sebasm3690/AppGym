@@ -39,6 +39,7 @@ DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = [    
     '127.0.0.1',
     'localhost',
+    '192.168.100.11',
     '1acf-2800-bf0-2420-13c-75ad-f115-289b-df2a.ngrok-free.app', ] # Add your ngrok URL
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -112,26 +113,26 @@ WSGI_APPLICATION = 'gym_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#if os.getenv("RENDER"):
+if 'RENDER' in os.environ:
     # 🔒 Producción (Render)
-DATABASES = {
-    'default': dj_database_url.config(
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
-#else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
     # 🧪 Local
-    #DATABASES = {
-        #'default': {
-            #'ENGINE': 'django.db.backends.postgresql',
-            #'NAME': 'AppGym6',
-            #'USER': 'postgres',
-            #'PASSWORD': 'awayouname11',
-            #'HOST': 'localhost',
-            #'PORT': '5432',
-        #}
-    #}
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'AppGym6',
+            'USER': 'postgres',
+            'PASSWORD': 'awayouname11',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 
 
 #DATABASES = {
