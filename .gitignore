@@ -1,0 +1,15 @@
+# Python virtual environments
+venv/
+env/
+Backend/venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Frontend dependencies
+node_modules/
+frontend/node_modules/
+Frontend/node_modules

@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.50202e7c.css",
+    "main.js": "/static/js/main.1a4c97b7.js",
+    "static/media/gymHome.png": "/static/media/gymHome.bcd5d5f41bfbd736024c.png",
+    "static/media/trainer-image.png": "/static/media/trainer-image.42ae5095de130e5cc567.png",
+    "static/media/logo.png": "/static/media/logo.645aa3e4d399e040e443.png",
+    "static/media/CamposNutrition2.png": "/static/media/CamposNutrition2.0d69e01c6562f8c60aa1.png",
+    "static/media/Rutinas.jpg": "/static/media/Rutinas.04c1c35629571e39db4b.jpg",
+    "static/media/ControlCalorico.jpg": "/static/media/ControlCalorico.5216178265d66dfc2f30.jpg",
+    "static/media/porDefectoFood.jpg": "/static/media/porDefectoFood.a4210d2fce65ff6e2fe7.jpg",
+    "static/media/admin-image.jpg": "/static/media/admin-image.1fcf4d77dfc70a623508.jpg",
+    "static/media/about-us-image.jpg": "/static/media/about-us-image.8d2c8fe4d0897a0870fb.jpg",
+    "static/media/loginGym.jpg": "/static/media/loginGym.f6cce666277115b71067.jpg",
+    "static/media/user-admin.png": "/static/media/user-admin.9f434f23f40e91b48bd1.png",
+    "static/media/client-image.jpg": "/static/media/client-image.a118036323e88729907f.jpg",
+    "index.html": "/index.html",
+    "main.50202e7c.css.map": "/static/css/main.50202e7c.css.map",
+    "main.1a4c97b7.js.map": "/static/js/main.1a4c97b7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.50202e7c.css",
+    "static/js/main.1a4c97b7.js"
+  ]
+}
