@@ -1,0 +1,11 @@
+# Passwords and Secrets
+.env
+*.sqlite3
+
+# Python / Django (Backend)
+venv/
+__pycache__/
+*.pyc
+media/
+
+

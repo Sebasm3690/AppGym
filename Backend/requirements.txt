@@ -1,0 +1,12 @@
+Django
+Pillow
+streamlit
+googletrans==4.0.0-rc1
+django-environ
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+psycopg2-binary
+django-modeltranslation
+django-redis
+whitenoise

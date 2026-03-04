@@ -21,7 +21,7 @@ router.register(r'compuesta',CompoundView,'compuesta')
 router.register(r'seAsigna',AssignedView,'seAsigna')
 router.register(r'parteDia',PartOfDayView,'parteDia')
 router.register(r'dispone',DisponeView,'dispone')
-router.register(r'nivelActividad',NivelActividadView,'nivelActividad')
+#router.register(r'nivelActividad',NivelActividadView,'nivelActividad')
 router.register(r'membresia',MembresiaView,'membresia')
 
 
