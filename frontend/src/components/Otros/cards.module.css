@@ -1,0 +1,109 @@
+/* styles.css */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.card {
+  width: 18rem;
+  margin: 1rem 0 0 3rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  transition: transform 0.2 ease, box-shadow 0.2 ease;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1rem;
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: "bold";
+  text-align: center;
+  margin-top: 10px;
+  color: #333;
+}
+
+.cardText {
+  font-size: 0.9rem;
+  text-align: center;
+  color: #555;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.roundedImage {
+  border-radius: 50%; /* Esto hará que la imagen sea circular */
+  width: 100%; /* Asegúrate de que la imagen ocupe todo el espacio del contenedor */
+  height: auto; /* Mantén la proporción de la imagen */
+  object-fit: cover; /* Asegúrate de que la imagen cubra el contenedor sin distorsionarse */
+}
+
+.overlayText {
+  position: absolute;
+  bottom: 86px;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 2em;
+}
+
+.weekdaysContent {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center all cards horizontally */
+  align-items: center; /* Align cards vertically */
+  padding: 20px; /* Uniform padding */
+  margin: 0 auto; /* Center the content block horizontally */
+  max-width: 1200px;
+  transition: all 0.3s ease-in-out;
+}
+
+.showWeekDaysButton {
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #666;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .weekdaysContent {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .card {
+    margin: 1rem 0 0 1.5rem;
+  }
+  .cardContainer {
+    margin-left: 1px;
+  }
+}

@@ -1,0 +1,16 @@
+.container-dashboard {
+  padding: 20px;
+  margin-left: 245px;
+}
+
+.date-navigation {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .container-dashboard {
+    margin-left: 0;
+    padding: 0;
+  }
+}

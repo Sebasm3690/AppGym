@@ -1,0 +1,42 @@
+.chart-container {
+  padding: 20px;
+  background-color: #f8f9fa; /* Light background */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.navigation-controls {
+  margin-bottom: 20px;
+}
+
+.navigation-controls .btn {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px;
+}
+
+/*.text-center {
+  font-size: 18px;
+  font-weight: bold;
+  color: #495057; /* Dark text */
+/*}*/
+
+.custom-modal-size .modal-dialog {
+  max-width: 680px; /* Adjust width */
+  width: 90%; /* Responsive width */
+}
+
+.custom-modal-size .modal-body {
+  max-height: 80vh; /* Keep height responsive */
+  overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+@media (max-width: 768px) {
+  .navigation-controls {
+    flex-direction: column;
+  }
+  .navigation-controls .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

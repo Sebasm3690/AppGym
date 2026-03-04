@@ -1,0 +1,23 @@
+/* components/Otros/footer.css */
+.footer {
+  background-color: #343a40; /* Color de fondo para combinar con el navbar y el sidebar */
+  color: #fff;
+  padding: 20px 0;
+}
+
+.footer h5 {
+  color: #fff;
+}
+
+.footer p {
+  color: #ccc;
+}
+
+.footer .social-icons a {
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer .social-icons a:hover {
+  color: #adb5bd; /* Color de hover para los íconos sociales */
+}

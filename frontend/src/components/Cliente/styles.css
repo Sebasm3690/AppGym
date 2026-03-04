@@ -1,0 +1,300 @@
+p {
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  color: #333; /* Darker gray for better readability */
+}
+
+/****Food search-bar*****/
+
+.search-bar-form {
+  margin-top: 20px;
+}
+
+.search-bar-input-group {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.search-bar-input {
+  border: none;
+  border-radius: 0;
+  padding: 12px 20px;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.search-bar-input::placeholder {
+  color: #888;
+}
+
+.search-bar-button {
+  background-color: #007bff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+/***Food cards***/
+.food-list-row {
+  margin-left: 10%; /* Default left alignment */
+  margin-right: auto;
+  max-width: 1200px;
+  gap: 1.5rem; /* Spacing between cards */
+}
+
+.food-list-col {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  margin-left: 6%;
+}
+
+/* Ensure all cards have the same height and width */
+.food-card {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth scaling effect */
+}
+
+/* Optional: Enhance hover effect for a subtle interaction */
+.food-card:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+/* Make the card footer align items properly */
+.food-card .card-footer {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.food-card-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.food-card-serving {
+  text-align: center;
+  color: #28a745;
+  font-weight: 500;
+  margin: 0;
+}
+
+.food-card-calories {
+  text-align: center;
+  color: #555;
+  font-size: 0.95rem;
+  margin: 0.5rem 0;
+}
+
+.food-card-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 0;
+}
+
+.food-card-button {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.food-card-button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.food-list-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 20px;
+  max-height: 100%;
+}
+
+/******************************/
+
+@media (max-width: 576px) {
+  .food-card {
+    width: 100%;
+  }
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 100px;
+  margin-top: 115px;
+}
+
+/*It allows to have slower animations*/
+
+.image-container img {
+  transition: transform 0.5s ease, filter 0.5s ease, opacity 0.5s ease;
+  opacity: 0.9;
+}
+
+/* Adding the blurred background to each image */
+.image-container img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2); /* Subtle white overlay */
+  filter: blur(15px); /* Initial blur value */
+  transition: opacity 0.3s ease;
+  opacity: 0; /* Hidden initially */
+  z-index: 1; /* Behind the image */
+}
+
+/* When hovering over an image, make it stand out and apply blur to the background */
+.image-container img:hover {
+  transform: scale(1.1); /* Scale up the image */
+  z-index: 3; /* Bring the image above other elements */
+  filter: brightness(1.2) drop-shadow(0px 5px 15px rgba(0, 0, 0, 0.5)); /* Brightness and shadow effect */
+  opacity: 1; /*The image appears with more oppacity*/
+}
+
+.image-container img:hover::before {
+  opacity: 1; /* Show the blurred background when hovering */
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.main-content-wrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the content horizontally */
+  justify-content: flex-start; /* Prevents unnecessary vertical alignment */
+  height: auto; /* Ensures it doesn't force unnecessary height */
+  padding-bottom: 0;
+}
+
+.main-content-food {
+  width: 100%;
+  max-width: 100%;
+  justify-self: start; /* Aligns it to the left of the grid */
+  box-sizing: border-box;
+  /*margin-left: 15rem;*/
+}
+
+/*This is an animation that is applied after a click in an image*/
+.image-container img:active {
+  animation: bounce 0.3s ease;
+}
+
+.search-bar-wrapper {
+  margin-bottom: 20px; /* Adds spacing between search bar and results */
+}
+
+.food-list-wrapper {
+  max-height: calc(100vh - 250px); /* Adjust based on available space */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.loading-spinner p {
+  font-size: 1.25rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+
+.loading-spinner .fa-spinner {
+  color: #007bff; /* Matches the button color */
+  font-size: 3rem;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.modal-update-food .modal-dialog {
+  margin-left: 43%;
+}
+
+@media (max-width: 576px) {
+  .modal-update-food .modal-dialog {
+    margin-left: 0%;
+  }
+
+  .image-container {
+    gap: 5px;
+  }
+
+  .image-container img {
+    transform: none;
+    filter: none;
+  }
+
+  .image-container img:hover {
+    transform: none;
+    filter: none;
+  }
+  /*.modal-update-food .modal-dialog {
+    width: 100%;
+    margin-right: 300px !important;
+  }*/
+  /***Food cards***/
+  .food-list-row {
+    gap: 15px; /* Spacing between cards */
+    margin-left: 0%; /* Default left alignment */
+  }
+  .search-bar-form {
+    margin-top: 0px;
+  }
+
+  .loading-spinner .fa-spinner {
+    font-size: 2.5rem;
+  }
+
+  .loading-spinner p {
+    margin-top: 10%;
+    font-size: 1.25rem;
+    color: #6c757d; /* Neutral text color */
+  }
+}
+
+/*@media (min-width: 768px) {
+  body {
+    padding-top: 70px; /* Desktop navbar height */
+/*}
+}*/
+/*@media (max-width: 767px) {
+  body {
+    padding-top: 56px; /* Mobile navbar height */
+/*}
+}*/

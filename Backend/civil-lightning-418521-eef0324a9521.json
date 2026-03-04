@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "civil-lightning-418521",
+  "private_key_id": "eef0324a95216025151554fddf7a31711a51d840",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCN0j9aRpXNJxUE\nRdeEhwmubBfbZpHbSBGg2y8kwgfnSmVRLt9npBn/zKbc/cqofxaKg47FFVSOcLFO\nhyjr9VVshp9C9lEBqQOeNRff33Y0mHhgQs2K1tX9589mmgS5KO2FJLfa5PjWeDwo\n1pJf3E3+WmUe1th5GnW5sX/3GKGrz7eT0/Vb0TZ3vUDVHxpuzxcRAmVGhb4C0ue3\nlskngNg/QHSy6Sx2/pgtDjm+Q5Ad0Vvzdk//fBGH5i//drHibHcEZrVpY9TdjO62\n6pEhoAvE4+aE+LmwqhNBj0RB2R+a2SZzd38J3J3lCFdKBbZ7h7yByyEuZ0UyLiPD\nkc0+fxZ1AgMBAAECggEAFN7edN4TWIQKWz0d+MJYoeMFZcPD7jW+ZmIrH2kweZCg\ntWBE/z8Olm7bFYWBx+cf/ZVbstQvQ+EArtJEKulJP3XWRSfzht+FCUi98TO09QuF\nF4FtNyPjjQCKrIo47LjBr4jWR6/PkNxT2hytoM7OaYKLBA1RAQ1sSr3823O0AxEP\n0T7/aCwaK5Lf5dJ5KgFGKA+zwPkcS45GcFLoxT3gZauO9YVrgVMkIFsdVyhvPrM5\nAGxi3itBhf0JCKE0PFn4oBkIL3ZyAUE8G4G84HPxt1zplu/p7WRcMNYWo0bt3li2\n/ZBOIaAmq41malJUS2cyEe4MPuaGYi033NTbCK6cYQKBgQDFKJxZ3iVqD0tOw/QS\nZa8OTNg+NXkXPEeCMbL47T7WjQpB4EV0E6KTvqFhPW7Fc34YeLmT0AGUXGGRXUfs\nkXkw59LHHTycj0cit6i8NT9YE6ObZ9sMG+WDMqoR+rfA7NHEwrYRW+wYH6/2TSRY\nZmqGdv89La3eKZvef4OmkObuBQKBgQC4JbsdHLhiY1j4AfLg82M2PWgLQet6Y+St\nG8kpPNQjjSGmfAtOWmWnaMc8HT7Za4YdpqFOzDcdudSD8IUYHhm5EfuW5xkgSq7S\nBB5mKj4O2StaDGt+iabU6Doi/gcFfGPZxDRHDArfXQ2vmqmVP0rM7RPmGeTHzmKS\nFO8+npSBsQKBgQCYRJgUVBxDQFKiH3bGKqA7hB/SU8wUpOp5Y9bcp6ZLX5xXalVZ\no7yBLM5IYoDFoD/3uG1i+lft9DcqZIei7mtR2QkR3MOuCn4fEwcPbHRimrBV2qzz\nOixU2nE894ypRH1x4Atrdrntm7Nznvp+B4MoHIld/4Rzu2D1QzgzEWA43QKBgFDs\n+/MKSRmr8VBkgtlK/MG8cLnpyVNrDPbqbBf8THonLq+cedeAMIZGrLAFZjZkY3cq\nYF9hraMZpIQrMkJsD//eIEOr4cXoLDXNa5KYY9dgpwWWybK9SZztRYdVPb6ycKsl\n55eFek249ifC/13Ah93RHlqT7I/GalkqbA2H4VmxAoGATdQ4iP7/usi09D5d3Nom\n9hws+bk87YMD8SlTasQuw680OKWgk/XN7Mwl2XpVvKmZq26fKZhtCrZokPkvrRCT\nie83PTz+fa2dfNVxf4YZ6zh42N9NOczXN1AGXaCY+mFbd8PDYAJMfrvL0mcx+3Ra\njKCumU3fe5AsI5oEMQGvwTM=\n-----END PRIVATE KEY-----\n",
+  "client_email": "cuneta-de-servicio-traducotr@civil-lightning-418521.iam.gserviceaccount.com",
+  "client_id": "104290100213316886089",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cuneta-de-servicio-traducotr%40civil-lightning-418521.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
