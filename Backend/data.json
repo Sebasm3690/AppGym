@@ -1,0 +1,4058 @@
+[
+  {
+    "model": "routine_app.administrador",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "nombre": "Sebastian",
+      "apellido": "Merino",
+      "cedula": "",
+      "borrado": false
+    }
+  },
+  {
+    "model": "routine_app.entrenador",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "borrado": false,
+      "nombre": "Jaime",
+      "apellido": "Peñaherrera",
+      "id_administrador": 1,
+      "cedula": "0604884296",
+      "imagen": "trainer_images/default.jpg"
+    }
+  },
+  {
+    "model": "routine_app.entrenador",
+    "pk": 2,
+    "fields": {
+      "user": 6,
+      "borrado": false,
+      "nombre": "Pepe",
+      "apellido": "Cabezas",
+      "id_administrador": 1,
+      "cedula": "1307353662",
+      "imagen": "trainer_images/default.jpg"
+    }
+  },
+  {
+    "model": "routine_app.entrenador",
+    "pk": 3,
+    "fields": {
+      "user": 8,
+      "borrado": false,
+      "nombre": "Admin",
+      "apellido": "ProbarAdmin",
+      "id_administrador": 1,
+      "cedula": "0400545836",
+      "imagen": "trainer_images/administrar-un-gimnasio-en-Lima.jpg"
+    }
+  },
+  {
+    "model": "routine_app.entrenador",
+    "pk": 6,
+    "fields": {
+      "user": 13,
+      "borrado": false,
+      "nombre": "Cristiano",
+      "apellido": "Ronaldo",
+      "id_administrador": 1,
+      "cedula": "1001023470",
+      "imagen": "trainer_images/ronaldo-050513_VG2715333_MG7009110.jpg"
+    }
+  },
+  {
+    "model": "routine_app.nivelgym",
+    "pk": 1,
+    "fields": {
+      "nombre": "Principiante"
+    }
+  },
+  {
+    "model": "routine_app.nivelgym",
+    "pk": 2,
+    "fields": {
+      "nombre": "Intermedio"
+    }
+  },
+  {
+    "model": "routine_app.nivelgym",
+    "pk": 3,
+    "fields": {
+      "nombre": "Avanzado"
+    }
+  },
+  {
+    "model": "routine_app.nivelactividad",
+    "pk": 1,
+    "fields": {
+      "nombre": "Sedentario",
+      "factor": "1.20"
+    }
+  },
+  {
+    "model": "routine_app.nivelactividad",
+    "pk": 2,
+    "fields": {
+      "nombre": "Ligeramente activo",
+      "factor": "1.38"
+    }
+  },
+  {
+    "model": "routine_app.nivelactividad",
+    "pk": 3,
+    "fields": {
+      "nombre": "Moderadamente activo",
+      "factor": "1.55"
+    }
+  },
+  {
+    "model": "routine_app.nivelactividad",
+    "pk": 4,
+    "fields": {
+      "nombre": "Muy activo",
+      "factor": "1.73"
+    }
+  },
+  {
+    "model": "routine_app.nivelactividad",
+    "pk": 5,
+    "fields": {
+      "nombre": "Extra activo",
+      "factor": "1.90"
+    }
+  },
+  {
+    "model": "routine_app.genero",
+    "pk": 1,
+    "fields": {
+      "nombre": "Masculino"
+    }
+  },
+  {
+    "model": "routine_app.genero",
+    "pk": 2,
+    "fields": {
+      "nombre": "Femenino"
+    }
+  },
+  {
+    "model": "routine_app.objetivo",
+    "pk": 1,
+    "fields": {
+      "nombre": "Perder peso"
+    }
+  },
+  {
+    "model": "routine_app.objetivo",
+    "pk": 2,
+    "fields": {
+      "nombre": "Ganar masa muscular"
+    }
+  },
+  {
+    "model": "routine_app.objetivo",
+    "pk": 3,
+    "fields": {
+      "nombre": "Mantener peso"
+    }
+  },
+  {
+    "model": "routine_app.membresia",
+    "pk": 1,
+    "fields": {
+      "duracion": "1 mes"
+    }
+  },
+  {
+    "model": "routine_app.membresia",
+    "pk": 2,
+    "fields": {
+      "duracion": "3 meses"
+    }
+  },
+  {
+    "model": "routine_app.membresia",
+    "pk": 3,
+    "fields": {
+      "duracion": "6 meses"
+    }
+  },
+  {
+    "model": "routine_app.membresia",
+    "pk": 4,
+    "fields": {
+      "duracion": "12 meses"
+    }
+  },
+  {
+    "model": "routine_app.cliente",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "nombre": "Cristiano",
+      "apellido": "Ronaldo",
+      "cedula": "0606157410",
+      "tmb": "2948.10",
+      "altura": "160.00",
+      "peso": "70.00",
+      "fecha_nacimiento": "2001-01-31",
+      "carbohidratos_g": "453.53",
+      "proteina_g": "126.00",
+      "grasas_g": "70.00",
+      "borrado": false,
+      "id_entrenador": 1,
+      "id_nivel_gym": 2,
+      "id_nivel_actividad": 3,
+      "id_genero": 1,
+      "id_objetivo": 2,
+      "id_membresia": 2,
+      "fecha_inicio": "2024-12-14",
+      "fecha_fin": "2025-01-14",
+      "imagen": "trainer_images/ronaldo-050513_VG2715333_MG7009110_iUcGZnU.jpg"
+    }
+  },
+  {
+    "model": "routine_app.cliente",
+    "pk": 2,
+    "fields": {
+      "user": 4,
+      "nombre": "David",
+      "apellido": "Cabezas",
+      "cedula": "1303753618",
+      "tmb": "0.00",
+      "altura": "174.00",
+      "peso": "68.00",
+      "fecha_nacimiento": "2001-01-31",
+      "carbohidratos_g": "-275.40",
+      "proteina_g": "122.40",
+      "grasas_g": "68.00",
+      "borrado": false,
+      "id_entrenador": 1,
+      "id_nivel_gym": 2,
+      "id_nivel_actividad": 2,
+      "id_genero": 1,
+      "id_objetivo": 2,
+      "id_membresia": 2,
+      "fecha_inicio": "2024-12-14",
+      "fecha_fin": "2025-01-14",
+      "imagen": "client_images/default.png"
+    }
+  },
+  {
+    "model": "routine_app.cliente",
+    "pk": 3,
+    "fields": {
+      "user": 5,
+      "nombre": "David",
+      "apellido": "Cabezas",
+      "cedula": "1713627071",
+      "tmb": "3203.85",
+      "altura": "174.00",
+      "peso": "75.00",
+      "fecha_nacimiento": "2001-11-23",
+      "carbohidratos_g": "497.21",
+      "proteina_g": "135.00",
+      "grasas_g": "75.00",
+      "borrado": false,
+      "id_entrenador": 1,
+      "id_nivel_gym": 2,
+      "id_nivel_actividad": 3,
+      "id_genero": 1,
+      "id_objetivo": 2,
+      "id_membresia": 2,
+      "fecha_inicio": "2024-12-14",
+      "fecha_fin": "2025-01-14",
+      "imagen": "client_images/default.png"
+    }
+  },
+  {
+    "model": "routine_app.cliente",
+    "pk": 4,
+    "fields": {
+      "user": 7,
+      "nombre": "Alexis",
+      "apellido": "Rivera",
+      "cedula": "0917136988",
+      "tmb": "3006.23",
+      "altura": "173.00",
+      "peso": "65.00",
+      "fecha_nacimiento": "2001-01-31",
+      "carbohidratos_g": "488.31",
+      "proteina_g": "117.00",
+      "grasas_g": "65.00",
+      "borrado": false,
+      "id_entrenador": 2,
+      "id_nivel_gym": 2,
+      "id_nivel_actividad": 3,
+      "id_genero": 1,
+      "id_objetivo": 2,
+      "id_membresia": 2,
+      "fecha_inicio": "2024-12-14",
+      "fecha_fin": "2025-07-14",
+      "imagen": "client_images/default.png"
+    }
+  },
+  {
+    "model": "routine_app.cliente",
+    "pk": 6,
+    "fields": {
+      "user": 10,
+      "nombre": "nombreBorrar",
+      "apellido": "apellidoBorrar",
+      "cedula": "0301858965",
+      "tmb": "2374.60",
+      "altura": "180.00",
+      "peso": "90.00",
+      "fecha_nacimiento": "2001-01-31",
+      "carbohidratos_g": "233.65",
+      "proteina_g": "198.00",
+      "grasas_g": "72.00",
+      "borrado": false,
+      "id_entrenador": 1,
+      "id_nivel_gym": 2,
+      "id_nivel_actividad": 3,
+      "id_genero": 1,
+      "id_objetivo": 1,
+      "id_membresia": 1,
+      "fecha_inicio": "2024-12-12",
+      "fecha_fin": "2024-12-13",
+      "imagen": ""
+    }
+  },
+  {
+    "model": "routine_app.cliente",
+    "pk": 7,
+    "fields": {
+      "user": 14,
+      "nombre": "Cristiano JR",
+      "apellido": "Ronaldo JR",
+      "cedula": "1303872616",
+      "tmb": "3529.35",
+      "altura": "190.00",
+      "peso": "90.00",
+      "fecha_nacimiento": "1985-01-31",
+      "carbohidratos_g": "517.84",
+      "proteina_g": "162.00",
+      "grasas_g": "90.00",
+      "borrado": false,
+      "id_entrenador": 1,
+      "id_nivel_gym": 2,
+      "id_nivel_actividad": 3,
+      "id_genero": 1,
+      "id_objetivo": 2,
+      "id_membresia": 2,
+      "fecha_inicio": "2024-12-14",
+      "fecha_fin": "2025-01-14",
+      "imagen": "trainer_images/196327-Anonymous-technology-minimalism-hacking-security_ZV1DVw1.jpg"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 2,
+    "fields": {
+      "nombre": "Chocolate sin Azúcar",
+      "calorias": "77.00",
+      "proteina_g": "1.39",
+      "carbohidratos_g": "2.13",
+      "grasa_g": "4.93",
+      "api_id_referencia": "28006297",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 3,
+    "fields": {
+      "nombre": "Granola",
+      "calorias": "408.00",
+      "proteina_g": "9.22",
+      "carbohidratos_g": "72.39",
+      "grasa_g": "11.03",
+      "api_id_referencia": "4655",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 4,
+    "fields": {
+      "nombre": "Agua Fresca",
+      "calorias": "60.00",
+      "proteina_g": "0.00",
+      "carbohidratos_g": "15.00",
+      "grasa_g": "0.00",
+      "api_id_referencia": "23182284",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 5,
+    "fields": {
+      "nombre": "Chocolate Sandwich Cookies",
+      "calorias": "160.00",
+      "proteina_g": "1.00",
+      "carbohidratos_g": "25.00",
+      "grasa_g": "7.00",
+      "api_id_referencia": "4346687",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 6,
+    "fields": {
+      "nombre": "Mexican Style Stewed Potatoes (Papas Guisadas)",
+      "calorias": "337.00",
+      "proteina_g": "4.11",
+      "carbohidratos_g": "36.64",
+      "grasa_g": "19.96",
+      "api_id_referencia": "5818",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 7,
+    "fields": {
+      "nombre": "Bread",
+      "calorias": "69.00",
+      "proteina_g": "1.99",
+      "carbohidratos_g": "13.16",
+      "grasa_g": "0.86",
+      "api_id_referencia": "3422",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 8,
+    "fields": {
+      "nombre": "Chicken with Tomatoes & Feta Cheese",
+      "calorias": "240.00",
+      "proteina_g": "29.00",
+      "carbohidratos_g": "8.00",
+      "grasa_g": "8.00",
+      "api_id_referencia": "5788721",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 9,
+    "fields": {
+      "nombre": "Classic Granola",
+      "calorias": "130.00",
+      "proteina_g": "3.00",
+      "carbohidratos_g": "18.00",
+      "grasa_g": "5.00",
+      "api_id_referencia": "60938",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 10,
+    "fields": {
+      "nombre": "Mini Oreos",
+      "calorias": "200.00",
+      "proteina_g": "2.00",
+      "carbohidratos_g": "30.00",
+      "grasa_g": "8.00",
+      "api_id_referencia": "54488124",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 11,
+    "fields": {
+      "nombre": "Shrimp Ceviche",
+      "calorias": "60.00",
+      "proteina_g": "9.00",
+      "carbohidratos_g": "4.00",
+      "grasa_g": "0.50",
+      "api_id_referencia": "10370667",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 13,
+    "fields": {
+      "nombre": "Puerto Rican Style Beef Steak with Onions (Biftec Encebollado)",
+      "calorias": "582.00",
+      "proteina_g": "37.07",
+      "carbohidratos_g": "7.55",
+      "grasa_g": "44.25",
+      "api_id_referencia": "2601",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 14,
+    "fields": {
+      "nombre": "Puerto-Rican Style Beef Stew (Carne Guisada Con Papas)",
+      "calorias": "454.00",
+      "proteina_g": "31.21",
+      "carbohidratos_g": "13.57",
+      "grasa_g": "30.08",
+      "api_id_referencia": "2338",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 15,
+    "fields": {
+      "nombre": "Café Con Leche - Large",
+      "calorias": "340.00",
+      "proteina_g": "12.00",
+      "carbohidratos_g": "47.00",
+      "grasa_g": "12.00",
+      "api_id_referencia": "68739448",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 16,
+    "fields": {
+      "nombre": "Papas A La Mexicana",
+      "calorias": "110.00",
+      "proteina_g": "2.00",
+      "carbohidratos_g": "17.00",
+      "grasa_g": "4.00",
+      "api_id_referencia": "82158",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 17,
+    "fields": {
+      "nombre": "Double Stuf Sandwich Cookies",
+      "calorias": "140.00",
+      "proteina_g": "1.00",
+      "carbohidratos_g": "21.00",
+      "grasa_g": "7.00",
+      "api_id_referencia": "72802",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 18,
+    "fields": {
+      "nombre": "Pan Integral",
+      "calorias": "140.00",
+      "proteina_g": "5.00",
+      "carbohidratos_g": "28.00",
+      "grasa_g": "2.00",
+      "api_id_referencia": "103919",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 19,
+    "fields": {
+      "nombre": "Pollo Asado",
+      "calorias": "130.00",
+      "proteina_g": "19.00",
+      "carbohidratos_g": "3.00",
+      "grasa_g": "4.00",
+      "api_id_referencia": "1009433",
+      "metrica_g": "0.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 21,
+    "fields": {
+      "nombre": "Coca-Cola Classic",
+      "calorias": "90.00",
+      "proteina_g": "0.00",
+      "carbohidratos_g": "27.00",
+      "grasa_g": "0.00",
+      "api_id_referencia": "1477908",
+      "metrica_g": "240.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 22,
+    "fields": {
+      "nombre": "Coca-Cola Classic (12 oz)",
+      "calorias": "140.00",
+      "proteina_g": "0.00",
+      "carbohidratos_g": "39.00",
+      "grasa_g": "0.00",
+      "api_id_referencia": "3650710",
+      "metrica_g": "12.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 23,
+    "fields": {
+      "nombre": "Colombian Salsa",
+      "calorias": "70.00",
+      "proteina_g": "0.00",
+      "carbohidratos_g": "4.00",
+      "grasa_g": "6.00",
+      "api_id_referencia": "34418087",
+      "metrica_g": "28.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 24,
+    "fields": {
+      "nombre": "Arroz Long Grain Enriched Rice",
+      "calorias": "160.00",
+      "proteina_g": "3.00",
+      "carbohidratos_g": "35.00",
+      "grasa_g": "0.00",
+      "api_id_referencia": "663513",
+      "metrica_g": "45.00",
+      "unidad_medida": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 26,
+    "fields": {
+      "nombre": "Crunchy Cheetos (Package)",
+      "calorias": "330.00",
+      "proteina_g": "3.00",
+      "carbohidratos_g": "31.00",
+      "grasa_g": "20.00",
+      "api_id_referencia": "68140298",
+      "metrica_g": "2.00",
+      "unidad_medida": "oz"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 27,
+    "fields": {
+      "nombre": "Nacho Cheese Tortilla Chips (28g)",
+      "calorias": "150.00",
+      "proteina_g": "2.00",
+      "carbohidratos_g": "18.00",
+      "grasa_g": "8.00",
+      "api_id_referencia": "8843673",
+      "metrica_g": "28.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 29,
+    "fields": {
+      "nombre": "Pan Blanco Chico",
+      "calorias": "120.00",
+      "proteina_g": "3.00",
+      "carbohidratos_g": "26.00",
+      "grasa_g": "1.00",
+      "api_id_referencia": "89117",
+      "metrica_g": "41.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 30,
+    "fields": {
+      "nombre": "Whole Milk",
+      "calorias": "146.00",
+      "proteina_g": "7.86",
+      "carbohidratos_g": "11.03",
+      "grasa_g": "7.93",
+      "api_id_referencia": "794",
+      "metrica_g": "244.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 31,
+    "fields": {
+      "nombre": "Puerto Rican Style Fruit Salad (Ensalada De Frutas Tropicales)",
+      "calorias": "141.00",
+      "proteina_g": "1.70",
+      "carbohidratos_g": "35.99",
+      "grasa_g": "0.44",
+      "api_id_referencia": "5546",
+      "metrica_g": "247.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 32,
+    "fields": {
+      "nombre": "Arroz Con Pollo",
+      "calorias": "330.00",
+      "proteina_g": "15.00",
+      "carbohidratos_g": "56.00",
+      "grasa_g": "5.00",
+      "api_id_referencia": "674730",
+      "metrica_g": "284.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 33,
+    "fields": {
+      "nombre": "Papaya Juice",
+      "calorias": "141.00",
+      "proteina_g": "0.42",
+      "carbohidratos_g": "35.84",
+      "grasa_g": "0.37",
+      "api_id_referencia": "5599",
+      "metrica_g": "247.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 34,
+    "fields": {
+      "nombre": "Boiled Egg",
+      "calorias": "77.00",
+      "proteina_g": "6.26",
+      "carbohidratos_g": "0.56",
+      "grasa_g": "5.28",
+      "api_id_referencia": "3094",
+      "metrica_g": "50.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 35,
+    "fields": {
+      "nombre": "Peanuts",
+      "calorias": "168.00",
+      "proteina_g": "7.85",
+      "carbohidratos_g": "4.27",
+      "grasa_g": "14.70",
+      "api_id_referencia": "3368",
+      "metrica_g": "28.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 36,
+    "fields": {
+      "nombre": "Yellow Cake without Icing (Home Recipe or Purchased)",
+      "calorias": "150.00",
+      "proteina_g": "2.01",
+      "carbohidratos_g": "24.18",
+      "grasa_g": "5.09",
+      "api_id_referencia": "3921",
+      "metrica_g": "42.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 37,
+    "fields": {
+      "nombre": "Grande Grado A Huevos De Calidad",
+      "calorias": "70.00",
+      "proteina_g": "6.00",
+      "carbohidratos_g": "1.00",
+      "grasa_g": "4.50",
+      "api_id_referencia": "437105",
+      "metrica_g": "50.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.alimento",
+    "pk": 38,
+    "fields": {
+      "nombre": "Papa asada",
+      "calorias": "203.00",
+      "proteina_g": "3.16",
+      "carbohidratos_g": "27.28",
+      "grasa_g": "9.52",
+      "api_id_referencia": "5735",
+      "metrica_g": "136.00",
+      "unidad_medida": "g"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 2,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 2,
+      "fecha": "2024-11-24"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 3,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 3,
+      "fecha": "2024-11-24"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 4,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 4,
+      "fecha": "2024-11-24"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 5,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 5,
+      "fecha": "2024-11-24"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 6,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 6,
+      "fecha": "2024-11-24"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 7,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 7,
+      "fecha": "2024-11-25"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 8,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 8,
+      "fecha": "2024-11-25"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 9,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 9,
+      "fecha": "2024-11-26"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 10,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 10,
+      "fecha": "2024-11-27"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 11,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 11,
+      "fecha": "2024-11-27"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 13,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 13,
+      "fecha": "2024-11-27"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 14,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 14,
+      "fecha": "2024-11-27"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 15,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 15,
+      "fecha": "2024-11-27"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 16,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 16,
+      "fecha": "2024-11-27"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 17,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 17,
+      "fecha": "2024-11-27"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 18,
+    "fields": {
+      "id_cliente": 4,
+      "id_alimento": 18,
+      "fecha": "2024-11-28"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 19,
+    "fields": {
+      "id_cliente": 4,
+      "id_alimento": 19,
+      "fecha": "2024-11-28"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 21,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 21,
+      "fecha": "2025-01-01"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 22,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 22,
+      "fecha": "2025-01-02"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 23,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 23,
+      "fecha": "2025-01-02"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 24,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 24,
+      "fecha": "2025-01-02"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 26,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 26,
+      "fecha": "2025-01-02"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 27,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 27,
+      "fecha": "2025-01-02"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 29,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 29,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 30,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 30,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 31,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 31,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 32,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 32,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 33,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 33,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 34,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 34,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 35,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 35,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 36,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 36,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 37,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 37,
+      "fecha": "2025-01-03"
+    }
+  },
+  {
+    "model": "routine_app.consume",
+    "pk": 38,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 38,
+      "fecha": "2025-03-16"
+    }
+  },
+  {
+    "model": "routine_app.partedia",
+    "pk": 1,
+    "fields": {
+      "nombre": "Desayuno",
+      "icono": "faCoffee"
+    }
+  },
+  {
+    "model": "routine_app.partedia",
+    "pk": 2,
+    "fields": {
+      "nombre": "Almuerzo",
+      "icono": "faUtensils"
+    }
+  },
+  {
+    "model": "routine_app.partedia",
+    "pk": 3,
+    "fields": {
+      "nombre": "Merienda",
+      "icono": "faDrumstickBite"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 2,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 2,
+      "id_parte_dia": 1,
+      "fecha": "2024-11-24",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 piece",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 3,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 3,
+      "id_parte_dia": 2,
+      "fecha": "2024-11-24",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "100 g",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 4,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 4,
+      "id_parte_dia": 3,
+      "fecha": "2024-11-24",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "8 fl oz",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 5,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 5,
+      "id_parte_dia": 3,
+      "fecha": "2024-11-24",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "3 cookies",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 6,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 6,
+      "id_parte_dia": 1,
+      "fecha": "2024-11-24",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 cup",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 7,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 6,
+      "id_parte_dia": 2,
+      "fecha": "2024-11-24",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 cup",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 9,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 7,
+      "id_parte_dia": 1,
+      "fecha": "2024-11-25",
+      "cantidad": "2.00",
+      "tamaño_porcion_g": "1 regular slice",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 10,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 8,
+      "id_parte_dia": 2,
+      "fecha": "2024-11-25",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 pouch",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 11,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 9,
+      "id_parte_dia": 1,
+      "fecha": "2024-11-26",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1/4 cup",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 22,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 9,
+      "id_parte_dia": 1,
+      "fecha": "2024-11-27",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1/4 cup",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 24,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 17,
+      "id_parte_dia": 2,
+      "fecha": "2024-11-27",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "2 cookies",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 26,
+    "fields": {
+      "id_cliente": 4,
+      "id_alimento": 18,
+      "id_parte_dia": 1,
+      "fecha": "2024-11-28",
+      "cantidad": "2.00",
+      "tamaño_porcion_g": "2 slices",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 27,
+    "fields": {
+      "id_cliente": 4,
+      "id_alimento": 19,
+      "id_parte_dia": 2,
+      "fecha": "2024-11-28",
+      "cantidad": "2.00",
+      "tamaño_porcion_g": "4 oz",
+      "gramos": "0.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 68,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 21,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-01",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "8 fl oz",
+      "gramos": "240.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 81,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 27,
+      "id_parte_dia": 2,
+      "fecha": "2025-01-02",
+      "cantidad": "1.14",
+      "tamaño_porcion_g": "12 chips",
+      "gramos": "32.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 87,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 29,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-03",
+      "cantidad": "2.07",
+      "tamaño_porcion_g": "2 slices",
+      "gramos": "85.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 88,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 30,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-03",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 cup",
+      "gramos": "244.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 89,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 31,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-03",
+      "cantidad": "1.01",
+      "tamaño_porcion_g": "1 cup",
+      "gramos": "250.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 90,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 32,
+      "id_parte_dia": 2,
+      "fecha": "2025-01-03",
+      "cantidad": "0.99",
+      "tamaño_porcion_g": "1 container",
+      "gramos": "282.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 91,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 33,
+      "id_parte_dia": 2,
+      "fecha": "2025-01-03",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 cup",
+      "gramos": "248.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 92,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 34,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-03",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 large",
+      "gramos": "50.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 93,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 35,
+      "id_parte_dia": 2,
+      "fecha": "2025-01-03",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 32 nuts serving",
+      "gramos": "28.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 94,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 36,
+      "id_parte_dia": 2,
+      "fecha": "2025-01-03",
+      "cantidad": "1.43",
+      "tamaño_porcion_g": "1 piece (1/10 8\" or 9\" dia)",
+      "gramos": "60.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 95,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 29,
+      "id_parte_dia": 3,
+      "fecha": "2025-01-03",
+      "cantidad": "1.95",
+      "tamaño_porcion_g": "2 slices",
+      "gramos": "80.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 96,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 30,
+      "id_parte_dia": 3,
+      "fecha": "2025-01-03",
+      "cantidad": "1.02",
+      "tamaño_porcion_g": "1 cup",
+      "gramos": "250.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 97,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 37,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-03",
+      "cantidad": "2.00",
+      "tamaño_porcion_g": "1 huevo",
+      "gramos": "100.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 98,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 27,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-12",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "12 fichas",
+      "gramos": "28.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 99,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 29,
+      "id_parte_dia": 1,
+      "fecha": "2025-01-13",
+      "cantidad": "0.49",
+      "tamaño_porcion_g": "2 rebanadas",
+      "gramos": "20.00"
+    }
+  },
+  {
+    "model": "routine_app.dispone",
+    "pk": 100,
+    "fields": {
+      "id_cliente": 3,
+      "id_alimento": 38,
+      "id_parte_dia": 1,
+      "fecha": "2025-03-16",
+      "cantidad": "1.00",
+      "tamaño_porcion_g": "1 mediano (de 2-1/4\" a 3\" de diámetro, crudo)",
+      "gramos": "136.00"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 1,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Espalda y bíceps - Entrenamiento A",
+      "descripcion": "Rutina para trabajar la espalda y los bíceps.",
+      "enfoque": "Espalda",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 2,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Espalda y bíceps - Entrenamiento B",
+      "descripcion": "Rutina para trabajar la espalda y los bíceps.",
+      "enfoque": "Espalda",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 3,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Pecho y tríceps - Entrenamiento A",
+      "descripcion": "Rutina para trabajar el pecho y los tríceps.",
+      "enfoque": "Pecho",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 4,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Pecho y tríceps - Entrenamiento B",
+      "descripcion": "Rutina para trabajar el pecho y los tríceps.",
+      "enfoque": "Pecho",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 5,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Piernas - Entrenamiento A",
+      "descripcion": "Rutina para trabajar piernas con énfasis en cuádriceps y glúteos.",
+      "enfoque": "Piernas",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 6,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Piernas - Entrenamiento B",
+      "descripcion": "Rutina para trabajar piernas con énfasis en isquiotibiales y pantorrillas.",
+      "enfoque": "Piernas",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 7,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Piernas - Entrenamiento C",
+      "descripcion": "Rutina para trabajar abductores y glúteos.",
+      "enfoque": "Piernas",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 8,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Piernas - Entrenamiento D",
+      "descripcion": "Rutina avanzada para piernas, glúteos, y pantorrillas.",
+      "enfoque": "Piernas",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 9,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Piernas - Entrenamiento E",
+      "descripcion": "Rutina de cuerpo completo de piernas con énfasis en glúteos y abductores.",
+      "enfoque": "Piernas",
+      "tipo": "Catalogo"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 10,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Rutina para espalda y bíceps",
+      "descripcion": "Rutina priorizando la espalda",
+      "enfoque": "Espalda",
+      "tipo": "Creada"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 11,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Rutina de pecho",
+      "descripcion": "Rutina priorizando el pecho alto",
+      "enfoque": "Pecho",
+      "tipo": "Creada"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 12,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Rutina de pecho",
+      "descripcion": "",
+      "enfoque": "Pecho",
+      "tipo": "Creada"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 13,
+    "fields": {
+      "id_entrenador": 2,
+      "nombre": "Rutina enfocada en pecho y tríceps",
+      "descripcion": "",
+      "enfoque": "Pecho",
+      "tipo": "Creada"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 14,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Rutina de espalda corta",
+      "descripcion": "",
+      "enfoque": "Espalda",
+      "tipo": "Creada"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 15,
+    "fields": {
+      "id_entrenador": 1,
+      "nombre": "Rutina de pierna",
+      "descripcion": "",
+      "enfoque": "Espalda",
+      "tipo": "Creada"
+    }
+  },
+  {
+    "model": "routine_app.rutina",
+    "pk": 16,
+    "fields": {
+      "id_entrenador": 2,
+      "nombre": "Rutina de jale",
+      "descripcion": "",
+      "enfoque": "Espalda",
+      "tipo": "Creada"
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 204,
+    "fields": {
+      "id_rutina": 1,
+      "id_ejercicio": 13
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 205,
+    "fields": {
+      "id_rutina": 1,
+      "id_ejercicio": 7
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 206,
+    "fields": {
+      "id_rutina": 1,
+      "id_ejercicio": 22
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 207,
+    "fields": {
+      "id_rutina": 1,
+      "id_ejercicio": 16
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 208,
+    "fields": {
+      "id_rutina": 1,
+      "id_ejercicio": 89
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 209,
+    "fields": {
+      "id_rutina": 2,
+      "id_ejercicio": 12
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 210,
+    "fields": {
+      "id_rutina": 2,
+      "id_ejercicio": 8
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 211,
+    "fields": {
+      "id_rutina": 2,
+      "id_ejercicio": 15
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 212,
+    "fields": {
+      "id_rutina": 2,
+      "id_ejercicio": 27
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 213,
+    "fields": {
+      "id_rutina": 2,
+      "id_ejercicio": 83
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 214,
+    "fields": {
+      "id_rutina": 3,
+      "id_ejercicio": 30
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 215,
+    "fields": {
+      "id_rutina": 3,
+      "id_ejercicio": 41
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 216,
+    "fields": {
+      "id_rutina": 3,
+      "id_ejercicio": 99
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 217,
+    "fields": {
+      "id_rutina": 3,
+      "id_ejercicio": 97
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 218,
+    "fields": {
+      "id_rutina": 3,
+      "id_ejercicio": 87
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 219,
+    "fields": {
+      "id_rutina": 3,
+      "id_ejercicio": 85
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 220,
+    "fields": {
+      "id_rutina": 4,
+      "id_ejercicio": 33
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 221,
+    "fields": {
+      "id_rutina": 4,
+      "id_ejercicio": 45
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 222,
+    "fields": {
+      "id_rutina": 4,
+      "id_ejercicio": 94
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 223,
+    "fields": {
+      "id_rutina": 4,
+      "id_ejercicio": 95
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 224,
+    "fields": {
+      "id_rutina": 4,
+      "id_ejercicio": 82
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 225,
+    "fields": {
+      "id_rutina": 4,
+      "id_ejercicio": 86
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 226,
+    "fields": {
+      "id_rutina": 5,
+      "id_ejercicio": 72
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 227,
+    "fields": {
+      "id_rutina": 5,
+      "id_ejercicio": 74
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 228,
+    "fields": {
+      "id_rutina": 5,
+      "id_ejercicio": 77
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 229,
+    "fields": {
+      "id_rutina": 5,
+      "id_ejercicio": 65
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 230,
+    "fields": {
+      "id_rutina": 5,
+      "id_ejercicio": 28
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 231,
+    "fields": {
+      "id_rutina": 6,
+      "id_ejercicio": 70
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 232,
+    "fields": {
+      "id_rutina": 6,
+      "id_ejercicio": 67
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 233,
+    "fields": {
+      "id_rutina": 6,
+      "id_ejercicio": 68
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 234,
+    "fields": {
+      "id_rutina": 6,
+      "id_ejercicio": 29
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 235,
+    "fields": {
+      "id_rutina": 6,
+      "id_ejercicio": 28
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 236,
+    "fields": {
+      "id_rutina": 7,
+      "id_ejercicio": 1
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 237,
+    "fields": {
+      "id_rutina": 7,
+      "id_ejercicio": 2
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 238,
+    "fields": {
+      "id_rutina": 7,
+      "id_ejercicio": 63
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 239,
+    "fields": {
+      "id_rutina": 7,
+      "id_ejercicio": 64
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 240,
+    "fields": {
+      "id_rutina": 7,
+      "id_ejercicio": 60
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 241,
+    "fields": {
+      "id_rutina": 8,
+      "id_ejercicio": 76
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 242,
+    "fields": {
+      "id_rutina": 8,
+      "id_ejercicio": 81
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 243,
+    "fields": {
+      "id_rutina": 8,
+      "id_ejercicio": 78
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 244,
+    "fields": {
+      "id_rutina": 8,
+      "id_ejercicio": 65
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 245,
+    "fields": {
+      "id_rutina": 8,
+      "id_ejercicio": 60
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 246,
+    "fields": {
+      "id_rutina": 9,
+      "id_ejercicio": 72
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 247,
+    "fields": {
+      "id_rutina": 9,
+      "id_ejercicio": 80
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 248,
+    "fields": {
+      "id_rutina": 9,
+      "id_ejercicio": 61
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 249,
+    "fields": {
+      "id_rutina": 9,
+      "id_ejercicio": 60
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 274,
+    "fields": {
+      "id_rutina": 11,
+      "id_ejercicio": 33
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 285,
+    "fields": {
+      "id_rutina": 10,
+      "id_ejercicio": 12
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 286,
+    "fields": {
+      "id_rutina": 10,
+      "id_ejercicio": 8
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 287,
+    "fields": {
+      "id_rutina": 10,
+      "id_ejercicio": 14
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 288,
+    "fields": {
+      "id_rutina": 10,
+      "id_ejercicio": 18
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 289,
+    "fields": {
+      "id_rutina": 10,
+      "id_ejercicio": 85
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 290,
+    "fields": {
+      "id_rutina": 12,
+      "id_ejercicio": 30
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 291,
+    "fields": {
+      "id_rutina": 12,
+      "id_ejercicio": 31
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 295,
+    "fields": {
+      "id_rutina": 13,
+      "id_ejercicio": 30
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 296,
+    "fields": {
+      "id_rutina": 13,
+      "id_ejercicio": 31
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 297,
+    "fields": {
+      "id_rutina": 14,
+      "id_ejercicio": 7
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 298,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 299,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 8
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 300,
+    "fields": {
+      "id_rutina": 16,
+      "id_ejercicio": 7
+    }
+  },
+  {
+    "model": "routine_app.compuesta",
+    "pk": 301,
+    "fields": {
+      "id_rutina": 16,
+      "id_ejercicio": 8
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 1,
+    "fields": {
+      "nombre": "Movimiento de abducción de cadera con banda",
+      "musculo": "abductores",
+      "equipamento": "banda",
+      "instrucciones": "[\"Coloca la banda justo por encima de tus rodillas.\", \"Ponte de pie con los pies separados al ancho de los hombros.\", \"Da un paso hacia un lado, manteniendo la tensión en la banda.\", \"Haz una pausa y regresa a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Abductors/band-hip-abduction-movement.gif",
+      "objetivo": "abductores de la cadera"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 2,
+    "fields": {
+      "nombre": "Sentadilla lateral con pesa en copa",
+      "musculo": "abductores",
+      "equipamento": "mancuerna",
+      "instrucciones": "[\"Sujeta una mancuerna a la altura del pecho.\", \"Da un paso grande hacia un lado.\", \"Realiza una sentadilla, manteniendo el peso centrado.\", \"Empuja hacia arriba para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Abductors/goblet-side-squat.gif",
+      "objetivo": "abductores de la cadera"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 3,
+    "fields": {
+      "nombre": "Máquina de abducción de cadera",
+      "musculo": "abductores",
+      "equipamento": "máquina",
+      "instrucciones": "[\"Ajusta la máquina a la resistencia deseada.\", \"Siéntate y coloca las piernas contra las almohadillas.\", \"Empuja las piernas hacia afuera contra la resistencia.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Abductors/hip-abduction-machine.gif",
+      "objetivo": "abductores de la cadera"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 4,
+    "fields": {
+      "nombre": "Abducción de cadera sentado con banda",
+      "musculo": "abductores",
+      "equipamento": "banda",
+      "instrucciones": "[\"Siéntate en un banco con la banda justo por encima de tus rodillas.\", \"Mantén los pies planos en el suelo.\", \"Empuja las rodillas hacia afuera, estirando la banda.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Abductors/seated-band-hip-abduction.gif",
+      "objetivo": "abductores de la cadera"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 5,
+    "fields": {
+      "nombre": "Polea al pecho con banda",
+      "musculo": "Espalda",
+      "equipamento": "Banda",
+      "instrucciones": "[\"Sujeta la banda a un punto elevado y siéntate en el suelo.\", \"Toma los extremos de la banda con ambas manos.\", \"Jala la banda hacia tu pecho, apretando los omóplatos.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/band-lat-pulldown.gif",
+      "objetivo": "Fortalecer los dorsales y la parte superior de la espalda"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 6,
+    "fields": {
+      "nombre": "Remo inclinado con barra",
+      "musculo": "Espalda",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Coloca una barra en el suelo y carga el peso deseado.\", \"Inclina el torso hacia adelante manteniendo la espalda recta.\", \"Sujeta la barra con ambas manos y jálala hacia tu abdomen.\", \"Haz una pausa y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/barbell-bent-over-row.gif",
+      "objetivo": "Fortalecer los dorsales, trapecios y romboides"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 7,
+    "fields": {
+      "nombre": "Jalón en polea alta",
+      "musculo": "Espalda",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Siéntate en la máquina de polea alta con los pies planos en el suelo.\", \"Sujeta la barra con un agarre por encima, más ancho que los hombros.\", \"Jala la barra hacia tu pecho, apretando los omóplatos.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/cable-lat-pulldown.gif",
+      "objetivo": "Fortalecer los dorsales y la parte superior de la espalda"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 8,
+    "fields": {
+      "nombre": "Remo sentado en máquina",
+      "musculo": "Espalda",
+      "equipamento": "Máquina",
+      "instrucciones": "[\"Siéntate en la máquina de remo con los pies apoyados.\", \"Sujeta las manijas con ambas manos.\", \"Jala las manijas hacia tu abdomen, apretando los omóplatos.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/cable-seated-row.gif",
+      "objetivo": "Fortalecer los dorsales y los romboides"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 9,
+    "fields": {
+      "nombre": "Encogimiento de hombros con polea",
+      "musculo": "Espalda",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Ponte de pie frente a la polea baja y sujeta la barra con ambas manos.\", \"Levanta los hombros hacia tus orejas lo más alto posible.\", \"Haz una pausa y luego regresa a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/cable-shrug.gif",
+      "objetivo": "Fortalecer el trapecio"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 10,
+    "fields": {
+      "nombre": "Remo invertido",
+      "musculo": "Espalda",
+      "equipamento": "Barra fija",
+      "instrucciones": "[\"Coloca una barra fija a la altura de tu cintura.\", \"Acuéstate debajo de la barra con los pies extendidos.\", \"Sujeta la barra con ambas manos y jala tu pecho hacia la barra.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/inverted-row.gif",
+      "objetivo": "Fortalecer los dorsales y los romboides"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 11,
+    "fields": {
+      "nombre": "Jalón neutral en polea alta",
+      "musculo": "Espalda",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Siéntate en la máquina de polea alta con los pies planos en el suelo.\", \"Sujeta las manijas con un agarre neutral (palmas enfrentadas).\", \"Jala las manijas hacia tu pecho, apretando los omóplatos.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/neutral-grip-lat-pulldown.gif",
+      "objetivo": "Fortalecer los dorsales y la parte superior de la espalda"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 12,
+    "fields": {
+      "nombre": "Dominadas",
+      "musculo": "Espalda",
+      "equipamento": "Barra fija",
+      "instrucciones": "[\"Agarra la barra con un agarre por encima, ligeramente más ancho que los hombros.\", \"Cuelga completamente con los brazos extendidos.\", \"Jala tu cuerpo hacia arriba hasta que tu barbilla pase la barra.\", \"Haz una pausa y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/pull-up.gif",
+      "objetivo": "Fortalecer los dorsales y los músculos de la parte superior de la espalda"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 13,
+    "fields": {
+      "nombre": "Remo con barra en T",
+      "musculo": "Espalda",
+      "equipamento": "Barra en T",
+      "instrucciones": "[\"Coloca la barra en T en el suelo y carga el peso deseado.\", \"Sujeta la barra con ambas manos en el mango de remo.\", \"Inclina el torso hacia adelante mientras mantienes la espalda recta.\", \"Jala la barra hacia tu abdomen, apretando los omóplatos.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Back/t-bar-row-muscles.gif",
+      "objetivo": "Fortalecer los dorsales, trapecios y romboides"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 14,
+    "fields": {
+      "nombre": "Curl Bayesiano",
+      "musculo": "Bíceps",
+      "equipamento": "Banda",
+      "instrucciones": "[\"Fija una banda elástica en un punto bajo.\", \"Toma el extremo de la banda con una mano y da un paso hacia atrás para generar tensión.\", \"Mantén el codo fijo y realiza un curl, llevando la mano hacia el hombro.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/bayesian-curl.gif",
+      "objetivo": "Fortalecer el bíceps braquial"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 15,
+    "fields": {
+      "nombre": "Curl en polea con arrastre",
+      "musculo": "Bíceps",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Ajusta la polea a una posición baja y sujeta la barra con ambas manos.\", \"Mantén los codos cerca del torso y realiza un curl, llevando la barra hacia los hombros.\", \"Inclina ligeramente el torso hacia atrás para un rango completo.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/cable-drag-curl.gif",
+      "objetivo": "Fortalecer el bíceps con un enfoque en la parte larga"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 16,
+    "fields": {
+      "nombre": "Curl Martillo Cruzado",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Sujeta una mancuerna en cada mano con un agarre neutral (palmas enfrentadas).\", \"Levanta una mancuerna hacia el hombro opuesto, manteniendo el codo cerca del torso.\", \"Regresa lentamente a la posición inicial y repite con el otro brazo.\", \"Alterna los brazos en cada repetición.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/cross-body-hammer-curl.gif",
+      "objetivo": "Trabajar el braquiorradial y fortalecer el bíceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 17,
+    "fields": {
+      "nombre": "Curl con arrastre",
+      "musculo": "Bíceps",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Coloca la polea a una posición baja.\", \"Sujeta la barra con ambas manos y jala hacia tus hombros.\", \"Mantén los codos hacia atrás y el torso inclinado ligeramente.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/drag-curl.gif",
+      "objetivo": "Enfocar el trabajo en la parte larga del bíceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 18,
+    "fields": {
+      "nombre": "Curl Inclinado con Mancuerna",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Siéntate en un banco inclinado con una mancuerna en cada mano.\", \"Mantén los codos cerca del torso y realiza un curl, levantando las mancuernas hacia los hombros.\", \"Regresa lentamente a la posición inicial.\", \"Asegúrate de no balancear los brazos para mantener la tensión en los bíceps.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/incline-dumbbell-curl.gif",
+      "objetivo": "Aislar los bíceps para un rango de movimiento completo"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 19,
+    "fields": {
+      "nombre": "Curl Zottman",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Sujeta una mancuerna en cada mano con las palmas hacia arriba.\", \"Realiza un curl llevando las mancuernas hacia los hombros.\", \"Gira las palmas hacia abajo en la parte superior del movimiento.\", \"Baja lentamente las mancuernas con las palmas hacia abajo.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/dumbbell-seated-zottman-curl.gif",
+      "objetivo": "Trabajar tanto el bíceps como el braquiorradial"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 20,
+    "fields": {
+      "nombre": "Curl con mancuerna inclinado hacia adelante",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Inclínate hacia adelante mientras sostienes una mancuerna en cada mano.\", \"Mantén los codos estables y realiza un curl, levantando las mancuernas hacia los hombros.\", \"Haz una pausa en la parte superior y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/dumbbell-bent-over-curl.gif",
+      "objetivo": "Trabajar el bíceps y aumentar su definición"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 21,
+    "fields": {
+      "nombre": "Curl de concentración con mancuerna",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuerna",
+      "instrucciones": "[\"Siéntate en un banco y coloca el codo de tu brazo de trabajo en la parte interna del muslo.\", \"Sujeta una mancuerna con la palma hacia arriba.\", \"Realiza un curl levantando la mancuerna hacia tu hombro.\", \"Haz una pausa en la parte superior y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de brazo.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/dumbbell-concentration-curl.gif",
+      "objetivo": "Aislar el bíceps y mejorar la definición"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 22,
+    "fields": {
+      "nombre": "Curl de bíceps en predicador con barra EZ",
+      "musculo": "Bíceps",
+      "equipamento": "Barra EZ",
+      "instrucciones": "[\"Coloca tus brazos en la almohadilla de la máquina de predicador.\", \"Sujeta una barra EZ con un agarre supino.\", \"Realiza un curl llevando la barra hacia los hombros.\", \"Haz una pausa en la parte superior y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/ez-bar-preacher-curl.gif",
+      "objetivo": "Aislar los bíceps y mejorar su pico"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 23,
+    "fields": {
+      "nombre": "Encogimiento de muñeca con mancuerna",
+      "musculo": "Bíceps y antebrazo",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Siéntate en un banco con una mancuerna en cada mano.\", \"Deja que las muñecas cuelguen del borde con las palmas hacia arriba.\", \"Flexiona las muñecas hacia arriba lo más alto posible.\", \"Haz una pausa y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/dumbbell-wrist-curl.gif",
+      "objetivo": "Fortalecer los antebrazos y los bíceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 24,
+    "fields": {
+      "nombre": "Curl de bíceps por encima de la cabeza",
+      "musculo": "Bíceps",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Ajusta las poleas a una posición alta y sujeta las manijas con ambas manos.\", \"Párate en el centro con los brazos extendidos hacia los lados.\", \"Realiza un curl llevando las manijas hacia la parte superior de tu cabeza.\", \"Haz una pausa en la parte superior y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/overhead-cable-curl.gif",
+      "objetivo": "Trabajar la cabeza larga del bíceps para desarrollar tamaño y definición"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 25,
+    "fields": {
+      "nombre": "Curl de bíceps lateral",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Sujeta una mancuerna en cada mano con las palmas hacia adelante.\", \"Levanta ambas mancuernas hacia los lados en un movimiento de curl.\", \"Mantén los codos cerca del torso mientras subes las pesas.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/lateral-bicep-curls.gif",
+      "objetivo": "Fortalecer el bíceps enfocándose en su cabeza larga"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 26,
+    "fields": {
+      "nombre": "Curl martillo con mancuerna",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Sujeta una mancuerna en cada mano con un agarre neutro (palmas enfrentadas).\", \"Levanta ambas mancuernas hacia los hombros manteniendo el agarre neutro.\", \"Haz una pausa en la parte superior y baja lentamente las mancuernas.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/dumbbell-hammer-curl.gif",
+      "objetivo": "Fortalecer el braquiorradial y los bíceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 27,
+    "fields": {
+      "nombre": "Curl de araña",
+      "musculo": "Bíceps",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Acuéstate boca abajo en un banco inclinado y sujeta una mancuerna en cada mano.\", \"Deja que los brazos cuelguen perpendicularmente al suelo.\", \"Levanta las mancuernas hacia los hombros mientras contraes los bíceps.\", \"Haz una pausa en la parte superior y baja lentamente las mancuernas.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Biceps/spider-curls.gif",
+      "objetivo": "Aislar y fortalecer los bíceps desde un ángulo único"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 28,
+    "fields": {
+      "nombre": "Elevación de pantorrillas sentado",
+      "musculo": "Pantorrillas",
+      "equipamento": "Máquina",
+      "instrucciones": "[\"Siéntate en la máquina con las puntas de los pies apoyadas en la plataforma.\", \"Ajusta el acolchado sobre tus muslos y libera el seguro de la máquina.\", \"Levanta los talones lo más alto posible mientras mantienes la tensión en las pantorrillas.\", \"Haz una pausa en la parte superior y luego baja lentamente los talones hasta la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Calves/seated-calf-raise.gif",
+      "objetivo": "Fortalecer el sóleo y los músculos de las pantorrillas"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 29,
+    "fields": {
+      "nombre": "Elevación de pantorrillas a una pierna",
+      "musculo": "Pantorrillas",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Colócate de pie en un escalón o plataforma con el talón sobresaliendo.\", \"Apóyate en una superficie estable para equilibrarte.\", \"Levanta una pierna, dejando el peso sobre la otra.\", \"Eleva el talón de la pierna de apoyo lo más alto posible.\", \"Haz una pausa y luego baja lentamente el talón hasta la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Calves/single-leg-calf-raise.gif",
+      "objetivo": "Aumentar fuerza y estabilidad en las pantorrillas de manera unilateral"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 30,
+    "fields": {
+      "nombre": "Press de banca con barra",
+      "musculo": "Pecho",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Acuéstate en un banco plano y sujeta la barra con un agarre ligeramente más ancho que los hombros.\", \"Baja la barra lentamente hacia el centro de tu pecho.\", \"Empuja la barra hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Haz una pausa y repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/barbell-bench-press.gif",
+      "objetivo": "Fortalecer el pectoral mayor y los tríceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 31,
+    "fields": {
+      "nombre": "Press declinado con barra",
+      "musculo": "Pecho",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Acuéstate en un banco declinado y sujeta la barra con un agarre ancho.\", \"Baja la barra hacia la parte inferior de tu pecho.\", \"Empuja la barra hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Haz una pausa y repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/barbell-decline-bench-press.gif",
+      "objetivo": "Fortalecer la parte inferior del pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 32,
+    "fields": {
+      "nombre": "Cruce de cables de pie",
+      "musculo": "Pecho",
+      "equipamento": "Poleas",
+      "instrucciones": "[\"Coloca las poleas en una posición alta y sujeta una manija en cada mano.\", \"Da un paso adelante con un pie para mantener el equilibrio.\", \"Lleva las manijas hacia el centro frente a tu pecho en un movimiento de cruce.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/cable-standing-crossover.gif",
+      "objetivo": "Aislar y definir el pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 33,
+    "fields": {
+      "nombre": "Press de pecho en máquina",
+      "musculo": "Pecho",
+      "equipamento": "Máquina",
+      "instrucciones": "[\"Sientate en la máquina y ajusta los agarres a la altura de tu pecho.\", \"Empuja los agarres hacia adelante hasta que tus brazos estén completamente extendidos.\", \"Haz una pausa y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/chest-press-machine.gif",
+      "objetivo": "Fortalecer el pectoral mayor con un movimiento guiado"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 34,
+    "fields": {
+      "nombre": "Press cerrado con barra",
+      "musculo": "Pecho",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Acuestate en un banco plano y sujeta la barra con un agarre cerrado.\", \"Baja la barra hacia el centro de tu pecho.\", \"Empuja la barra hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Haz una pausa y repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/close-grip-bench-press-movement.gif",
+      "objetivo": "Fortalecer el pectoral mayor y los tríceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 35,
+    "fields": {
+      "nombre": "Aperturas con cable en declinación",
+      "musculo": "Pecho",
+      "equipamento": "Poleas",
+      "instrucciones": "[\"Ajusta las poleas a una posición baja y sujeta una manija en cada mano.\", \"Da un paso adelante con un pie y inclina ligeramente el torso hacia adelante.\", \"Lleva las manijas hacia el centro en un movimiento de apertura.\", \"Haz una pausa y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/decline-cable-fly.gif",
+      "objetivo": "Aislar la parte inferior del pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 36,
+    "fields": {
+      "nombre": "Flexiones en declinación",
+      "musculo": "Pecho",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Coloca tus pies en una superficie elevada y las manos en el suelo.\", \"Baja el pecho hacia el suelo manteniendo el torso recto.\", \"Empuja hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/decline-push-up.gif",
+      "objetivo": "Trabajar la parte inferior del pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 37,
+    "fields": {
+      "nombre": "Flexiones con déficit",
+      "musculo": "Pecho",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Coloca tus manos en plataformas o manijas elevadas.\", \"Baja el pecho más allá del nivel de tus manos.\", \"Empuja hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/deficit-push-ups.gif",
+      "objetivo": "Aumentar el rango de movimiento y trabajar el pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 38,
+    "fields": {
+      "nombre": "Flexiones diamante",
+      "musculo": "Pecho",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Coloca tus manos juntas formando un diamante debajo de tu pecho.\", \"Baja el torso hacia el suelo manteniendo el cuerpo recto.\", \"Empuja hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/diamond-pushup.gif",
+      "objetivo": "Fortalecer el pectoral mayor y los tríceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 39,
+    "fields": {
+      "nombre": "Aperturas con mancuerna",
+      "musculo": "Pecho",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Acuéstate en un banco plano con una mancuerna en cada mano.\", \"Abre los brazos hacia los lados en un movimiento de apertura.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/dumbbell-chest-fly-muscles.gif",
+      "objetivo": "Aislar el pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 40,
+    "fields": {
+      "nombre": "Press con agarre cerrado y mancuerna",
+      "musculo": "Pecho",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Acuéstate en un banco plano con una mancuerna en cada mano.\", \"Mantén las mancuernas juntas y empuja hacia arriba.\", \"Haz una pausa y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/dumbbell-close-grip-press.gif",
+      "objetivo": "Trabajar el pectoral mayor y los tríceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 41,
+    "fields": {
+      "nombre": "Press de banca inclinada con barra",
+      "musculo": "Pecho",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Ajusta un banco inclinado a 30-45 grados y acuéstate sobre él.\", \"Sujeta la barra con un agarre ligeramente más ancho que el ancho de los hombros.\", \"Baja la barra hacia la parte superior de tu pecho.\", \"Empuja la barra hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/incline-barbell-bench-press.gif",
+      "objetivo": "Fortalecer la parte superior del pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 42,
+    "fields": {
+      "nombre": "Aperturas inclinadas con cable",
+      "musculo": "Pecho",
+      "equipamento": "Poleas",
+      "instrucciones": "[\"Ajusta las poleas a una posición baja y toma una manija en cada mano.\", \"Siéntate en un banco inclinado y lleva las manijas hacia arriba frente a tu pecho.\", \"Regresa lentamente las manijas hacia abajo hasta que tus brazos estén abiertos pero no bloqueados.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/incline-cable-fly.gif",
+      "objetivo": "Aislar la parte superior del pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 43,
+    "fields": {
+      "nombre": "Press hexagonal inclinado con mancuernas",
+      "musculo": "Pecho",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Siéntate en un banco inclinado sosteniendo dos mancuernas juntas a la altura del pecho.\", \"Presiona las mancuernas hacia arriba manteniéndolas juntas durante todo el movimiento.\", \"Haz una pausa en la parte superior y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/incline-dumbbell-hex-press.gif",
+      "objetivo": "Fortalecer la parte superior del pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 44,
+    "fields": {
+      "nombre": "Aperturas bajas con cable",
+      "musculo": "Pecho",
+      "equipamento": "Poleas",
+      "instrucciones": "[\"Ajusta las poleas a una posición baja y toma una manija en cada mano.\", \"Inclínate ligeramente hacia adelante y lleva las manijas hacia el centro frente a tu pecho.\", \"Haz una pausa en la parte superior y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/low-cable-chest-flys.gif",
+      "objetivo": "Aislar la parte inferior del pectoral mayor"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 45,
+    "fields": {
+      "nombre": "Aperturas en máquina (Pec Deck)",
+      "musculo": "Pecho",
+      "equipamento": "Máquina",
+      "instrucciones": "[\"Siéntate en la máquina de aperturas y ajusta las manijas al nivel de tu pecho.\", \"Lleva las manijas hacia el centro frente a tu pecho.\", \"Haz una pausa en la parte superior y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/pec-deck.gif",
+      "objetivo": "Aislar el pectoral mayor con un movimiento controlado"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 46,
+    "fields": {
+      "nombre": "Flexiones de pecho",
+      "musculo": "Pecho",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Coloca las manos ligeramente más anchas que los hombros en el suelo.\", \"Baja el pecho hacia el suelo manteniendo el torso recto.\", \"Empuja hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/push-up.gif",
+      "objetivo": "Fortalecer el pectoral mayor y los tríceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 47,
+    "fields": {
+      "nombre": "Press de banca con agarre inverso",
+      "musculo": "Pecho",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Acuéstate en un banco plano y sujeta la barra con un agarre supino.\", \"Baja la barra hacia el centro de tu pecho.\", \"Empuja la barra hacia arriba hasta que tus brazos estén completamente extendidos.\", \"Haz una pausa y repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/reverse-grip-bench-press.gif",
+      "objetivo": "Trabajar el pectoral mayor y los tríceps con énfasis en la parte superior"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 48,
+    "fields": {
+      "nombre": "Fondos en paralelas",
+      "musculo": "Pecho",
+      "equipamento": "Barras paralelas",
+      "instrucciones": "[\"Sujeta las barras paralelas y levanta tu cuerpo hasta que tus brazos estén completamente extendidos.\", \"Baja el cuerpo doblando los codos hasta que los hombros estén al nivel de los codos.\", \"Empuja hacia arriba para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/tricep-dips.gif",
+      "objetivo": "Fortalecer el pectoral mayor y los tríceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 49,
+    "fields": {
+      "nombre": "Fondos con peso",
+      "musculo": "Pecho",
+      "equipamento": "Barras paralelas y peso adicional",
+      "instrucciones": "[\"Usa un cinturón con peso o sostén una mancuerna entre tus pies.\", \"Sujeta las barras paralelas y levanta tu cuerpo.\", \"Baja el cuerpo doblando los codos hasta que los hombros estén al nivel de los codos.\", \"Empuja hacia arriba para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Chest/weighted-dips.gif",
+      "objetivo": "Aumentar la fuerza del pecho y los tríceps con resistencia adicional"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 50,
+    "fields": {
+      "nombre": "Abdominales mariposa",
+      "musculo": "Core",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Acuéstate en el suelo con las plantas de los pies juntas y las rodillas hacia los lados.\", \"Coloca las manos detrás de la cabeza o en el pecho.\", \"Levanta el torso hacia las piernas contrayendo los abdominales.\", \"Baja lentamente de vuelta a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Core/butterfly-sit-up.gif",
+      "objetivo": "Fortalecer los músculos abdominales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 51,
+    "fields": {
+      "nombre": "Crunch en polea de rodillas",
+      "musculo": "Core",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Ajusta una polea alta con una cuerda y arrodíllate frente a ella.\", \"Sujeta la cuerda con ambas manos a la altura de la cabeza.\", \"Inclina el torso hacia abajo contrayendo los abdominales.\", \"Regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Core/cable-knee-crunch.gif",
+      "objetivo": "Trabajar los músculos abdominales superiores"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 52,
+    "fields": {
+      "nombre": "Elevación de piernas en silla romana",
+      "musculo": "Core",
+      "equipamento": "Silla romana",
+      "instrucciones": "[\"Apóyate en la silla romana con los antebrazos y la espalda firmemente contra el respaldo.\", \"Levanta las piernas rectas o ligeramente dobladas hacia el pecho.\", \"Haz una pausa y luego baja lentamente las piernas a la posición inicial.\", \"Evita balancearte y mantén el control durante todo el movimiento.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Core/captains-chair-leg-raise.gif",
+      "objetivo": "Fortalecer los músculos abdominales inferiores"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 53,
+    "fields": {
+      "nombre": "Crunch en el suelo",
+      "musculo": "Core",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Acuéstate en el suelo con las rodillas dobladas y los pies planos en el suelo.\", \"Coloca las manos detrás de la cabeza o cruzadas sobre el pecho.\", \"Levanta el torso contrayendo los abdominales.\", \"Haz una pausa en la parte superior y luego regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Core/crunch-floor.gif",
+      "objetivo": "Fortalecer los músculos abdominales superiores"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 54,
+    "fields": {
+      "nombre": "Abdominales en declive",
+      "musculo": "Core",
+      "equipamento": "Banco declinado",
+      "instrucciones": "[\"Ajusta un banco en declive y siéntate con los pies asegurados.\", \"Cruza las manos sobre el pecho o colócalas detrás de la cabeza.\", \"Levanta el torso contrayendo los abdominales.\", \"Haz una pausa en la parte superior y luego baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Core/decline-sit-up.gif",
+      "objetivo": "Trabajar los abdominales superiores e inferiores"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 55,
+    "fields": {
+      "nombre": "Plancha",
+      "musculo": "Core",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Colócate en una posición de plancha apoyando los antebrazos y los pies en el suelo.\", \"Mantén el cuerpo en línea recta desde la cabeza hasta los pies.\", \"Aprieta los músculos abdominales y mantén la posición durante el tiempo deseado.\", \"Evita que las caderas caigan o se eleven demasiado.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Core/plank.gif",
+      "objetivo": "Fortalecer el core y mejorar la estabilidad general"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 56,
+    "fields": {
+      "nombre": "Lat Pulldown con agarre ancho",
+      "musculo": "Core y dorsales",
+      "equipamento": "Máquina de polea",
+      "instrucciones": "[\"Siéntate en la máquina con las rodillas aseguradas y sujeta la barra con un agarre ancho.\", \"Jala la barra hacia el pecho manteniendo los codos hacia abajo y apretando los músculos del core.\", \"Haz una pausa y luego regresa lentamente la barra a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Core/wide-grip-lat-pulldown.gif",
+      "objetivo": "Fortalecer el core mientras trabajas los dorsales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 57,
+    "fields": {
+      "nombre": "Curl de muñeca detrás de la espalda",
+      "musculo": "Antebrazos",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Sujeta una barra con las palmas hacia arriba detrás de tu espalda.\", \"Deja que las muñecas cuelguen por completo.\", \"Levanta la barra flexionando las muñecas lo más alto posible.\", \"Haz una pausa y luego baja lentamente la barra.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Forearms/behind-the-back-wrist-curl.gif",
+      "objetivo": "Fortalecer los músculos flexores del antebrazo"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 58,
+    "fields": {
+      "nombre": "Curl de muñeca con mancuerna",
+      "musculo": "Antebrazos",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Siéntate en un banco con una mancuerna en cada mano.\", \"Apoya los antebrazos en los muslos con las muñecas extendiéndose más allá del borde.\", \"Flexiona las muñecas hacia arriba levantando las mancuernas.\", \"Haz una pausa y luego baja lentamente las mancuernas.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Forearms/dumbbell-wrist-curl.gif",
+      "objetivo": "Fortalecer los flexores del antebrazo"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 59,
+    "fields": {
+      "nombre": "Curl inverso con barra EZ",
+      "musculo": "Antebrazos",
+      "equipamento": "Barra EZ",
+      "instrucciones": "[\"Sujeta una barra EZ con un agarre prono (palmas hacia abajo).\", \"Mantén los codos cerca del torso y realiza un curl levantando la barra hacia los hombros.\", \"Haz una pausa en la parte superior y luego baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Forearms/ez-bar-reverse-grip-curl.gif",
+      "objetivo": "Fortalecer los extensores del antebrazo y el braquiorradial"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 60,
+    "fields": {
+      "nombre": "Empuje de cadera en posición B",
+      "musculo": "Glúteos",
+      "equipamento": "Banco y barra",
+      "instrucciones": "[\"Apoya la parte superior de tu espalda en un banco estable.\", \"Coloca los pies en el suelo, separados a la anchura de los hombros, con un pie más adelantado que el otro.\", \"Coloca una barra sobre tus caderas y estabilízala con las manos.\", \"Empuja las caderas hacia arriba contrayendo los glúteos.\", \"Haz una pausa en la parte superior y baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Glutes/b-stance-hip-thrust.gif",
+      "objetivo": "Fortalecer los glúteos y mejorar la estabilidad unilateral"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 61,
+    "fields": {
+      "nombre": "Empuje de cadera con cable",
+      "musculo": "Glúteos",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Coloca una correa de tobillo en la polea baja y sujeta el cable a un tobillo.\", \"Inclínate ligeramente hacia adelante apoyándote en una superficie estable.\", \"Extiende la pierna hacia atrás contrayendo los glúteos.\", \"Haz una pausa en la parte superior y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Glutes/cable-pull-through.gif",
+      "objetivo": "Fortalecer los glúteos con resistencia constante"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 62,
+    "fields": {
+      "nombre": "Peso muerto con déficit",
+      "musculo": "Glúteos",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Párate sobre una plataforma para aumentar el rango de movimiento.\", \"Sujeta una barra con un agarre prono, ligeramente más ancho que los hombros.\", \"Inclina las caderas hacia atrás y baja la barra mientras mantienes la espalda recta.\", \"Empuja las caderas hacia adelante para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Glutes/deficit-deadlift.gif",
+      "objetivo": "Fortalecer los glúteos y los isquiotibiales mientras mejoras el rango de movimiento"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 63,
+    "fields": {
+      "nombre": "Empuje de cadera estilo rana",
+      "musculo": "Glúteos",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Acuéstate en el suelo con las plantas de los pies juntas y las rodillas hacia los lados.\", \"Empuja las caderas hacia arriba contrayendo los glúteos.\", \"Haz una pausa en la parte superior y luego baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Glutes/frog-hip-thrust.gif",
+      "objetivo": "Aislar los glúteos en una posición de abducción"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 64,
+    "fields": {
+      "nombre": "Empuje de cadera a una pierna",
+      "musculo": "Glúteos",
+      "equipamento": "Banco",
+      "instrucciones": "[\"Apoya la parte superior de tu espalda en un banco estable y levanta una pierna.\", \"Empuja las caderas hacia arriba con la pierna de apoyo contrayendo los glúteos.\", \"Haz una pausa en la parte superior y baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Glutes/single-leg-hip-thrust-muscles.gif",
+      "objetivo": "Fortalecer los glúteos y mejorar el equilibrio"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 65,
+    "fields": {
+      "nombre": "Peso muerto con piernas rectas",
+      "musculo": "Glúteos",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Sujeta una barra con un agarre prono y mantén las piernas rectas pero no bloqueadas.\", \"Inclina las caderas hacia atrás y baja la barra manteniendo la espalda recta.\", \"Empuja las caderas hacia adelante para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Glutes/straight-leg-deadlift.gif",
+      "objetivo": "Trabajar los glúteos y los isquiotibiales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 66,
+    "fields": {
+      "nombre": "Empuje de cadera con cable",
+      "musculo": "Isquiotibiales",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Coloca una correa de tobillo en la polea baja y sujeta el cable a un tobillo.\", \"Inclínate ligeramente hacia adelante apoyándote en una superficie estable.\", \"Extiende la pierna hacia atrás contrayendo los glúteos y los isquiotibiales.\", \"Haz una pausa en la parte superior y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Harmstring/Hamstring/cable-pull-through.gif",
+      "objetivo": "Fortalecer los isquiotibiales y glúteos con resistencia constante"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 67,
+    "fields": {
+      "nombre": "Peso muerto con déficit",
+      "musculo": "Isquiotibiales",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Párate sobre una plataforma para aumentar el rango de movimiento.\", \"Sujeta una barra con un agarre prono, ligeramente más ancho que los hombros.\", \"Inclina las caderas hacia atrás y baja la barra mientras mantienes la espalda recta.\", \"Empuja las caderas hacia adelante para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Harmstring/Hamstring/deficit-deadlift.gif",
+      "objetivo": "Fortalecer los isquiotibiales y los glúteos mientras mejoras el rango de movimiento"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 68,
+    "fields": {
+      "nombre": "Peso muerto con kettlebell",
+      "musculo": "Isquiotibiales",
+      "equipamento": "Kettlebell",
+      "instrucciones": "[\"Párate con los pies separados al ancho de los hombros y una kettlebell en el suelo frente a ti.\", \"Inclina las caderas hacia atrás y baja el torso para sujetar la kettlebell con ambas manos.\", \"Empuja las caderas hacia adelante para levantar la kettlebell manteniendo la espalda recta.\", \"Haz una pausa en la parte superior y baja lentamente la kettlebell a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Harmstring/Hamstring/how-to-kettlebell-deadlift.gif",
+      "objetivo": "Fortalecer los isquiotibiales, glúteos y zona lumbar"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 69,
+    "fields": {
+      "nombre": "Curl de pierna acostado",
+      "musculo": "Isquiotibiales",
+      "equipamento": "Máquina de curl de pierna",
+      "instrucciones": "[\"Acuéstate boca abajo en la máquina de curl de pierna y ajusta el rodillo sobre los tobillos.\", \"Flexiona las rodillas para levantar el rodillo hacia los glúteos.\", \"Haz una pausa en la parte superior y baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Harmstring/Hamstring/lying-leg-curl.gif",
+      "objetivo": "Fortalecer los isquiotibiales de forma aislada"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 70,
+    "fields": {
+      "nombre": "Curl de pierna sentado",
+      "musculo": "Isquiotibiales",
+      "equipamento": "Máquina de curl de pierna",
+      "instrucciones": "[\"Siéntate en la máquina y ajusta el rodillo sobre los tobillos.\", \"Flexiona las rodillas para mover el rodillo hacia abajo.\", \"Haz una pausa en la parte inferior y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Harmstring/Hamstring/seated-leg-curl.gif",
+      "objetivo": "Fortalecer los isquiotibiales de forma controlada"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 71,
+    "fields": {
+      "nombre": "Peso muerto con piernas rectas",
+      "musculo": "Isquiotibiales",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Sujeta una barra con un agarre prono y mantén las piernas rectas pero no bloqueadas.\", \"Inclina las caderas hacia atrás y baja la barra manteniendo la espalda recta.\", \"Empuja las caderas hacia adelante para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Harmstring/Hamstring/straight-leg-deadlift.gif",
+      "objetivo": "Fortalecer los isquiotibiales y glúteos"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 72,
+    "fields": {
+      "nombre": "Sentadilla con peso corporal",
+      "musculo": "Piernas",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Párate con los pies separados al ancho de los hombros.\", \"Baja las caderas hacia atrás y hacia abajo hasta que los muslos estén paralelos al suelo.\", \"Mantén el pecho erguido y las rodillas alineadas con los pies.\", \"Empuja a través de los talones para volver a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/bodyweight-squat.gif",
+      "objetivo": "Fortalecer cuádriceps, glúteos e isquiotibiales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 73,
+    "fields": {
+      "nombre": "Split squat con mancuerna",
+      "musculo": "Piernas",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Sujeta una mancuerna en cada mano y da un paso hacia adelante.\", \"Baja el cuerpo doblando ambas rodillas, manteniendo el torso recto.\", \"Empuja con el pie delantero para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/dumbbell-split-squat.gif",
+      "objetivo": "Fortalecer cuádriceps, glúteos e isquiotibiales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 74,
+    "fields": {
+      "nombre": "Sentadilla sumo con mancuerna",
+      "musculo": "Piernas",
+      "equipamento": "Mancuerna",
+      "instrucciones": "[\"Sujeta una mancuerna con ambas manos y coloca los pies más anchos que los hombros.\", \"Baja las caderas hacia abajo mientras mantienes el pecho erguido.\", \"Haz una pausa y empuja hacia arriba a través de los talones.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/dumbbell-sumo-squat.gif",
+      "objetivo": "Fortalecer cuádriceps, glúteos y aductores"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 75,
+    "fields": {
+      "nombre": "Estiramiento de músculos en posición de arrodillado",
+      "musculo": "Piernas",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Arrodíllate en el suelo con una pierna hacia adelante.\", \"Empuja las caderas hacia adelante para estirar el músculo del muslo trasero.\", \"Mantén la posición durante 15-30 segundos y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/kneeling-lunge-stretch-muscles.gif",
+      "objetivo": "Mejorar la flexibilidad y la movilidad de los músculos de las piernas"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 76,
+    "fields": {
+      "nombre": "Extensión de piernas en máquina",
+      "musculo": "Piernas",
+      "equipamento": "Máquina de extensión de piernas",
+      "instrucciones": "[\"Siéntate en la máquina y ajusta el rodillo para que quede sobre tus tobillos.\", \"Extiende las piernas hacia adelante completamente.\", \"Haz una pausa y baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/leg-extension-machine.gif",
+      "objetivo": "Aislar y fortalecer los cuádriceps"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 77,
+    "fields": {
+      "nombre": "Prensa de pierna",
+      "musculo": "Piernas",
+      "equipamento": "Máquina de prensa de pierna",
+      "instrucciones": "[\"Siéntate en la máquina de prensa de pierna y coloca los pies en la plataforma.\", \"Empuja la plataforma hacia arriba extendiendo las piernas, sin bloquear las rodillas.\", \"Baja lentamente la plataforma hasta que las rodillas estén en un ángulo de 90 grados.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/leg-press.gif",
+      "objetivo": "Fortalecer cuádriceps, glúteos e isquiotibiales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 78,
+    "fields": {
+      "nombre": "Sentadilla pistol",
+      "musculo": "Piernas",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Párate sobre una pierna con la otra pierna extendida hacia adelante.\", \"Baja lentamente el cuerpo hacia abajo doblando la pierna de apoyo.\", \"Empuja hacia arriba a través del talón para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/pistol-squat-muscles.gif",
+      "objetivo": "Fortalecer piernas y mejorar el equilibrio"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 79,
+    "fields": {
+      "nombre": "Lunge con déficit inverso",
+      "musculo": "Piernas",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Párate en una plataforma y da un paso hacia atrás con una pierna.\", \"Baja el cuerpo doblando ambas rodillas hasta que la pierna trasera toque el suelo.\", \"Empuja con el pie delantero para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de pierna.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/reverse-deficit-lunge.gif",
+      "objetivo": "Fortalecer cuádriceps, glúteos e isquiotibiales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 80,
+    "fields": {
+      "nombre": "Sentadilla isométrica de 2 segundos",
+      "musculo": "Piernas",
+      "equipamento": "Peso corporal",
+      "instrucciones": "[\"Párate con los pies separados al ancho de los hombros.\", \"Baja las caderas hacia abajo hasta que los muslos estén paralelos al suelo.\", \"Mantén la posición durante 2 segundos antes de regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/squat-hold-2-seconds.gif",
+      "objetivo": "Fortalecer cuádriceps y mejorar la resistencia"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 81,
+    "fields": {
+      "nombre": "Peso muerto con piernas rectas",
+      "musculo": "Piernas",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Sujeta una barra con un agarre prono y mantén las piernas rectas pero no bloqueadas.\", \"Inclina las caderas hacia atrás y baja la barra manteniendo la espalda recta.\", \"Empuja las caderas hacia adelante para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/straight-leg-deadlift.gif",
+      "objetivo": "Fortalecer glúteos e isquiotibiales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 82,
+    "fields": {
+      "nombre": "V Squat",
+      "musculo": "Piernas",
+      "equipamento": "Máquina",
+      "instrucciones": "\"[\\\"Colócate en la máquina V Squat con los pies en la plataforma.\\\", \\\"Ajusta la posición para que los hombros estén asegurados debajo de los acolchados.\\\", \\\"Baja el cuerpo doblando las rodillas hasta que los muslos estén paralelos al suelo.\\\", \\\"Empuja a través de los talones para regresar a la posición inicial.\\\", \\\"Repite el número deseado de repeticiones.\\\"]\"",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/v-squat.gif",
+      "objetivo": "Fortalecer los cuádriceps, glúteos y mejorar la estabilidad en las piernas."
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 83,
+    "fields": {
+      "nombre": "Dumbbell Squat",
+      "musculo": "Piernas",
+      "equipamento": "Mancuernas",
+      "instrucciones": "\"[\\\"Toma una mancuerna en cada mano y mantén los brazos extendidos a los lados del cuerpo.\\\", \\\"Coloca los pies a la altura de los hombros con las puntas ligeramente hacia afuera.\\\", \\\"Dobla las rodillas y baja las caderas hacia abajo y hacia atrás como si estuvieras sentado en una silla.\\\", \\\"Mantén el peso en los talones mientras bajas, asegurándote de que las rodillas no sobrepasen los dedos de los pies.\\\", \\\"Empuja hacia arriba a través de los talones para regresar a la posición inicial.\\\", \\\"Repite el número deseado de repeticiones.\\\"]\"",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Legs/dumbbell-squat.gif",
+      "objetivo": "Fortalecer los cuádriceps, glúteos y estabilizar los músculos de las piernas."
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 84,
+    "fields": {
+      "nombre": "Press Arnold",
+      "musculo": "Hombros",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Sujeta una mancuerna en cada mano a la altura de los hombros con las palmas mirando hacia ti.\", \"Empuja las mancuernas hacia arriba mientras giras las muñecas, terminando con las palmas mirando hacia afuera.\", \"Baja las mancuernas lentamente a la posición inicial invirtiendo el movimiento.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/arnold-presses.gif",
+      "objetivo": "Fortalecer los deltoides y mejorar la movilidad del hombro"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 85,
+    "fields": {
+      "nombre": "Jalón de cara con banda",
+      "musculo": "Hombros",
+      "equipamento": "Banda",
+      "instrucciones": "[\"Sujeta una banda a una superficie estable a la altura del pecho.\", \"Agarra los extremos de la banda con ambas manos con las palmas hacia abajo.\", \"Jala la banda hacia tu cara mientras mantienes los codos hacia afuera.\", \"Haz una pausa en la contracción y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/banded-face-pull.gif",
+      "objetivo": "Fortalecer la parte trasera del deltoide y mejorar la postura"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 86,
+    "fields": {
+      "nombre": "Remo vertical con barra de pie",
+      "musculo": "Hombros",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Sujeta una barra con un agarre prono a la anchura de los hombros.\", \"Levanta la barra hacia la barbilla manteniendo los codos hacia arriba y hacia afuera.\", \"Haz una pausa en la parte superior y baja lentamente la barra.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/barbell-upright-row-standing.gif",
+      "objetivo": "Fortalecer los deltoides laterales y el trapecio"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 87,
+    "fields": {
+      "nombre": "Elevación lateral con cable a un brazo",
+      "musculo": "Hombros",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Coloca el mango de la polea baja en una mano.\", \"Levanta el brazo hacia un lado hasta que esté paralelo al suelo.\", \"Haz una pausa y baja lentamente el brazo a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de brazo.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/cable-one-arm-lateral-raise.gif",
+      "objetivo": "Fortalecer los deltoides laterales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 88,
+    "fields": {
+      "nombre": "Variaciones de elevación lateral con mancuerna",
+      "musculo": "Hombros",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Sujeta una mancuerna en cada mano con los brazos a los costados.\", \"Levanta ambos brazos hacia los lados hasta que estén paralelos al suelo.\", \"Haz una pausa en la parte superior y baja lentamente las mancuernas.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/dumbbell-lateral-raise-variations.gif",
+      "objetivo": "Aislar y fortalecer los deltoides laterales"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 89,
+    "fields": {
+      "nombre": "Press de hombros en máquina",
+      "musculo": "Hombros",
+      "equipamento": "Máquina",
+      "instrucciones": "[\"Siéntate en la máquina y ajusta la posición de los agarres.\", \"Empuja los agarres hacia arriba hasta que los brazos estén completamente extendidos.\", \"Baja lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/machine-shoulder-press.gif",
+      "objetivo": "Fortalecer los deltoides con apoyo"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 90,
+    "fields": {
+      "nombre": "Press militar",
+      "musculo": "Hombros",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Sujeta una barra con un agarre prono a la altura de los hombros.\", \"Empuja la barra hacia arriba hasta que los brazos estén completamente extendidos.\", \"Baja la barra lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/military-press.gif",
+      "objetivo": "Fortalecer los deltoides y el trapecio superior"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 91,
+    "fields": {
+      "nombre": "Elevación trasera sentado con mancuerna",
+      "musculo": "Hombros",
+      "equipamento": "Mancuernas",
+      "instrucciones": "[\"Siéntate en un banco y sujeta una mancuerna en cada mano.\", \"Inclina el torso hacia adelante hasta que quede paralelo al suelo.\", \"Levanta los brazos hacia los lados mientras mantienes un ligero arco en los codos.\", \"Haz una pausa en la parte superior y baja lentamente las mancuernas.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/seated-reverse-fly.gif",
+      "objetivo": "Fortalecer la parte trasera del deltoide"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 92,
+    "fields": {
+      "nombre": "Press con barra en landmine",
+      "musculo": "Hombros",
+      "equipamento": "Landmine y barra",
+      "instrucciones": "[\"Sujeta el extremo de una barra asegurada en una landmine.\", \"Empuja la barra hacia arriba con un brazo hasta que esté completamente extendido.\", \"Baja lentamente la barra a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de brazo.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/standing-landmine-press.gif",
+      "objetivo": "Fortalecer los deltoides y el core"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 93,
+    "fields": {
+      "nombre": "Press de hombros en máquina Smith",
+      "musculo": "Hombros",
+      "equipamento": "Máquina Smith",
+      "instrucciones": "[\"Sujeta la barra de la máquina Smith a la altura de los hombros.\", \"Empuja la barra hacia arriba hasta que los brazos estén completamente extendidos.\", \"Baja lentamente la barra a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Shoulders/standing-smith-machine-shoulder-press.gif",
+      "objetivo": "Fortalecer los deltoides con soporte de la máquina"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 94,
+    "fields": {
+      "nombre": "Dips en banco",
+      "musculo": "Tríceps",
+      "equipamento": "Banco",
+      "instrucciones": "[\"Siéntate en el borde de un banco con las manos apoyadas a los lados.\", \"Extiende las piernas frente a ti con los talones apoyados en el suelo.\", \"Desciende el cuerpo doblando los codos hasta que los brazos formen un ángulo de 90 grados.\", \"Empuja hacia arriba con los brazos para regresar a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/bench-dip.gif",
+      "objetivo": "Fortalecer los tríceps y mejorar la estabilidad del hombro"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 95,
+    "fields": {
+      "nombre": "Patada de tríceps con cable",
+      "musculo": "Tríceps",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Coloca un mango en la polea alta y sujétalo con una mano.\", \"Inclínate ligeramente hacia adelante con la espalda recta.\", \"Extiende el brazo hacia atrás mientras contraes el tríceps.\", \"Haz una pausa y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones y cambia de brazo.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/cable-tricep-kickback.gif",
+      "objetivo": "Fortalecer los tríceps con resistencia constante"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 96,
+    "fields": {
+      "nombre": "Press de banca con agarre cerrado",
+      "musculo": "Tríceps",
+      "equipamento": "Barra",
+      "instrucciones": "[\"Acuéstate en un banco plano y sujeta una barra con un agarre estrecho.\", \"Baja la barra hacia el pecho manteniendo los codos cerca del cuerpo.\", \"Empuja la barra hacia arriba hasta que los brazos estén completamente extendidos.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/close-grip-bench-press-movement.gif",
+      "objetivo": "Fortalecer los tríceps, pectorales y deltoides"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 97,
+    "fields": {
+      "nombre": "Skull crusher en banco plano",
+      "musculo": "Tríceps",
+      "equipamento": "Barra EZ",
+      "instrucciones": "[\"Acuéstate en un banco plano sujetando una barra EZ con un agarre prono.\", \"Baja lentamente la barra hacia la frente doblando los codos.\", \"Extiende los brazos hacia arriba regresando a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/flat-bench-skull-crusher.gif",
+      "objetivo": "Fortalecer los tríceps de manera aislada"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 98,
+    "fields": {
+      "nombre": "Skull crusher inclinado",
+      "musculo": "Tríceps",
+      "equipamento": "Barra EZ",
+      "instrucciones": "[\"Acuéstate en un banco inclinado sujetando una barra EZ con un agarre prono.\", \"Baja lentamente la barra hacia la frente doblando los codos.\", \"Extiende los brazos hacia arriba regresando a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/incline-skullcrusher.gif",
+      "objetivo": "Fortalecer los tríceps desde un ángulo diferente"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 99,
+    "fields": {
+      "nombre": "Extensión de tríceps con cable por encima de la cabeza",
+      "musculo": "Tríceps",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Sujeta un mango en la polea alta con ambas manos.\", \"Da un paso adelante y extiende los brazos por encima de la cabeza.\", \"Dobla los codos para llevar el mango detrás de la cabeza.\", \"Extiende los brazos nuevamente regresando a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/overhead-cable-tricep-extension.gif",
+      "objetivo": "Fortalecer los tríceps con enfoque en la cabeza larga"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 100,
+    "fields": {
+      "nombre": "Extensión de tríceps por encima de la cabeza",
+      "musculo": "Tríceps",
+      "equipamento": "Mancuerna",
+      "instrucciones": "[\"Sujeta una mancuerna con ambas manos por detrás de la cabeza.\", \"Extiende los brazos hacia arriba completamente.\", \"Baja lentamente la mancuerna detrás de la cabeza doblando los codos.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/tricep-overhead-extensions.gif",
+      "objetivo": "Fortalecer los tríceps con un movimiento completo"
+    }
+  },
+  {
+    "model": "routine_app.ejercicio",
+    "pk": 101,
+    "fields": {
+      "nombre": "Pushdown de tríceps con barra en V",
+      "musculo": "Tríceps",
+      "equipamento": "Polea",
+      "instrucciones": "[\"Sujeta una barra en V conectada a la polea alta.\", \"Empuja la barra hacia abajo hasta que los brazos estén completamente extendidos.\", \"Haz una pausa y regresa lentamente a la posición inicial.\", \"Repite el número deseado de repeticiones.\"]",
+      "imagen": "https://storage.googleapis.com/gifs_exercises_regional/Gifs%20exercises/Triceps/v-bar-tricep-pushdown.gif",
+      "objetivo": "Fortalecer los tríceps con enfoque en la cabeza lateral"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 649,
+    "fields": {
+      "id_rutina": 12,
+      "id_ejercicio": 30,
+      "id_cliente": 1,
+      "notas": "Realizar con la técnica correcta",
+      "tiempo_descanso": 120,
+      "serie": 1,
+      "repeticiones": 12,
+      "peso": 40,
+      "fecha": "2025-01-11T03:36:35.408Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "40kg x 12"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 650,
+    "fields": {
+      "id_rutina": 12,
+      "id_ejercicio": 30,
+      "id_cliente": 1,
+      "notas": "Realizar con la técnica correcta",
+      "tiempo_descanso": 120,
+      "serie": 2,
+      "repeticiones": 11,
+      "peso": 40,
+      "fecha": "2025-01-11T03:36:35.422Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "40kg x 11"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 651,
+    "fields": {
+      "id_rutina": 12,
+      "id_ejercicio": 31,
+      "id_cliente": 1,
+      "notas": "Realizar con el banco a una inclinación de 45 grados",
+      "tiempo_descanso": 180,
+      "serie": 1,
+      "repeticiones": 9,
+      "peso": 40,
+      "fecha": "2025-01-11T03:36:35.432Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "40kg x 10"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 652,
+    "fields": {
+      "id_rutina": 12,
+      "id_ejercicio": 31,
+      "id_cliente": 1,
+      "notas": "Realizar con el banco a una inclinación de 45 grados",
+      "tiempo_descanso": 180,
+      "serie": 2,
+      "repeticiones": 8,
+      "peso": 40,
+      "fecha": "2025-01-11T03:36:35.441Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "40kg x 9"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 766,
+    "fields": {
+      "id_rutina": 12,
+      "id_ejercicio": 30,
+      "id_cliente": 1,
+      "notas": null,
+      "tiempo_descanso": 180,
+      "serie": 3,
+      "repeticiones": 10,
+      "peso": 40,
+      "fecha": "2025-01-11T03:36:35.449Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "40kg x 10"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 853,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "Realizar con el banco recto",
+      "tiempo_descanso": 120,
+      "serie": 1,
+      "repeticiones": 12,
+      "peso": 100,
+      "fecha": "2025-01-11T17:20:51.347Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "100kg x 12"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 854,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "Realizar con el banco recto",
+      "tiempo_descanso": 120,
+      "serie": 2,
+      "repeticiones": 11,
+      "peso": 100,
+      "fecha": "2025-01-11T17:20:51.357Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "100kg x 11"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 855,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 8,
+      "id_cliente": 3,
+      "notas": "Realizar con la técnica correcta",
+      "tiempo_descanso": 120,
+      "serie": 1,
+      "repeticiones": 10,
+      "peso": 100,
+      "fecha": "2025-01-11T17:20:51.365Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "100kg x 10"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 857,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "Mejorando la técnica1",
+      "tiempo_descanso": 6,
+      "serie": 1,
+      "repeticiones": 11,
+      "peso": 100,
+      "fecha": "2025-01-11T17:23:33.178Z",
+      "dia": "Lunes",
+      "tipo": "progreso",
+      "asignado": "100kg x 12"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 858,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "Mejorando la técnica1",
+      "tiempo_descanso": 22,
+      "serie": 2,
+      "repeticiones": 10,
+      "peso": 100,
+      "fecha": "2025-01-11T17:23:33.200Z",
+      "dia": "Lunes",
+      "tipo": "progreso",
+      "asignado": "100kg x 11"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 859,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 8,
+      "id_cliente": 3,
+      "notas": "Mejorando la técnica2",
+      "tiempo_descanso": 11,
+      "serie": 1,
+      "repeticiones": 9,
+      "peso": 100,
+      "fecha": "2025-01-11T17:23:33.208Z",
+      "dia": "Lunes",
+      "tipo": "progreso",
+      "asignado": "100kg x 10"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 861,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "Realizar con el banco recto",
+      "tiempo_descanso": 120,
+      "serie": 1,
+      "repeticiones": 11,
+      "peso": 100,
+      "fecha": "2025-01-11T17:24:28.872Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "100kg x 12"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 862,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "Realizar con el banco recto",
+      "tiempo_descanso": 120,
+      "serie": 2,
+      "repeticiones": 10,
+      "peso": 100,
+      "fecha": "2025-01-11T17:24:28.883Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "100kg x 11"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 863,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 8,
+      "id_cliente": 3,
+      "notas": "Realizar con la técnica correcta",
+      "tiempo_descanso": 120,
+      "serie": 1,
+      "repeticiones": 9,
+      "peso": 100,
+      "fecha": "2025-01-11T17:24:28.890Z",
+      "dia": "Lunes",
+      "tipo": "asignacion",
+      "asignado": "100kg x 10"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 866,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "",
+      "tiempo_descanso": 5,
+      "serie": 1,
+      "repeticiones": 12,
+      "peso": 100,
+      "fecha": "2025-01-11T17:26:33.500Z",
+      "dia": "Lunes",
+      "tipo": "progreso",
+      "asignado": "100kg x 11"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 867,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 7,
+      "id_cliente": 3,
+      "notas": "",
+      "tiempo_descanso": 7,
+      "serie": 2,
+      "repeticiones": 11,
+      "peso": 100,
+      "fecha": "2025-01-11T17:26:33.510Z",
+      "dia": "Lunes",
+      "tipo": "progreso",
+      "asignado": "100kg x 10"
+    }
+  },
+  {
+    "model": "routine_app.seasigna",
+    "pk": 869,
+    "fields": {
+      "id_rutina": 15,
+      "id_ejercicio": 8,
+      "id_cliente": 3,
+      "notas": "Mejorando la técnica2",
+      "tiempo_descanso": 5,
+      "serie": 1,
+      "repeticiones": 10,
+      "peso": 100,
+      "fecha": "2025-01-11T17:26:33.525Z",
+      "dia": "Lunes",
+      "tipo": "progreso",
+      "asignado": "100kg x 9"
+    }
+  },
+
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$OEbRoibPESDU7qqHSlXmYY$HF8daLKbWtrwiFaNillQzN9cEKn3fis/d6pKaZK2cW8=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "sebasm3690",
+      "first_name": "Sebastian",
+      "last_name": "Merino",
+      "email": "sebasm6004@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-19T04:38:58.462Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$XdNeQFMRTrGwG40QJZAWMZ$lQTeZ6ouBvH+CzJxV++Ct4TrVtscbJ5pgOgJ5on0SFA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "jaime123",
+      "first_name": "",
+      "last_name": "",
+      "email": "anonblade10@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-19T04:54:16.177Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$w3Sa6uPx48htTOkfy9gM6o$yMiY33R2asU8AFFRUbfzD0Wj5IRDM+f6oRFXHtcQbXs=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "franklin123",
+      "first_name": "",
+      "last_name": "",
+      "email": "frank123@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-21T01:57:29.923Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$W8qux6ZNZMYowtIvTkzEtd$WFmzf3oqPfS4v2HQgvHJbdHdaueaNyRAT+8EyATrWcU=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "david123",
+      "first_name": "",
+      "last_name": "",
+      "email": "David123@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-23T22:12:52.095Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$pKM6Bl6P7CZ4Pcefx527L9$5l8wUKW++SUbJE/YhvrmyyWWs5D5rynJTv/Py3LV/fA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "david1234",
+      "first_name": "",
+      "last_name": "",
+      "email": "juanvz1990@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-24T04:28:33.130Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$vakrno9pGLs1248y87Hp7k$OthAMLacmQct22zfHkRkQHiv1xnaMSDKhNAIsDzlSwM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "pepe123",
+      "first_name": "",
+      "last_name": "",
+      "email": "pepe1234@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-28T20:35:54.545Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$VcWksCxrJjJ8C9XVeXL9aJ$83YaM6yhAEi7/Cc/PLub72A8HFtRTK77Fme6q18jvLE=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "alexis123",
+      "first_name": "",
+      "last_name": "",
+      "email": "alexis123@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-28T20:42:40.440Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$JGwTqymh6Rgymmffrue2S4$F270kYF59Vs+mVyhyA06IkO1KSlmIVss8GDVcyTwnFA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "admin123",
+      "first_name": "",
+      "last_name": "",
+      "email": "adminProbar@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-28T21:38:22.288Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$XHiaHAv6qUsXxuCqzNvgTo$FNzpSzrueeufwC3ecYrsSBoOZlpysEYk0HSTfutxS0U=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "borrar123",
+      "first_name": "",
+      "last_name": "",
+      "email": "borrar123@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-12-14T04:48:32.086Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 10,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$eZSRDzduVSjiq3DYQejRgG$FU+PB6xCQtlMvazoqjEqZdD8kkBq6upxf9wrHVUUb6w=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "borrar1234",
+      "first_name": "",
+      "last_name": "",
+      "email": "borrar1234@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-12-14T05:45:19.880Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 11,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$1pRcRnhgUaf1iOUyuh8MAS$B/MQ63gaTyy3A+EQpWbAVkXMdzPnTgA6qG7dOz0cTkc=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "cristiano123",
+      "first_name": "",
+      "last_name": "",
+      "email": "cristiano123@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-12-26T04:06:55.216Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 12,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$daJ9BPYvDfIQ0w4jXEEhKA$GV/6iJpCJ5BoHoTO/BF+mJiHzloDPuVpJl0ZgfBqYFE=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "cristiano1234",
+      "first_name": "",
+      "last_name": "",
+      "email": "cristiano1234@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-12-26T16:06:26.870Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 13,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$huaD9jPReMQYPpHDJ5R6UL$Qa8NsdWXBCmNVyWHcEC7XziCa1Fq6EYKF06jPW6WQAc=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "cristiano12345",
+      "first_name": "",
+      "last_name": "",
+      "email": "cristiano12345@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-12-26T16:14:38.305Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 14,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$zJgDYN6oCI6LYO6FHI10XW$12cQOlaAuTzfrpiHPTgjqmMUjgEwNAuce9XQdpnm6sQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "cristianojr12345",
+      "first_name": "",
+      "last_name": "",
+      "email": "cristianojr12345@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-12-29T02:44:11.692Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "09b01aa53038f850ec7bfecb43bae142db272e2b",
+    "fields": {
+      "user": 2,
+      "created": "2024-11-19T04:54:16.461Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "124921e26d07630265567bdb7029f30d71507c22",
+    "fields": {
+      "user": 1,
+      "created": "2024-11-19T04:41:17.547Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "163a080b7055042c6b47246a7022956e180ae194",
+    "fields": {
+      "user": 3,
+      "created": "2024-11-21T01:57:30.530Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "2bcb5b2aa839159fcd87c74f8f19d95c5b303bef",
+    "fields": {
+      "user": 4,
+      "created": "2024-11-23T22:12:52.569Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "5dffc32aa3908946ff10a9293f3f9612c8effe37",
+    "fields": {
+      "user": 12,
+      "created": "2024-12-26T16:06:27.168Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "77808b13aef994ca759fed0c87acddd3e5dcaaff",
+    "fields": {
+      "user": 14,
+      "created": "2024-12-29T02:44:11.974Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "8611aaa3b7bc22f0cee441ea2a1277907be08461",
+    "fields": {
+      "user": 10,
+      "created": "2024-12-14T05:45:20.111Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "8ebe649f6739b65aca2401b76fd954327ddd2cdd",
+    "fields": {
+      "user": 5,
+      "created": "2024-11-24T04:28:33.365Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "8f2a2e62537294640fdf173d62db5e7031e04647",
+    "fields": {
+      "user": 6,
+      "created": "2024-11-28T20:35:55.007Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "c759474486b304705cfa492b7003e3fa4be4a4bd",
+    "fields": {
+      "user": 13,
+      "created": "2024-12-26T16:14:38.630Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "cad44ac05dbea75968326fae7238ab5d78890c64",
+    "fields": {
+      "user": 9,
+      "created": "2024-12-14T04:48:32.320Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "dc01f6e28674d0527eba61cdd1b23ca1d3b9c1d8",
+    "fields": {
+      "user": 7,
+      "created": "2024-11-28T20:42:40.821Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "dfdd1457936e18a3331fe761f7ece23a97900a61",
+    "fields": {
+      "user": 8,
+      "created": "2024-11-28T21:38:22.607Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "f0d3bca6a06df1755c3e56fa2b616c0f3cfb4b98",
+    "fields": {
+      "user": 11,
+      "created": "2024-12-26T04:06:55.471Z"
+    }
+  }
+]

@@ -6,6 +6,7 @@ class Administrador(models.Model):
     id_administrador = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
+    borrado = models.BooleanField(default=False)
     cedula = models.CharField(max_length=10)
 
 class Entrenador(models.Model):
