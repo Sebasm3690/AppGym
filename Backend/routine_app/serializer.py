@@ -11,15 +11,20 @@ class AdminSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Administrador
 		fields = ['id_administrador','nombre','apellido','email', 'cedula', 'username', 'password']
+
+	#.pop('clave')
+	#1. Elimina la clave 'user' (y su contenido) del diccionario original (validated_data).
+	#2. Devuelve el valor que tenía esa clave, guardándolo en la variable user_data.
+
 	
 	def create(self, validated_data): #validated_data contiene los datos que se han enviado a través de una solicitud HTTP
 		user_data = validated_data.pop('user') #se elimina la clave 'user' de validated_data
-		password = user_data.pop('password', None)
-		user = User.objects.create(**user_data) 
-		if password:
+		password = user_data.pop('password', None) #Extrae la contraseña del diccionario user_data y la guarda en la variable password.
+		user = User.objects.create(**user_data) # Crea la instancia del modelo User de Django usando los datos restantes en user_data (username, email)
+		if password: # Verifica si se proporcionó una contraseña
 			user.set_password(password)
 			user.save()
-		administrador = Administrador.objects.create(user=user, **validated_data) 
+		administrador = Administrador.objects.create(user=user, **validated_data) # Crea la instancia del modelo Administrador utilizando la instancia de User creada y los datos validados restantes (nombre, apellido, cedula)
 		return administrador
 		  
 
@@ -43,6 +48,16 @@ class TrainerSerializer(serializers.ModelSerializer):
 		# Creamos una nueva instancia de Cliente utilizando el usuario creado y los datos restantes validados
 		entrenador = Entrenador.objects.create(user=user, **validated_data)
 		return entrenador
+
+	#instance
+ 
+	#Es el registro que ya existe en la base de datos y que se trajo para ser modificado
+	#Es un objeto del modelo de la Base de Datos (una instancia de la clase Entrenador o Cliente). 
+
+	#validated_data
+	#Es un diccionario que proviene de la petición HTTP (frontend) tras haber pasado las validaciones del serializador.
+	#Contiene los datos NUEVOS que el cliente quiere actualiza
+	
 	
 	def update(self, instance, validated_data): #Instance es la instancia del modelo que se está actualizando con los nuevos datos en validated_data (por ejemplo aqui instance es la instancia del modelo que se está actualizando y validated_data contiene los nuevos datos que deben ser aplicados a esa instancia)
 		# Extraer los datos del usuario

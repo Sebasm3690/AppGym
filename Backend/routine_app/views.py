@@ -1,3 +1,5 @@
+from concurrent.futures._base import _STATE_TO_DESCRIPTION_MAP
+from routine_app.serializer import ClientSerializer
 import locale
 from rest_framework import viewsets
 from .serializer import *
@@ -61,6 +63,15 @@ logger = logging.getLogger(__name__)
 
 #logger = logging.getLogger(__name__)
 
+
+
+#3 MODELS IN DRF Serializers
+
+#Serializer(data=request.data)	Calls create() on .save()	Creating a new record from incoming JSON
+#Serializer(instance, data=request.data)	Calls update() on .save()	Updating an existing record with incoming JSON
+#Serializer(instance=instance)	No .save() or .is_valid() used	Serializing (converting model object to JSON for response)
+
+
 # SignUp trainer
 @api_view(['POST'])
 def trainerRegister(request):
@@ -77,7 +88,7 @@ def trainerRegister(request):
         #return Response({'cedula':'La cedula ingresada ya ha sido registrada previamente'},status=status.HTTP_400_BAD_REQUEST)
 
     # If email and username are unique, proceed with serialization
-    serializer = TrainerSerializer(data=request.data)
+    serializer = TrainerSerializer(data=request.data) #Calls create(validated_data) in serializer.py
     if serializer.is_valid():
         entrenador = serializer.save(imagen=request.FILES.get('imagen'))
         token = Token.objects.create(user=entrenador.user)
@@ -103,7 +114,7 @@ def clientRegister(request):
         return Response({'cedula':'La cedula ingresada ya ha sido asignada a un administrador o entrenador'},status=status.HTTP_400_BAD_REQUEST)
     
     # If email and username are unique, proceed with serialization
-    serializer = ClientSerializer(data=request.data)
+    serializer = ClientSerializer(data=request.data) #Calls create(validated_data) in serializer.py
 
     if serializer.is_valid():
         cliente = serializer.save()	
@@ -139,7 +150,7 @@ def update_trainer(request,id):
         return Response({'cedula':'La cedula ingresada ya ha sido registrada previamente'},status=status.HTTP_400_BAD_REQUEST)
     
     #Perfom update if no conflicts are found
-    serializer = TrainerSerializer(entrenador, data=request.data, partial=True)
+    serializer = TrainerSerializer(entrenador, data=request.data, partial=True) #Calls update(instance, validated_data) with partial validation in serializer.py
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -148,7 +159,6 @@ def update_trainer(request,id):
 
 
 # Update client
-
 @api_view(['PUT'])
 def update_client(request,id):
     try:
@@ -174,7 +184,7 @@ def update_client(request,id):
         return Response({'cedula':'La cedula ingresada ya ha sido registrada previamente'},status=status.HTTP_400_BAD_REQUEST)
     
     #Perfom update if no conflicts are found
-    serializer = ClientSerializer(cliente, data=request.data, partial=True)
+    serializer = ClientSerializer(cliente, data=request.data, partial=True) #Calls update(instance, validated_data) with partial validation in serializer.py
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -207,7 +217,7 @@ def trainerLogin(request):
                 return Response({"error":"Entrenador dado de baja por el administrador"}, status=status.HTTP_404_NOT_FOUND)
             else:
                 token , created = Token.objects.get_or_create(user=user)
-                serializer = TrainerSerializer(instance = entrenador)
+                serializer = TrainerSerializer(instance = entrenador) #Serializing (converting model object to JSON for response)
                 return Response({"token":token.key, "entrenador":serializer.data}, status = status.HTTP_200_OK)
         
         except Entrenador.DoesNotExist:
@@ -254,115 +264,100 @@ def clientLogin(request):
 
 
 #Buscar entrenadores
-class TrainerViewSet(viewsets.ModelViewSet):
-    queryset = Entrenador.objects.all()
-    serializer_class = TrainerSerializer
+@api_view(['GET'])
+def buscar_entrenadores(request, id_administrador):
+    # 1. Filter trainers by the administrator ID from URL path
+    entrenadores = Entrenador.objects.filter(id_administrador=id_administrador)
 
-    def get_queryset(self):
-        queryset = super().get_queryset() #Llama al método get_queryset del padre (viewsets.ModelViewSet) para obtener el conjunto de datos predeterminado. Este conjunto de datos inicial incluye todos los registros de Entrenador.
+    # 2. Extract query parameters
+    nombre = request.query_params.get("nombre")
+    apellido = request.query_params.get("apellido")
+    cedula = request.query_params.get("cedula")
 
-        id_admin = self.kwargs.get('id_administrador')
+    # 3. Apply optional filters
+    if nombre:
+        entrenadores = entrenadores.filter(nombre__icontains=nombre)
+    if apellido:
+        entrenadores = entrenadores.filter(apellido__icontains=apellido)
+    if cedula:
+        entrenadores = entrenadores.filter(cedula__icontains=cedula)
 
-        queryset = queryset.filter(id_administrador=id_admin)
-
-        nombre = self.request.query_params.get("nombre") 
-        apellido = self.request.query_params.get("apellido")
-        cedula = self.request.query_params.get("cedula")
-
-        if nombre:
-            queryset = queryset.filter(nombre__icontains=nombre)
-        if apellido:
-            queryset = queryset.filter(apellido__icontains=apellido)
-        if cedula:
-            queryset = queryset.filter(cedula__icontains=cedula) #Para acceder al correo que está dentro de user
-        
-        return queryset
+    # 4. Serialize and return response
+    serializer = TrainerSerializer(entrenadores, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 #Buscar clientes
-class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Cliente.objects.all()  
-    serializer_class = ClientSerializer
+@api_view(['GET'])
+def buscar_clientes(request,id_entrenador):
+    # 1. Filter trainers by the administrator ID from URL path
+    clientes = Cliente.objects.filter(id_entrenador=id_entrenador)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
+    # 2. Extract query parameters
+    nombre = request.query_params.get("nombre")
+    apellido = request.query_params.get("apellido")
+    correo = request.query_params.get("correo")
 
-        id_entrenador = self.kwargs.get('id_entrenador')
+    # 3. Apply optional filters
+    if nombre:
+        clientes = clientes.filter(nombre__icontains=nombre)
+    if apellido:
+        clientes = clientes.filter(apellido__icontains=apellido)
+    if correo:
+        clientes = clientes.filter(correo__icontains=correo)
 
-        queryset = queryset.filter(id_entrenador=id_entrenador)
-
-        # Obtiene los parámetros de consulta de la solicitud
-        nombre = self.request.query_params.get("nombre") #query_params es un diccionario que contiene los parámetros de consulta (query parameters) enviados en la URL de la solicitud.
-        apellido = self.request.query_params.get("apellido")
-        correo = self.request.query_params.get("correo")
+    # 4. Serialize and return response
+    serializer = ClientSerializer(clientes, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-        # Filtra el queryset según los parámetros de consulta proporcionados
-        if nombre:
-            queryset = queryset.filter(nombre__icontains=nombre)
-        if apellido:
-            queryset = queryset.filter(apellido__icontains=apellido)
-        if correo:
-            queryset = queryset.filter(user__email__icontains=correo)
 
-        # Devuelve el queryset filtrado
-        return queryset
-    
-
-    
 #Buscar rutinas
-class RoutineViewSet(viewsets.ModelViewSet):
-    queryset = Rutina.objects.all()
-    serializer_class = RoutineSerializer
+@api_view(['GET'])
+def buscar_rutinas(request, id_entrenador):
+    #1. Filter routines by the administrator ID from URL path
+    rutinas = Rutina.objects.filter(id_entrenador=id_entrenador)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        id_entrenador = self.kwargs.get('id_entrenador')
-        tipo = self.request.query_params.get("tipo")
-        queryset = queryset.filter(id_entrenador=id_entrenador, tipo=tipo)
-        print(id_entrenador)
-        print(tipo)
-        nombre = self.request.query_params.get("nombre")
-        enfoque = self.request.query_params.get("enfoque")
-       
-        if nombre:
-            result = queryset.filter(nombre__icontains=nombre)
-        elif enfoque:
-            result = queryset.filter(enfoque__icontains=enfoque)
-        else:
-            result = queryset
+    #2. Extract query parameters
+    tipo = request.query_params.get("tipo")
+    nombre = request.query_params.get("nombre")
+    enfoque = request.query_params.get("enfoque")
 
-     
-        # Devuelve el queryset filtrado
-        return result
+    #3. Apply optional filters
+    if tipo:
+        rutinas = rutinas.filter(tipo__icontains=tipo)
+    if nombre:
+        rutinas = rutinas.filter(nombre__icontains=nombre)
+    if enfoque:
+        rutinas = rutinas.filter(enfoque__icontains=enfoque)
 
+    #4. Serialize and return response
+    serializer = RoutineSerializer(rutinas, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 #Buscar catalogos
-class CatalogViewSet(viewsets.ModelViewSet):
-    queryset = Rutina.objects.all()
-    serializer_class = RoutineSerializer
+@api_view(['GET'])
+def buscar_catalogos(request, id_entrenador):
+    #1. Filter routines by the administrator ID from URL path
+    catalogos = Rutina.objects.filter(id_entrenador=id_entrenador, tipo = 'Catalogo')
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        id_entrenador = self.kwargs.get('id_entrenador')
-        queryset = queryset.filter(id_entrenador=id_entrenador, tipo = "Catalogo")
-        
-        nombre = self.request.query_params.get("nombre")
-        enfoque = self.request.query_params.get("enfoque")
-        tipo = self.request.query_params.get("tipo")
+    #2. Extract query parameters
+    tipo = request.query_params.get('tipo')
+    nombre = request.query_params.get('nombre')
+    enfoque = request.query_params.get('enfoque')
 
-        if nombre:
-            queryset = queryset.filter(nombre__icontains=nombre)
-        if enfoque:
-            queryset = queryset.filter(enfoque__icontains=enfoque)
-        if tipo:
-            queryset = queryset.filter(tipo__icontains=tipo)
+    #3. Apply optional filters
+    if tipo:
+        catalogos = catalogos.filter(tipo__icontains = tipo)
+    if nombre:
+        catalogos = catalogos.filter(nombre__icontains = nombre)
+    if enfoque:
+        catalogos = catalogos.filter(enfoque__icontains = enfoque)
 
-        # Devuelve el queryset filtrado
-        return queryset
-    
-
+    #4. Serialize and return response
+    serializer = RoutineSerializer(catalogos, many = True)
+    return Response(serializer.data, status = status.HTTP_200_OK)
 
 
 
@@ -403,7 +398,6 @@ def profile(request):
 
 
 #Obtener comidas en FatSecret
-
 def get_nutrition_data(request):
     """Fetch nutrition data from FatSecret API."""
     query = request.GET.get("search")
@@ -482,17 +476,17 @@ def get_food_by_id(request, food_id):
 
 
 #Ver comidas
-class FoodAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        query = request.data.get('query', '')
+#class FoodAPIView(APIView):
+    #def get(self, request, *args, **kwargs):
+        #query = request.data.get('query', '')
 
-        if query:
+        #if query:
             # Consulta a la API de Nutrición
-            api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
-            api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'  # Idealmente, mover a una variable de entorno o configuración segura
-            api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
-            if api_request.status_code == 200:
-                api_response = api_request.json()
+            #api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
+            #api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'  # Idealmente, mover a una variable de entorno o configuración segura
+            #api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
+            #if api_request.status_code == 200:
+                #api_response = api_request.json()
                 
                 # Aquí deberías iterar sobre api_response para extraer los nombres de alimentos
                 # y hacer la traducción con la API de traducción de tu elección.
@@ -500,26 +494,26 @@ class FoodAPIView(APIView):
                 # Este es un paso conceptual, necesitarías adaptarlo a la API específica que elijas.
                 
                 # Por ejemplo, usando Google Translate API de manera muy simplificada:
-                translate_url = "https://translation.googleapis.com/language/translate/v2"
-                for item in api_response:
-                    text = item["food_name"]  # Asumiendo que este campo existe en tu respuesta
-                    translate_params = {
-                        "q": text,
-                        "source": "en",
-                        "target": "es",
-                        "format": "text"
-                    }
-                    translate_headers = {"Authorization": "Bearer tu_token_de_acceso"}
-                    translate_response = requests.post(translate_url, params=translate_params, headers=translate_headers)
-                    translated_text = translate_response.json()['data']['translations'][0]['translatedText']
-                    item["food_name"] = translated_text
+                #translate_url = "https://translation.googleapis.com/language/translate/v2"
+                #for item in api_response:
+                    #text = item["food_name"]  # Asumiendo que este campo existe en tu respuesta
+                    #translate_params = {
+                        #"q": text,
+                        #"source": "en",
+                        #"target": "es",
+                        #"format": "text"
+                    #}
+                    #translate_headers = {"Authorization": "Bearer tu_token_de_acceso"}
+                    #translate_response = requests.post(translate_url, params=translate_params, headers=translate_headers)
+                    #translated_text = translate_response.json()['data']['translations'][0]['translatedText']
+                    #item["food_name"] = translated_text
 
-                return Response(api_response, status=status.HTTP_200_OK)
-            else:
+                #return Response(api_response, status=status.HTTP_200_OK)
+            #else:
                 # Manejo en caso de que la API de Nutrición no responda correctamente
-                return Response({"error": "Error al consultar la API de Nutrición"}, status=api_request.status_code)
-        else:
-            return Response({"error": "Sin query"}, status=status.HTTP_404_BAD_REQUEST)
+                #return Response({"error": "Error al consultar la API de Nutrición"}, status=api_request.status_code)
+        #else:
+            #return Response({"error": "Sin query"}, status=status.HTTP_404_BAD_REQUEST)
 
 
 #Agregar comidas
@@ -591,9 +585,9 @@ class FoodAPIView(APIView):
 
 
 class CalcularTMBAPIView(APIView):
-    def post(self,request,query_param, *args, **kwargs):
+    def post(self,request,id_cliente, *args, **kwargs):
         print("Si entra al calculo de TMB")
-        id_cli = query_param
+        id_cli = id_cliente
         cliente = Cliente.objects.get(id_cliente=id_cli) #Get es mejor que filter porque solo se obtendrá un objeto y no varios 
         edad = calcularEdad(cliente.fecha_nacimiento)
 
@@ -613,9 +607,8 @@ class CalcularTMBAPIView(APIView):
     
 
 class calcularMacroNutrientes(APIView):
-    def post(self,request,query_param,*args,**kwargs):
-        print("Si entra a calcular los macronutrientes")
-        id_cli = query_param
+    def post(self,request,id_cliente,*args,**kwargs):
+        id_cli = id_cliente
         proteina = 0
         grasas = 0
         carbohidratos = 0
@@ -664,10 +657,10 @@ class calcularTotalMacrosAlimentos(APIView):
             start_date = today
             end_date = today
         elif date_range == 'ayer':
-            start_date = today - timedelta(days=1)
-            end_date = today - timedelta(days=1)
+            start_date = today - timedelta(days=1)  # se le resta un dia a la fecha actual
+            end_date = today - timedelta(days=1)  # se le resta un dia a la fecha actual
         elif date_range == 'esta semana':
-            start_date = today - timedelta(days=today.weekday())  # Start of the week (Monday)
+            start_date = today - timedelta(days=today.weekday())  # If today is Wednesday September 16, 2026 it returns Monday, September 14, 2026.
             end_date = today
         elif date_range == 'semana pasada':
             start_date = today - timedelta(days=today.weekday() + 7)  # Last Monday
@@ -676,7 +669,7 @@ class calcularTotalMacrosAlimentos(APIView):
             custom_start = request.query_params.get('start_date')
             custom_end = request.query_params.get('end_date')
             try:
-                start_date = datetime.strptime(custom_start, '%Y-%m-%d').date()
+                start_date = datetime.strptime(custom_start, '%Y-%m-%d').date() # It reads a text string and parses it into a full Python datetime object 
                 end_date = datetime.strptime(custom_end, '%Y-%m-%d').date()
             except (TypeError, ValueError):
                 return Response(
@@ -722,7 +715,7 @@ class calcularTotalMacrosAlimentos(APIView):
             )
         )
 
-        dias_rango = (end_date - start_date).days + 1 # +1 to include both start and end dates
+        dias_rango = (end_date - start_date).days + 1 # +1 to include both start and end dates and to avoid below total_calorias / 0
         promedio_calorias = (
             consumo_hoy['total_calorias'] / dias_rango if dias_rango > 0 else 0
         )
@@ -774,9 +767,9 @@ def getFuerzaRutinaFecha(request):
     # 1. Process to get all dates
     if date_range == "mes" and month and year:
         try:
-            start_date = datetime.strptime(f"{year}-{month}-01", "%Y-%m-%d").date()
-            _, last_day = monthrange(int(year), int(month))
-            end_date = start_date.replace(day=last_day)
+            start_date = datetime.strptime(f"{year}-{month}-01", "%Y-%m-%d").date() # Creates a string for the 1st day of that month (e.g. "2026-09-01").
+            _, last_day = monthrange(int(year), int(month)) # Returns the number of days in the month.
+            end_date = start_date.replace(day=last_day) # Changes the day from 1 to 30, producing 2026-09-30.
         except ValueError:
             return Response({"error": "Mes o año invalido"}, status=status.HTTP_400_BAD_REQUEST)
     

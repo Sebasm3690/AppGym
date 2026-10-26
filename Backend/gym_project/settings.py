@@ -16,6 +16,7 @@ import environ
 from datetime import datetime
 import pytz
 import dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # Base directory
@@ -40,7 +41,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '192.168.100.11',
-    '1acf-2800-bf0-2420-13c-75ad-f115-289b-df2a.ngrok-free.app', ] # Add your ngrok URL
+    '1acf-2800-bf0-2420-13c-75ad-f115-289b-df2a.ngrok-free.app', 
+    '192.168.1.51'] # Add your ngrok URL
+   
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -124,13 +127,18 @@ if 'RENDER' in os.environ:
 else:
     # 🧪 Local
     DATABASES = {
+        #'default': dj_database_url.config(
+            #default="postgresql://postgres.puvbecnmrnivlsqzapkn:Awayouname11@aws-0-us-east-1.pooler.supabase.com:5432/postgres",
+            #conn_max_age=600,
+            #ssl_require=True
+        #)
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'AppGym6',
-            'USER': 'postgres',
-            'PASSWORD': 'awayouname11',
-            'HOST': 'localhost',
-            'PORT': '5432',
+            'NAME': config("DB_NAME"),
+            'USER': config("DB_USER"),
+            'PASSWORD': config("DB_PASSWORD"),
+            'HOST': config("DB_HOST"),
+            'PORT': config("DB_PORT"),
         }
     }
 
@@ -268,5 +276,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'sebasm6004@gmail.com'
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = 'bjnn toit gggb lcjk'

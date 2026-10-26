@@ -1,3 +1,4 @@
+from routine_app.views import buscar_clientes
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
@@ -10,7 +11,7 @@ router.register(r'food',FoodView, 'food')
 router.register(r'consume', ConsumeView, 'consume') 
 router.register(r'trainer', TrainerView, 'trainer') 
 router.register(r'client',ClientView,'client')
-router.register(r'entrenador',TrainerViewSet) #Buscar entrenador
+#router.register(r'entrenador',TrainerViewSet) #Buscar entrenador
 router.register(r'genero',GenreView,'genero')
 router.register(r'nivelGym',GymLevelView,'nivelGym')
 router.register(r'nivelActividad',GymActivityView,'nivelActividad')
@@ -35,9 +36,9 @@ urlpatterns = [
     path('getExcercises/<str:body_part>', get_exercises),
     path('adminLogin/',adminLogin),
     path('clientLogin/',clientLogin),
-     # Incluye las rutas del router bajo un prefijo específico para evitar conflictos
+    # Incluye las rutas del router bajo un prefijo específico para evitar conflictos
     path( "api/v1/", include(router.urls)), #/api/v1/
-    path("getFood/",FoodAPIView.as_view(),name='getFood'),
+    #path("getFood/",FoodAPIView.as_view(),name='getFood'),
     #path("addFood/<query_param>/",NutritionAPIView.as_view(), name='addFood'),
     path("consumeFood/",ConsumeView.as_view({'get':'list'}), name='consumeFood'),
     path("calcularTMB/<query_param>/",CalcularTMBAPIView.as_view(), name='calcularTMB'),
@@ -51,12 +52,12 @@ urlpatterns = [
     path("recuperarEntrenador/<query_param>/",RecuperarEntrenador.as_view(), name='recuperarEntrenador'),
     path("recuperarCliente/<query_param>/",RecuperarCliente.as_view(), name='recuperarCliente'),
     path("cerrarSesion/",logout,name="cerrarSesion"),
-    path("buscarClientes/<int:id_entrenador>/",ClientViewSet.as_view({'get':'list'}, name="cliente-buscar")),
-    path("buscarEntrenadores/<int:id_administrador>/",TrainerViewSet.as_view({'get':'list'}, name="entrenador-buscar")),
+    path("buscarClientes/<int:id_entrenador>/",buscar_clientes, name="cliente-buscar"),
+    path("buscarEntrenadores/<int:id_administrador>/",buscar_entrenadores, name="entrenador-buscar"),
     path("addRoutine/",addRoutine,name="agregar-rutina"),
     path("ejerciciosRutina/<query_param>/",obtenerEjerciciosRutina,name="ejerciciosRutina"),
     path("updateRoutine/<int:rutina_id>", updateRoutine, name="actualizarRutina"),
-    path("buscarRutinas/<int:id_entrenador>/",RoutineViewSet.as_view({'get':'list'},name="rutina-buscar")),
+    path("buscarRutinas/<int:id_entrenador>/",buscar_catalogos,name="rutina-buscar"),
     path("asignarRutina/",asignarRutina,name="asignar-rutina"),
     path("obtenerRutinasCliente/",obtenerRutinasCliente, name="obtener-rutinas"),
     path("obtenerTodasRutinasCliente/",obtenerTodasRutinasCliente, name="obtener-todas-rutinas"),
