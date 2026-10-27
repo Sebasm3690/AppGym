@@ -127,19 +127,19 @@ if 'RENDER' in os.environ:
 else:
     # 🧪 Local
     DATABASES = {
-        #'default': dj_database_url.config(
-            #default="postgresql://postgres.puvbecnmrnivlsqzapkn:Awayouname11@aws-0-us-east-1.pooler.supabase.com:6543/postgres",
-            #conn_max_age=0,
-            #ssl_require=True
-        #)
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config("DB_NAME"),
-            'USER': config("DB_USER"),
-            'PASSWORD': config("DB_PASSWORD"),
-            'HOST': config("DB_HOST"),
-            'PORT': config("DB_PORT"),
-        }
+        'default': dj_database_url.config(
+            default="postgresql://postgres.puvbecnmrnivlsqzapkn:Awayouname11@aws-0-us-east-1.pooler.supabase.com:6543/postgres",
+            conn_max_age=0,
+            ssl_require=True
+        )
+        #'default': {
+            #'ENGINE': 'django.db.backends.postgresql',
+            #'NAME': config("DB_NAME"),
+            #'USER': config("DB_USER"),
+            #'PASSWORD': config("DB_PASSWORD"),
+            #'HOST': config("DB_HOST"),
+            #'PORT': config("DB_PORT"),
+        #}
     }
 
 
