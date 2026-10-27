@@ -128,8 +128,8 @@ else:
     # 🧪 Local
     DATABASES = {
         #'default': dj_database_url.config(
-            #default="postgresql://postgres.puvbecnmrnivlsqzapkn:Awayouname11@aws-0-us-east-1.pooler.supabase.com:5432/postgres",
-            #conn_max_age=600,
+            #default="postgresql://postgres.puvbecnmrnivlsqzapkn:Awayouname11@aws-0-us-east-1.pooler.supabase.com:6543/postgres",
+            #conn_max_age=0,
             #ssl_require=True
         #)
         'default': {

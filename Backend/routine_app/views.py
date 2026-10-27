@@ -413,14 +413,19 @@ def get_nutrition_data(request):
 
     # Get the token dynamically
     token = get_fatsecret_token()
+    if not token:
+        return JsonResponse({"error": "No se pudo obtener el token de FatSecret"}, status=500)
+
     headers = {
-        "Authorization": token,
+        "Authorization": f"Bearer {token}",
     }
 
     response = requests.get(url, headers=headers, params=querystring)
 
     if response.status_code == 200:
         data = response.json()
+        if "error" in data:
+            return JsonResponse({"error": "Error de FatSecret", "details": data}, status=400)
         return JsonResponse(data)
     else:
         return JsonResponse(
@@ -441,9 +446,11 @@ def get_food_by_id(request, food_id):
 
      # Get the token dynamically
     token = get_fatsecret_token()
+    if not token:
+        return JsonResponse({"error": "No se pudo obtener el token de FatSecret"}, status=500)
 
     headers = {
-        "Authorization": token
+        "Authorization": f"Bearer {token}"
     }
 
     # Perform the API request
@@ -458,184 +465,93 @@ def get_food_by_id(request, food_id):
         return JsonResponse({"error": "Error al obtener los datos"}, status=response.status_code)
 
 
-    #if response.status_code != 200:
-        #return JsonResponse({"error": "Error al obtener los datos"}, status = response.status_code)
-
-    # Parse the API response
-    #data = response.json()
-    #foods = data.get('foods',{}).get('food',[])
-
-    # Filter the foods to find the one matching the given food_id
-    #filtered_food = next((food for food in foods if str(food.get('food_id')) == str(food_id)), None)
-
-    #if filtered_food:
-        #return JsonResponse(filtered_food)
-    #else:
-        #return JsonResponse({"error": f"No se encontró la comida con el ID {food_id}"},status=404)
-    
-
-
-#Ver comidas
-#class FoodAPIView(APIView):
-    #def get(self, request, *args, **kwargs):
-        #query = request.data.get('query', '')
-
-        #if query:
-            # Consulta a la API de Nutrición
-            #api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
-            #api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'  # Idealmente, mover a una variable de entorno o configuración segura
-            #api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
-            #if api_request.status_code == 200:
-                #api_response = api_request.json()
-                
-                # Aquí deberías iterar sobre api_response para extraer los nombres de alimentos
-                # y hacer la traducción con la API de traducción de tu elección.
-                # Asegúrate de revisar la documentación de la API de traducción para la implementación correcta.
-                # Este es un paso conceptual, necesitarías adaptarlo a la API específica que elijas.
-                
-                # Por ejemplo, usando Google Translate API de manera muy simplificada:
-                #translate_url = "https://translation.googleapis.com/language/translate/v2"
-                #for item in api_response:
-                    #text = item["food_name"]  # Asumiendo que este campo existe en tu respuesta
-                    #translate_params = {
-                        #"q": text,
-                        #"source": "en",
-                        #"target": "es",
-                        #"format": "text"
-                    #}
-                    #translate_headers = {"Authorization": "Bearer tu_token_de_acceso"}
-                    #translate_response = requests.post(translate_url, params=translate_params, headers=translate_headers)
-                    #translated_text = translate_response.json()['data']['translations'][0]['translatedText']
-                    #item["food_name"] = translated_text
-
-                #return Response(api_response, status=status.HTTP_200_OK)
-            #else:
-                # Manejo en caso de que la API de Nutrición no responda correctamente
-                #return Response({"error": "Error al consultar la API de Nutrición"}, status=api_request.status_code)
-        #else:
-            #return Response({"error": "Sin query"}, status=status.HTTP_404_BAD_REQUEST)
-
-
-#Agregar comidas
-#class NutritionAPIView(APIView):
-    #def post(self, request, query_param, *args, **kwargs):
-        #id_cliente = query_param
-        #query = request.data.get('query', '') #Se otiene el valor del parámetro 'query' enviado en la solicitud POST
-
-        #if query:
-            #nombre_alimento = query.split()[-1]
-            #cantidad = query.split()[0]
-            # Eliminar el último carácter (que en este caso sería "g")
-            #cantidad_sin_unidad = cantidad[:-1]
-
-            #alimento = Alimento.objects.filter(nombre=nombre_alimento, tamaño_porcion_g=cantidad_sin_unidad).first()  # Se utiliza filter para que devuelva la lista vacia, get devuelve Alimento.DoesnotExist
-            #if not alimento: 
-                #print("El alimento no existe")
-                #api_url = 'https://api.api-ninjas.com/v1/nutrition?query='
-                #api_key = '120T1ZhRsgzR6bTRBgrakw==9I1RDeQNeDEPGWIE'
-                #api_request = requests.get(api_url + query, headers={'X-Api-Key': api_key})
-                #try:
-                    #api_response = api_request.json()
-                    #for item in api_response:
-                        #serializer = FoodSerializer(data={ #Crea una instancia del serializador AlimentoSerializer con los datos del elemento actual
-                            #'nombre': item.get('name'),
-                            #'calorias': item.get('calories'),
-                            #'grasa_total_g': item.get('serving_size_g'),
-                            #'proteina_g': item.get('fat_total_g'),
-                            #'sodio_mg': item.get('sodium_mg'), 
-                            #'potasio_mg': item.get('potassium_mg'), 
-                            #'colesterol_mg': item.get('cholesterol_mg'),
-                            #'total_carbohidratos_g': item.get('carbohydrates_total_g'),
-                            #'total_fibra_g': item.get('fiber_g'),
-                            #'grasa_total_saturada_g': item.get('fat_saturated_g'),
-                            #'tamaño_porcion_g':	item.get('serving_size_g'),
-                            #"azucar_total_g": item.get('sugar_g')
-                        #})
-                        #if serializer.is_valid():
-                            #alimento = serializer.save()
-                            #serializer2 = ConsumeSerializer(data={
-                                #'id_alimento': alimento.id_alimento,
-                                #'id_cliente': id_cliente,
-                                #'fecha': now().date()
-                            #})
-                            #if serializer2.is_valid():
-                                #serializer2.save()
-                        #else:
-                            #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                    #return Response(api_response, status = status.HTTP_201_CREATED)
-                #except Exception as e:
-                    #return Response({"error": "Hubo un error procesando la solicitud", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            #else:
-                #print("El alimento si existe")
-                #serializer = FoodSerializer(alimento)
-                #print(serializer.data)
-                #serializer2 = ConsumeSerializer(data={
-                    #'id_alimento': alimento.id_alimento,
-                    #'id_cliente': id_cliente,
-                    #'fecha': now().date()
-                #})
-                #if serializer2.is_valid():	
-                    #serializer2.save()
-                    #return Response(serializer.data, status = status.HTTP_201_CREATED)
-                #else:
-                    #return Response(serializer2.errors, status=status.HTTP_400_BAD_REQUEST)
-        #else:
-            #return Response({"error","Sin query"}, status = status.HTTP_404_BAD_REQUEST)
-
-
 
 class CalcularTMBAPIView(APIView):
-    def post(self,request,id_cliente, *args, **kwargs):
-        print("Si entra al calculo de TMB")
-        id_cli = id_cliente
-        cliente = Cliente.objects.get(id_cliente=id_cli) #Get es mejor que filter porque solo se obtendrá un objeto y no varios 
+    def post(self, request, id_cliente=None, query_param=None, *args, **kwargs):
+        id_cli = id_cliente or query_param or kwargs.get('id_cliente') or kwargs.get('query_param')
+        try:
+            cliente = Cliente.objects.get(id_cliente=id_cli)
+        except Cliente.DoesNotExist:
+            return Response({"error": "Cliente no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
         edad = calcularEdad(cliente.fecha_nacimiento)
 
-        if cliente.id_genero.nombre == 'Masculino':
-            tmb = (Decimal('10') * cliente.peso) + (Decimal('6.25') * cliente.altura) - (Decimal('5') * edad) + Decimal('5') #La altura debe estar en cm
+        if cliente.id_genero and cliente.id_genero.nombre == 'Masculino':
+            tmb = (Decimal('10') * cliente.peso) + (Decimal('6.25') * cliente.altura) - (Decimal('5') * edad) + Decimal('5')
         else:
             tmb = (Decimal('10') * cliente.peso) + (Decimal('6.25') * cliente.altura) - (Decimal('5') * edad) - Decimal('161')
-        tmb = tmb * cliente.id_nivel_actividad.factor
-        if cliente.id_objetivo.nombre == 'Ganar masa muscular':
-            tmb = tmb + (tmb * Decimal('0.20')) 
-        elif cliente.id_objetivo.nombre == 'Perder peso':
-            tmb = tmb - (tmb * Decimal('0.20'))
-        cliente.tmb = tmb	
+        
+        if cliente.id_nivel_actividad and cliente.id_nivel_actividad.factor:
+            tmb = tmb * cliente.id_nivel_actividad.factor
+            
+        if cliente.id_objetivo:
+            if cliente.id_objetivo.nombre == 'Ganar masa muscular':
+                tmb = tmb + (tmb * Decimal('0.20')) 
+            elif cliente.id_objetivo.nombre == 'Perder peso':
+                tmb = tmb - (tmb * Decimal('0.20'))
+                
+        cliente.tmb = round(tmb, 2)
         cliente.save()		
 
-        return Response({"tmb": tmb}, status=status.HTTP_200_OK)
+        return Response({"tmb": cliente.tmb}, status=status.HTTP_200_OK)
     
 
 class calcularMacroNutrientes(APIView):
-    def post(self,request,id_cliente,*args,**kwargs):
-        id_cli = id_cliente
-        proteina = 0
-        grasas = 0
-        carbohidratos = 0
-        cliente = Cliente.objects.get(id_cliente=id_cli)
-        #print(f"Objetivo del cliente: {cliente.id_objetivo.nombre}")
+    def post(self, request, id_cliente=None, query_param=None, *args, **kwargs):
+        id_cli = id_cliente or query_param or kwargs.get('id_cliente') or kwargs.get('query_param')
+        try:
+            cliente = Cliente.objects.get(id_cliente=id_cli)
+        except Cliente.DoesNotExist:
+            return Response({"error": "Cliente no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
-        if cliente.id_objetivo.nombre == 'Ganar masa muscular':
-            proteina = cliente.peso * Decimal('1.8') #  1.8 - 2.2
-            grasas = cliente.peso * Decimal('1') #  1 - 1.2
-            #carbohidratos = cliente.peso * 3 # 3 - 4
-            carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
-        elif cliente.id_objetivo.nombre == 'Perder peso':
-            proteina = cliente.peso * Decimal('2.2') # 2.2 - 2.7
-            grasas = cliente.peso * Decimal('0.8') # 0.8 - 1
-            #carbohidratos = cliente.peso * Decimal('1') #1 - 1.5
-            carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
-        elif cliente.id_objetivo.nombre == 'Mantener peso':
-            proteina = cliente.peso * Decimal('1.8') #  1.8 - 2.2
-            grasas = cliente.peso * Decimal('1') #  1 - 1.2
-            #carbohidratos = cliente.peso * 2.5 # 2.5 - 3.5
-            carbohidratos = (cliente.tmb - (proteina*4 + grasas*9))/4
-        cliente.carbohidratos_g = carbohidratos
-        cliente.proteina_g = proteina
-        cliente.grasas_g = grasas
+        # Si el cliente aún no tiene TMB calculado, o es 0, lo calculamos primero
+        if not cliente.tmb or cliente.tmb == Decimal('0.00'):
+            edad = calcularEdad(cliente.fecha_nacimiento)
+            if cliente.id_genero and cliente.id_genero.nombre == 'Masculino':
+                tmb = (Decimal('10') * cliente.peso) + (Decimal('6.25') * cliente.altura) - (Decimal('5') * edad) + Decimal('5')
+            else:
+                tmb = (Decimal('10') * cliente.peso) + (Decimal('6.25') * cliente.altura) - (Decimal('5') * edad) - Decimal('161')
+            if cliente.id_nivel_actividad and cliente.id_nivel_actividad.factor:
+                tmb = tmb * cliente.id_nivel_actividad.factor
+            if cliente.id_objetivo:
+                if cliente.id_objetivo.nombre == 'Ganar masa muscular':
+                    tmb = tmb + (tmb * Decimal('0.20')) 
+                elif cliente.id_objetivo.nombre == 'Perder peso':
+                    tmb = tmb - (tmb * Decimal('0.20'))
+            cliente.tmb = round(tmb, 2)
+            cliente.save()
+
+        proteina = Decimal('0')
+        grasas = Decimal('0')
+        carbohidratos = Decimal('0')
+
+        if cliente.id_objetivo and cliente.id_objetivo.nombre == 'Ganar masa muscular':
+            proteina = cliente.peso * Decimal('1.8')
+            grasas = cliente.peso * Decimal('1')
+            carbohidratos = (cliente.tmb - (proteina * Decimal('4') + grasas * Decimal('9'))) / Decimal('4')
+        elif cliente.id_objetivo and cliente.id_objetivo.nombre == 'Perder peso':
+            proteina = cliente.peso * Decimal('2.2')
+            grasas = cliente.peso * Decimal('0.8')
+            carbohidratos = (cliente.tmb - (proteina * Decimal('4') + grasas * Decimal('9'))) / Decimal('4')
+        elif cliente.id_objetivo and cliente.id_objetivo.nombre == 'Mantener peso':
+            proteina = cliente.peso * Decimal('1.8')
+            grasas = cliente.peso * Decimal('1')
+            carbohidratos = (cliente.tmb - (proteina * Decimal('4') + grasas * Decimal('9'))) / Decimal('4')
+        else:
+            proteina = cliente.peso * Decimal('1.8')
+            grasas = cliente.peso * Decimal('1')
+            carbohidratos = (cliente.tmb - (proteina * Decimal('4') + grasas * Decimal('9'))) / Decimal('4')
+
+        cliente.carbohidratos_g = round(carbohidratos, 2)
+        cliente.proteina_g = round(proteina, 2)
+        cliente.grasas_g = round(grasas, 2)
         cliente.save()
 
-        return Response({"carbohidratos":carbohidratos, "proteina":proteina, "grasas":grasas}, status=status.HTTP_200_OK)
+        return Response({
+            "carbohidratos": cliente.carbohidratos_g,
+            "proteina": cliente.proteina_g,
+            "grasas": cliente.grasas_g
+        }, status=status.HTTP_200_OK)
 
 
 
